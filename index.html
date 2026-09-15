@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mudify — Tu mudanza al mejor precio</title>
+  <meta name="description"
+    content="Publicá tu mudanza, recibí ofertas de mudanceros verificados y elegí el mejor precio. Gratis para clientes, sin sorpresas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="nav" id="nav">
+    <div class="nav__inner">
+      <a href="#" class="logo" id="logo-home">
+        <div class="logo__mark">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2L3 14h14L10 2z" fill="white" />
+            <circle cx="10" cy="16" r="2" fill="white" />
+          </svg>
+        </div>
+        <span class="logo__text">Mudify</span>
+      </a>
+
+      <div class="nav__links" id="navLinks">
+        <a href="#servicios" id="nav-servicios">Servicios</a>
+        <a href="#como-funciona" id="nav-como">Cómo funciona</a>
+        <a href="#precios" id="nav-precios">Precios</a>
+        <a href="#mudanceros" id="nav-mudanceros">Para mudanceros</a>
+      </div>
+
+      <div class="nav__actions" id="navActions">
+        <a href="#" class="nav__sign-in" id="nav-signin">Ingresar</a>
+        <a href="#hero-form" class="btn-nav" id="nav-cta">Publicar mudanza</a>
+      </div>
+
+      <button class="nav__burger" id="burger" aria-label="Abrir menú" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== MOBILE MENU ===== -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu__inner">
+      <a href="#servicios" class="mm-link" id="mm-servicios">Servicios</a>
+      <a href="#como-funciona" class="mm-link" id="mm-como">Cómo funciona</a>
+      <a href="#precios" class="mm-link" id="mm-precios">Precios</a>
+      <a href="#mudanceros" class="mm-link" id="mm-mudanceros">Para mudanceros</a>
+      <a href="#" class="mm-link" id="mm-signin">Ingresar</a>
+      <a href="#precios" class="btn-primary mm-cta" id="mm-cta">Publicar mudanza gratis</a>
+    </div>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="hero__left">
+      <div class="hero__eyebrow"><span></span> Mudanzas más simples en Argentina</div>
+
+      <!-- Main SEO H1 Title -->
+      <h1 class="hero__title" id="hero-title">
+        Tu mudanza,<br>
+        sin vueltas y<br>
+        <span class="hero__title-accent">al mejor precio.</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="hero__sub" id="hero-sub">
+        Compará ofertas al instante de transportistas verificados en tu zona. Cotizaciones transparentes en pesos, seguimiento GPS y ahorro de hasta un 40%.
+      </p>
+
+      <!-- Interactive Quick Service Pills -->
+      <div class="hero__service-tabs">
+        <div class="hero-tab active">
+          <span class="tab-icon">📦</span>
+          <div class="tab-info">
+            <span class="tab-title">Fletes Express</span>
+            <span class="tab-sub">Muebles & bultos sueltos</span>
+          </div>
+        </div>
+        <div class="hero-tab">
+          <span class="tab-icon">🏠</span>
+          <div class="tab-info">
+            <span class="tab-title">Mudanza Completa</span>
+            <span class="tab-sub">Departamentos y Casas</span>
+          </div>
+        </div>
+        <div class="hero-tab">
+          <span class="tab-icon">💼</span>
+          <div class="tab-info">
+            <span class="tab-title">Empresas</span>
+            <span class="tab-sub">Oficinas y depósitos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action CTAs -->
+      <div class="hero__actions">
+        <a href="#precios" class="btn-primary btn-hero-cta" id="hero-primary-cta">
+          <span>Publicar mudanza gratis</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#como-funciona" class="btn-secondary btn-hero-secondary" id="hero-secondary-cta">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          <span>Ver cómo funciona</span>
+        </a>
+      </div>
+
+      <!-- Metrics Counter Grid -->
+      <div class="hero__metrics">
+        <div class="metric-item">
+          <div class="metric-val">5 min</div>
+          <div class="metric-lbl">Respuesta promedio</div>
+        </div>
+        <div class="metric-sep"></div>
+        <div class="metric-item">
+          <div class="metric-val">4.9 ★</div>
+          <div class="metric-lbl">+12.000 viajes realizados</div>
+        </div>
+        <div class="metric-sep"></div>
+        <div class="metric-item">
+          <div class="metric-val">-40%</div>
+          <div class="metric-lbl">Ahorro promedio</div>
+        </div>
+      </div>
+
+      <!-- Social Proof -->
+      <div class="hero__social-proof">
+        <div class="social-avatars">
+          <div class="avatar-img" style="background-image:url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80')"></div>
+          <div class="avatar-img" style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80')"></div>
+          <div class="avatar-img" style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80')"></div>
+          <div class="avatar-img" style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80')"></div>
+        </div>
+        <div class="social-text">
+          <div class="social-stars">★★★★★ <strong>4.9/5 Calificación</strong></div>
+          <div class="social-count">+10.000 clientes satisfechos en CABA, GBA y todo el país</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO RIGHT SHOWCASE -->
+    <div class="hero__right">
+      <div class="hero__carousel-container">
+        
+        <!-- Floating Driver Live Card (Top Left) -->
+        <div class="hero__float-card float-card--top">
+          <div class="float-avatar">CR</div>
+          <div class="float-body">
+            <div class="float-name">Carlos R. <span class="float-badge">★ 4.9</span></div>
+            <div class="float-sub">Ford Transit 2021 · <strong>En camino</strong></div>
+          </div>
+          <div class="float-live">ETA 12m</div>
+        </div>
+
+        <!-- Carousel -->
+        <div class="hero__carousel" id="hero-carousel">
+          <div class="carousel__viewport">
+            <div class="carousel__track" id="carousel-track">
+              <div class="carousel__slide active">
+                <img src="app-slide-1.jpg" alt="Mudify App Android - Ofertas en tiempo real" class="hero__app-img" loading="eager">
+                <div class="slide-caption">Ofertas para tu mudanza en minutos</div>
+              </div>
+              <div class="carousel__slide">
+                <img src="app-slide-2.jpg" alt="Mudify App Android - Seguimiento GPS en vivo" class="hero__app-img" loading="lazy">
+                <div class="slide-caption">Seguimiento GPS en tiempo real</div>
+              </div>
+              <div class="carousel__slide">
+                <img src="app-slide-3.jpg" alt="Mudify App Android - Reserva y pago seguro" class="hero__app-img" loading="lazy">
+                <div class="slide-caption">Mudanza confirmada y pago seguro</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <button class="carousel__btn carousel__btn--prev" id="carousel-prev" aria-label="Imagen anterior">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button class="carousel__btn carousel__btn--next" id="carousel-next" aria-label="Siguiente imagen">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+
+          <!-- Dots -->
+          <div class="carousel__dots" id="carousel-dots">
+            <button class="carousel__dot active" data-index="0" aria-label="Ver slide 1"></button>
+            <button class="carousel__dot" data-index="1" aria-label="Ver slide 2"></button>
+            <button class="carousel__dot" data-index="2" aria-label="Ver slide 3"></button>
+          </div>
+        </div>
+
+        <!-- Floating Guarantee Card (Bottom Right) -->
+        <div class="hero__float-card float-card--bottom">
+          <div class="float-icon">🛡️</div>
+          <div class="float-body">
+            <div class="float-name">Garantía Mudify</div>
+            <div class="float-sub">Pago protegido · Choferes verificados</div>
+          </div>
+        </div>
+
+        <!-- Android App Badge -->
+        <div class="hero__app-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997 0-.551.4482-.9993.9993-.9993.5511 0 .9993.4483.9993.9993 0 .5511-.4482.9997-.9993.9997zm-11.046 0c-.5511 0-.9993-.4486-.9993-.9997 0-.551.4482-.9993.9993-.9993.5511 0 .9993.4483.9993.9993 0 .5511-.4482.9997-.9993.9997zm11.4045-6.02l1.9973-3.4592c.1235-.2137.0504-.4865-.1633-.61-.2137-.1235-.4865-.0504-.61.1633l-2.0223 3.5025c-1.3963-.6373-2.9837-.9993-4.6832-.9993-1.6995 0-3.2869.362-4.6832.9993l-2.0223-3.5025c-.1235-.2137-.3963-.2868-.61-.1633-.2137.1235-.2868.3963-.1633.61l1.9973 3.4592c-3.1517 1.7145-5.321 4.9085-5.5786 8.6366h21.4646c-.2576-3.7281-2.4269-6.9221-5.5786-8.6366z"/>
+          </svg>
+          <span>App Oficial Android</span>
+        </div>
+
+      </div>
+
+      <!-- Trust strip -->
+      <div class="hero__trust">
+        <div class="trust-item">
+          <span class="trust-ico">✓</span> Conductores 100% verificados
+        </div>
+        <div class="trust-sep"></div>
+        <div class="trust-item">
+          <span class="trust-ico">✓</span> Ofertas al instante en ARS
+        </div>
+        <div class="trust-sep"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===== SERVICIOS (estilo Uber) ===== -->
+  <section class="services-section" id="servicios">
+    <div class="wrap">
+      <h2 class="section-title">Encontrá el servicio<br>que necesitás</h2>
+      <div class="services-grid">
+        <a href="#hero-form" class="svc-card" id="svc-flete">
+          <div class="svc-card__body">
+            <div class="svc-card__icon">📦</div>
+            <h3>Flete de muebles</h3>
+            <p>Desde una silla hasta un departamento entero. El servicio más pedido.</p>
+          </div>
+          <div class="svc-card__footer">
+            Ver opciones <span>→</span>
+          </div>
+        </a>
+        <a href="#hero-form" class="svc-card" id="svc-depto">
+          <div class="svc-card__body">
+            <div class="svc-card__icon">🏠</div>
+            <h3>Departamento</h3>
+            <p>Monoambiente a 3 ambientes. Con o sin embalaje, a tu elección.</p>
+          </div>
+          <div class="svc-card__footer">
+            Ver opciones <span>→</span>
+          </div>
+        </a>
+        <a href="#hero-form" class="svc-card" id="svc-casa">
+          <div class="svc-card__body">
+            <div class="svc-card__icon">🏡</div>
+            <h3>Casa / PH</h3>
+            <p>Garaje, patio, pisos múltiples. Camiones de gran capacidad disponibles.</p>
+          </div>
+          <div class="svc-card__footer">
+            Ver opciones <span>→</span>
+          </div>
+        </a>
+        <a href="#hero-form" class="svc-card" id="svc-oficina">
+          <div class="svc-card__body">
+            <div class="svc-card__icon">🏢</div>
+            <h3>Oficina</h3>
+            <p>Traslado completo sin interrumpir tu operación. Fines de semana o nocturnos.</p>
+          </div>
+          <div class="svc-card__footer">
+            Ver opciones <span>→</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMO FUNCIONA ===== -->
+  <section class="how-section" id="como-funciona">
+    <div class="wrap">
+      <div class="how-header">
+        <span class="section-tag">Cómo funciona</span>
+        <h2 class="section-title">Simple, rápido<br>y sin sorpresas.</h2>
+      </div>
+      <div class="how-steps">
+        <div class="how-step" id="step-1">
+          <div class="how-step__num">1</div>
+          <div class="how-step__body">
+            <h3>Publicás tu mudanza gratis</h3>
+            <p>Origen, destino, tipo y fecha. Listo en 2 minutos. Sin cuenta previa, sin costo.</p>
+          </div>
+        </div>
+        <div class="how-step__arrow" aria-hidden="true">→</div>
+        <div class="how-step" id="step-2">
+          <div class="how-step__num">2</div>
+          <div class="how-step__body">
+            <h3>Recibís ofertas en minutos</h3>
+            <p>Conductores verificados de tu zona te mandan presupuesto con precio y rating real.</p>
+          </div>
+        </div>
+        <div class="how-step__arrow" aria-hidden="true">→</div>
+        <div class="how-step" id="step-3">
+          <div class="how-step__num">3</div>
+          <div class="how-step__body">
+            <h3>Elegís y seguís todo en vivo</h3>
+            <p>Confirmás, pagás seguro y hacés tracking en tiempo real desde el celular.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DUAL AUDIENCE (estilo Cabify) ===== -->
+  <section class="dual-section" id="dual">
+    <div class="dual-card dual-card--client" id="dual-client">
+      <div class="dual-card__content">
+        <div class="dual-card__tag">Para quienes se mudan</div>
+        <h2>Mudanzas<br>al mejor<br>precio.</h2>
+        <ul class="dual-list">
+          <li><span>✓</span> Publicar es 100% gratis</li>
+          <li><span>✓</span> Múltiples ofertas competitivas</li>
+          <li><span>✓</span> Mudanceros verificados</li>
+          <li><span>✓</span> Pago protegido en escrow</li>
+          <li><span>✓</span> Tracking en tiempo real</li>
+        </ul>
+        <a href="#hero-form" class="btn-white" id="dual-client-cta">Publicar mudanza gratis</a>
+      </div>
+    </div>
+    <div class="dual-card dual-card--driver" id="dual-driver">
+      <div class="dual-card__content">
+        <div class="dual-card__tag">Para mudanceros</div>
+        <h2>Ganá dinero<br>con tu<br>camión.</h2>
+        <ul class="dual-list">
+          <li><span>✓</span> Registro gratis, sin cuota mensual</li>
+          <li><span>✓</span> Vos elegís qué trabajos aceptar</li>
+          <li><span>✓</span> Solo 8% por mudanza concretada</li>
+          <li><span>✓</span> Cobro en 24hs</li>
+          <li><span>✓</span> Zona, día y precio: vos decidís</li>
+        </ul>
+        <a href="#mudanceros" class="btn-dark" id="dual-driver-cta">Registrarme como mudancero</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STATS ===== -->
+  <section class="stats-section" id="stats">
+    <div class="wrap">
+      <div class="stats-grid">
+        <div class="stat-item" id="stat-1">
+          <div class="stat-num counter" data-target="12000" data-suffix="+">0</div>
+          <div class="stat-lbl">Clientes satisfechos</div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat-item" id="stat-2">
+          <div class="stat-num counter" data-target="3200" data-suffix="+">0</div>
+          <div class="stat-lbl">Mudanceros activos</div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat-item" id="stat-3">
+          <div class="stat-num">4.9★</div>
+          <div class="stat-lbl">Rating promedio</div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat-item" id="stat-4">
+          <div class="stat-num counter" data-target="98" data-suffix="%">0</div>
+          <div class="stat-lbl">Mudanzas exitosas</div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat-item" id="stat-5">
+          <div class="stat-num">&lt;30min</div>
+          <div class="stat-lbl">Primera oferta</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== REVIEWS ===== -->
+  <section class="reviews-section" id="reviews">
+    <div class="wrap">
+      <span class="section-tag">Testimonios</span>
+      <h2 class="section-title">Lo que dice<br>nuestra comunidad.</h2>
+      <div class="reviews-grid">
+        <div class="review-card" id="rev-1">
+          <div class="review-stars">★★★★★</div>
+          <p>"Recibí 6 ofertas en 2 horas. Elegí la más barata con buenas reseñas y todo salió perfecto. Mucho más
+            barato que llamar a una mudanza tradicional."</p>
+          <div class="review-footer">
+            <div class="review-av" style="--c:#f97316">LM</div>
+            <div>
+              <strong>Laura M.</strong>
+              <span>Mudanza completa · Belgrano</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-card" id="rev-2">
+          <div class="review-stars">★★★★★</div>
+          <p>"Trasladamos la oficina de 15 personas en un sábado. Publicamos el viernes y para la noche ya teníamos 4
+            presupuestos. El tracking fue clave."</p>
+          <div class="review-footer">
+            <div class="review-av" style="--c:#8b5cf6">SG</div>
+            <div>
+              <strong>Sofía G.</strong>
+              <span>Mudanza corporativa · Palermo</span>
+            </div>
+          </div>
+        </div>
+        <div class="review-card" id="rev-3">
+          <div class="review-stars">★★★★★</div>
+          <p>"Con Mudify tengo trabajo constante y elijo los viajes que me convienen por zona. La comisión es justa y el
+            pago llega puntual."</p>
+          <div class="review-footer">
+            <div class="review-av" style="--c:#06b6d4">DP</div>
+            <div>
+              <strong>Daniel P.</strong>
+              <span>Mudancero · 180 mudanzas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRECIOS ===== -->
+  <section class="pricing-section" id="precios">
+    <div class="wrap">
+      <span class="section-tag">Precios</span>
+      <h2 class="section-title">Transparente<br>desde el primer día.</h2>
+      <p class="pricing-sub">Sin costos ocultos. Sin letra chica.</p>
+      <div class="pricing-grid">
+        <div class="price-card" id="price-client">
+          <div class="price-card__label">Para clientes</div>
+          <div class="price-card__amount">$0</div>
+          <div class="price-card__period">siempre gratis</div>
+          <ul class="price-card__list">
+            <li>Publicar mudanzas ilimitadas</li>
+            <li>Recibir todas las ofertas</li>
+            <li>Chat con mudanceros</li>
+            <li>Pago protegido (escrow)</li>
+            <li>Tracking en tiempo real</li>
+            <li>Soporte 7 días a la semana</li>
+          </ul>
+          <a href="#hero-form" class="btn-outline-dark price-cta" id="price-client-cta">Empezar gratis</a>
+        </div>
+        <div class="price-card price-card--featured" id="price-driver">
+          <div class="price-card__badge">⚡ Más elegido</div>
+          <div class="price-card__label">Para mudanceros</div>
+          <div class="price-card__amount">8<small>%</small></div>
+          <div class="price-card__period">por mudanza concretada</div>
+          <ul class="price-card__list">
+            <li>Registro totalmente gratuito</li>
+            <li>Sin suscripción mensual</li>
+            <li>Vos elegís los trabajos</li>
+            <li>Pago en 24hs</li>
+            <li>Badge de verificado</li>
+            <li>Panel de gestión incluido</li>
+          </ul>
+          <a href="#mudanceros" class="btn-primary price-cta" id="price-driver-cta">Registrarme gratis</a>
+        </div>
+        <div class="price-card" id="price-biz">
+          <div class="price-card__label">Para empresas</div>
+          <div class="price-card__amount" style="font-size:1.8rem;line-height:1.2">A tu<br>medida</div>
+          <div class="price-card__period">para flotas y volumen</div>
+          <ul class="price-card__list">
+            <li>Tarifa negociada</li>
+            <li>Factura A</li>
+            <li>Gestor de cuenta dedicado</li>
+            <li>Reportes mensuales</li>
+            <li>API de integración</li>
+            <li>SLA garantizado</li>
+          </ul>
+          <a href="#cta-email" class="btn-outline-dark price-cta" id="price-biz-cta">Hablar con ventas</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PARA MUDANCEROS ===== -->
+  <section class="drivers-section" id="mudanceros">
+    <div class="wrap">
+      <div class="drivers-layout">
+        <div class="drivers-text">
+          <span class="section-tag section-tag--dark">Para conductores</span>
+          <h2 class="drivers-title">Trabajá cuando<br>querés y cuánto<br>querés.</h2>
+          <p class="drivers-sub">Sin jefes. Sin horarios fijos. Sin costos de entrada. Vos manejás tu negocio.</p>
+          <div class="drivers-nums">
+            <div class="d-num">
+              <div class="d-num__val counter" data-target="45000" data-prefix="$">0</div>
+              <div class="d-num__lbl">Ingreso promedio mensual</div>
+            </div>
+            <div class="d-num">
+              <div class="d-num__val counter" data-target="85" data-suffix="%">0</div>
+              <div class="d-num__lbl">Siguen 6+ meses</div>
+            </div>
+          </div>
+          <a href="#cta-email" class="btn-primary" id="drivers-cta-btn">Sumarme como mudancero →</a>
+        </div>
+        <div class="drivers-features">
+          <div class="d-feat" id="d-feat-1">
+            <div class="d-feat__ico" aria-hidden="true">🚀</div>
+            <div>
+              <h4>Registro gratis</h4>
+              <p>Sin cuota ni costo de entrada. Pagás 8% solo cuando concretás.</p>
+            </div>
+          </div>
+          <div class="d-feat" id="d-feat-2">
+            <div class="d-feat__ico" aria-hidden="true">🎯</div>
+            <div>
+              <h4>Elegís tus trabajos</h4>
+              <p>Filtrás por zona, tamaño y precio. Aceptás solo lo que te conviene.</p>
+            </div>
+          </div>
+          <div class="d-feat" id="d-feat-3">
+            <div class="d-feat__ico" aria-hidden="true">💳</div>
+            <div>
+              <h4>Cobro garantizado en 24hs</h4>
+              <p>El pago llega a tu cuenta el día siguiente de terminar la mudanza.</p>
+            </div>
+          </div>
+          <div class="d-feat" id="d-feat-4">
+            <div class="d-feat__ico" aria-hidden="true">⭐</div>
+            <div>
+              <h4>Reputación que crece</h4>
+              <p>Mejores reseñas = más trabajo = más ingresos. Simple y directo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="faq-section" id="faq">
+    <div class="wrap wrap--narrow">
+      <span class="section-tag">Preguntas frecuentes</span>
+      <h2 class="section-title">Todo lo que<br>necesitás saber.</h2>
+      <div class="faq-list" id="faq-list">
+        <div class="faq-item" id="faq-1">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-1">
+            <span>¿Cómo funcionan los pagos?</span>
+            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-answer" id="faq-ans-1">
+            <p>El pago va en escrow hasta que confirmás que la mudanza se completó bien. Tu dinero está protegido en
+              todo momento. Aceptamos tarjeta, transferencia y MercadoPago.</p>
+          </div>
+        </div>
+        <div class="faq-item" id="faq-2">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-2">
+            <span>¿Los mudanceros están verificados?</span>
+            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-answer" id="faq-ans-2">
+            <p>Sí. Validamos DNI, antecedentes penales y revisamos el vehículo antes de aprobarlo. El rating público de
+              la comunidad complementa esa verificación.</p>
+          </div>
+        </div>
+        <div class="faq-item" id="faq-3">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-3">
+            <span>¿Qué pasa si se rompe algo?</span>
+            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-answer" id="faq-ans-3">
+            <p>Todas las mudanzas incluyen seguro básico de traslado. Reportás el daño en 24hs y nuestro equipo
+              interviene para resolver. También hay cobertura extendida opcional.</p>
+          </div>
+        </div>
+        <div class="faq-item" id="faq-4">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-4">
+            <span>¿Cuándo llega la primera oferta?</span>
+            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-answer" id="faq-ans-4">
+            <p>En AMBA, Rosario y Córdoba la primera oferta llega en menos de 30 minutos. La mayoría de los clientes
+              recibe entre 3 y 8 ofertas en las primeras 2 horas.</p>
+          </div>
+        </div>
+        <div class="faq-item" id="faq-5">
+          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-5">
+            <span>¿Puedo cancelar gratis?</span>
+            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.5">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="faq-answer" id="faq-ans-5">
+            <p>Sí, cancelás sin cargo hasta 24hs antes de la mudanza. Con menos de 24hs puede aplicar un cargo del 10%
+              para compensar al mudancero.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA FINAL ===== -->
+  <section class="cta-section" id="cta-email">
+    <div class="wrap cta-inner">
+      <div class="cta-text">
+        <h2 class="cta-title">¿Listo para tu<br>próxima mudanza?</h2>
+        <p class="cta-sub">Publicás gratis en 2 minutos. Recibís ofertas. Elegís la mejor. Así de fácil.</p>
+        <a href="#hero-form" class="btn-primary btn-lg" id="cta-main-btn">Publicar mudanza gratis →</a>
+      </div>
+      <div class="cta-email-block">
+        <p class="cta-email-title">¿Preferís que te contactemos?</p>
+        <form class="cta-email-form" id="ctaEmailForm" novalidate>
+          <div class="email-row">
+            <input type="email" id="cta-email-input" placeholder="tu@email.com" required aria-label="Tu email">
+            <button type="submit" class="btn-primary" id="cta-email-btn">Enviar</button>
+          </div>
+          <p class="email-note">Sin spam. Te contactamos una sola vez.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a href="#" class="logo" id="footer-logo">
+          <div class="logo__mark">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2L3 14h14L10 2z" fill="white" />
+              <circle cx="10" cy="16" r="2" fill="white" />
+            </svg>
+          </div>
+          <span class="logo__text">Mudify</span>
+        </a>
+        <p>Conectamos personas que necesitan mudarse con mudanceros independientes verificados en Argentina.</p>
+        <div class="footer-socials">
+          <a href="#" aria-label="X" id="footer-x">𝕏</a>
+          <a href="#" aria-label="Instagram" id="footer-ig">📷</a>
+          <a href="#" aria-label="WhatsApp" id="footer-wa">💬</a>
+        </div>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <h6>Plataforma</h6>
+          <a href="#como-funciona">Cómo funciona</a>
+          <a href="#servicios">Servicios</a>
+          <a href="#mudanceros">Ser mudancero</a>
+          <a href="#precios">Precios</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="footer__col">
+          <h6>Empresa</h6>
+          <a href="#">Sobre nosotros</a>
+          <a href="#">Blog</a>
+          <a href="#">Prensa</a>
+          <a href="#">Carreras</a>
+        </div>
+        <div class="footer__col">
+          <h6>Soporte</h6>
+          <a href="#">Centro de ayuda</a>
+          <a href="#">Contacto</a>
+          <a href="#">Términos</a>
+          <a href="#">Privacidad</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>© 2026 Mudify. Hecho 100% en Argentina. Por Argentinos.</p>
+      <div class="footer__bottom-links">
+        <a href="#">Privacidad</a>
+        <a href="#">Términos</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </footer>
+
+  <button class="btt" id="btt" aria-label="Volver arriba">↑</button>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
