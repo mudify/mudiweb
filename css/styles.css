@@ -1751,3 +1751,253 @@ body {
   .services-section, .how-section, .dual-section + *, .stats-section, .reviews-section, .pricing-section, .drivers-section, .faq-section, .cta-section { padding: 72px 0; }
 }
 
+/* ===== COMING SOON MODAL ===== */
+.coming-soon-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.coming-soon-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.coming-soon-modal__content {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  transform: translateY(20px) scale(0.95);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: var(--shadow-xl);
+}
+
+.coming-soon-modal.open .coming-soon-modal__content {
+  transform: translateY(0) scale(1);
+}
+
+.coming-soon-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--gray-400);
+  cursor: pointer;
+  transition: color var(--t);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.coming-soon-modal__close:hover {
+  color: var(--black);
+  background: var(--gray-50);
+}
+
+.coming-soon-modal__icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.coming-soon-modal h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--black);
+  margin-bottom: 12px;
+}
+
+.coming-soon-modal p {
+  font-size: 0.95rem;
+  color: var(--gray-600);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.coming-soon-modal__btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+}
+
+/* Terminos Section */
+.terms-section h1, .terms-section h3, .terms-section h4 {
+  font-family: 'Outfit', sans-serif;
+}
+.terms-section ul, .terms-section ol {
+  margin-bottom: 20px;
+  padding-left: 20px;
+}
+.terms-section li {
+  margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   Términos y Condiciones (Estilo Uber)
+   ========================================================================== */
+.terms-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 120px 20px 80px;
+}
+
+.legal-header {
+  margin-bottom: 60px;
+  border-bottom: 2px solid var(--border-light);
+  padding-bottom: 30px;
+}
+
+.legal-header h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.legal-subtitle {
+  color: var(--text-light);
+  font-size: 1.1rem;
+}
+
+.legal-layout {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+.legal-sidebar {
+  flex: 0 0 280px;
+  position: sticky;
+  top: 100px; /* Offset for a sticky header if any */
+}
+
+.legal-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legal-sidebar li {
+  margin-bottom: 12px;
+}
+
+.legal-sidebar a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: block;
+  padding: 4px 0;
+}
+
+.legal-sidebar a:hover {
+  color: var(--primary);
+}
+
+.legal-content {
+  flex: 1;
+  color: var(--text-light);
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.legal-content h3 {
+  color: var(--text-dark);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-top: 50px;
+  margin-bottom: 20px;
+  scroll-margin-top: 100px; /* For smooth scrolling offset */
+}
+
+.legal-content h3:first-child {
+  margin-top: 0;
+}
+
+.legal-content h4 {
+  color: var(--text-dark);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.legal-content p {
+  margin-bottom: 20px;
+}
+
+.legal-content ul, .legal-content ol {
+  margin-bottom: 25px;
+  padding-left: 25px;
+}
+
+.legal-content li {
+  margin-bottom: 12px;
+}
+
+.legal-content strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.legal-note, .legal-warning {
+  background-color: var(--bg-light);
+  padding: 20px;
+  border-left: 4px solid var(--primary);
+  border-radius: 0 8px 8px 0;
+  margin: 30px 0;
+}
+
+.legal-warning {
+  border-left-color: #ff3b30;
+  background-color: #fff5f5;
+}
+
+.legal-note p, .legal-warning p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 900px) {
+  .legal-layout {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .legal-sidebar {
+    position: static;
+    flex: auto;
+    width: 100%;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 10px;
+  }
+  
+  .legal-header h1 {
+    font-size: 2.2rem;
+  }
+}

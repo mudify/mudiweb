@@ -1,4 +1,4 @@
-/* ==========================================
+﻿/* ==========================================
    MUDIFY v5 — Scripts
    ========================================== */
 (function () {
@@ -105,7 +105,7 @@
       heroBtn.style.opacity = '.75';
 
       setTimeout(function () {
-        showToast('¡Mudanza publicada! Recibirás ofertas de mudanceros pronto. 🚚', 'ok');
+        showToast('¡Mudanza publicada! Recibirás ofertas de conductores pronto. 🚚', 'ok');
         heroBtn.textContent = 'Ver precios disponibles';
         heroBtn.disabled = false;
         heroBtn.style.opacity = '';
@@ -342,6 +342,50 @@
     });
 
     startAutoSlide();
+  }
+
+  // ===== COMING SOON MODAL =====
+  var comingSoonModal = document.getElementById('comingSoonModal');
+  var closeModalBtn = document.getElementById('closeModalBtn');
+  var closeModalActionBtn = document.getElementById('closeModalActionBtn');
+  var comingSoonTriggers = [
+    document.getElementById('nav-signin'),
+    document.getElementById('nav-cta'),
+    document.getElementById('mm-signin'),
+    document.getElementById('mm-conductores')
+  ];
+
+  function openModal(e) {
+    if (e) e.preventDefault();
+    if (comingSoonModal) {
+      comingSoonModal.classList.add('open');
+      comingSoonModal.setAttribute('aria-hidden', 'false');
+    }
+  }
+
+  function closeModal() {
+    if (comingSoonModal) {
+      comingSoonModal.classList.remove('open');
+      comingSoonModal.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  comingSoonTriggers.forEach(function(trigger) {
+    if (trigger) {
+      trigger.addEventListener('click', openModal);
+    }
+  });
+
+  if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+  if (closeModalActionBtn) closeModalActionBtn.addEventListener('click', closeModal);
+
+  // Close on backdrop click
+  if (comingSoonModal) {
+    comingSoonModal.addEventListener('click', function(e) {
+      if (e.target === comingSoonModal) {
+        closeModal();
+      }
+    });
   }
 
 })();
