@@ -1,726 +1,840 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mudify — Tu mudanza al mejor precio</title>
-  <meta name="description"
-    content="Publicá tu mudanza, recibí ofertas de conductores verificados y elegí el mejor precio. Gratis para clientes, sin sorpresas.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>Mudify | Mudanzas y Fletes al Instante en Argentina</title>
+    <meta name="title" content="Mudify | Mudanzas y Fletes al Instante en Argentina">
+    <meta name="description"
+        content="Mudify es la plataforma líder on-demand de mudanzas y fletes en Argentina. Cotizá en segundos, elegí transportistas verificados, seguí tu viaje por GPS en tiempo real y pagá 100% digital. Cobertura en CABA, GBA y todo el país.">
+    <meta name="keywords"
+        content="mudanzas argentina, fletes caba, fletes gba, app mudanzas, fletes al instante, fletes economicos, flete express, mudanza departamento, alquiler flete, transportistas verificados, fletes rosario, fletes cordoba, fletes mendoza">
+    <meta name="author" content="Mudify Technologies">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="language" content="Spanish">
+    <meta name="geo.region" content="AR">
+    <meta name="geo.placename" content="Buenos Aires, Argentina">
+    <link rel="canonical" href="https://mudify.com.ar/">
+
+    <!-- Theme & Icons -->
+    <meta name="theme-color" content="#0052cc">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/logo.png">
+
+    <!-- Performance: Preload LCP Hero Background -->
+    <link rel="preload" as="image" href="assets/images/hero_v2.webp">
+
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mudify.com.ar/">
+    <meta property="og:site_name" content="Mudify">
+    <meta property="og:title" content="Mudify | Mudanzas y Fletes On-Demand en Argentina">
+    <meta property="og:description"
+        content="La primera app de mudanzas y fletes de Argentina. Conductores verificados, seguimiento GPS en vivo y pago 100% digital. Cotizá gratis en minutos desde la app.">
+    <meta property="og:image" content="https://mudify.com.ar/assets/images/hero_v2.webp">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="es_AR">
+
+    <!-- Twitter / X Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mudify.com.ar/">
+    <meta name="twitter:title" content="Mudify | Mudanzas y Fletes On-Demand en Argentina">
+    <meta name="twitter:description"
+        content="Cotizá tu mudanza o flete al instante. Conductores verificados, seguimiento por GPS en tiempo real y pago 100% digital.">
+    <meta name="twitter:image" content="https://mudify.com.ar/assets/images/hero_v2.webp">
+
+    <!-- Fonts & Styles -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- JSON-LD Structured Data Schema (Google Rich Results) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Mudify",
+      "operatingSystem": "Android, iOS",
+      "applicationCategory": "BusinessApplication",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "12400",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "ARS"
+      },
+      "description": "Plataforma de mudanzas y fletes on-demand en Argentina con seguimiento GPS en vivo y conductores verificados.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Mudify",
+        "url": "https://mudify.com.ar",
+        "logo": "https://mudify.com.ar/assets/images/logo.png"
+      }
+    }
+    </script>
 </head>
 
 <body>
 
-  <!-- ===== NAVBAR ===== -->
-  <nav class="nav" id="nav">
-    <div class="nav__inner">
-      <a href="#" class="logo" id="logo-home">
-        <div class="logo__mark">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M10 2L3 14h14L10 2z" fill="white" />
-            <circle cx="10" cy="16" r="2" fill="white" />
-          </svg>
-        </div>
-        <span class="logo__text">Mudify</span>
-      </a>
-
-      <div class="nav__links" id="navLinks">
-        <a href="#servicios" id="nav-servicios">Servicios</a>
-        <a href="#como-funciona" id="nav-como">Cómo funciona</a>
-        <a href="#precios" id="nav-precios">Precios</a>
-        <a href="#conductores" id="nav-conductores">Para conductores</a>
-      </div>
-
-      <div class="nav__actions" id="navActions">
-        <a href="#" class="nav__sign-in" id="nav-signin">Conductores</a>
-        <a href="#hero-form" class="btn-nav" id="nav-cta">Clientes</a>
-      </div>
-
-      <button class="nav__burger" id="burger" aria-label="Abrir menú" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- ===== MOBILE MENU ===== -->
-  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-    <div class="mobile-menu__inner">
-      <a href="#servicios" class="mm-link" id="mm-servicios">Servicios</a>
-      <a href="#como-funciona" class="mm-link" id="mm-como">Cómo funciona</a>
-      <a href="#precios" class="mm-link" id="mm-precios">Precios</a>
-      <a href="#conductores" class="mm-link" id="mm-conductores">Para conductores</a>
-      <a href="#" class="mm-link" id="mm-signin">Ingresar</a>
-      <a href="#precios" class="btn-primary mm-cta" id="mm-cta">Publicar mudanza gratis</a>
-    </div>
-  </div>
-
-  <!-- ===== HERO ===== -->
-  <section class="hero" id="hero">
-    <div class="hero__left">
-      <div class="hero__eyebrow"><span></span> Mudanzas más simples en Argentina</div>
-
-      <!-- Main SEO H1 Title -->
-      <h1 class="hero__title" id="hero-title">
-        Tu mudanza,<br>
-        sin vueltas y<br>
-        <span class="hero__title-accent">al mejor precio.</span>
-      </h1>
-
-      <!-- Subtitle -->
-      <p class="hero__sub" id="hero-sub">
-        Compará ofertas al instante de transportistas verificados en tu zona. Cotizaciones transparentes en pesos,
-        seguimiento GPS y ahorro de hasta un 40%.
-      </p>
-
-      <!-- Interactive Quick Service Pills -->
-      <div class="hero__service-tabs">
-        <div class="hero-tab active">
-          <span class="tab-icon">📦</span>
-          <div class="tab-info">
-            <span class="tab-title">Fletes Express</span>
-            <span class="tab-sub">Muebles & bultos sueltos</span>
-          </div>
-        </div>
-        <div class="hero-tab">
-          <span class="tab-icon">🏠</span>
-          <div class="tab-info">
-            <span class="tab-title">Mudanza Completa</span>
-            <span class="tab-sub">Departamentos y Casas</span>
-          </div>
-        </div>
-        <div class="hero-tab">
-          <span class="tab-icon">💼</span>
-          <div class="tab-info">
-            <span class="tab-title">Empresas</span>
-            <span class="tab-sub">Oficinas y depósitos</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action CTAs -->
-      <div class="hero__actions">
-        <a href="#precios" class="btn-primary btn-hero-cta" id="hero-primary-cta">
-          <span>Publicar mudanza gratis</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="5" y1="12" x2="19" y2="12" />
-            <polyline points="12 5 19 12 12 19" />
-          </svg>
-        </a>
-        <a href="#como-funciona" class="btn-secondary btn-hero-secondary" id="hero-secondary-cta">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10" />
-            <polygon points="10 8 16 12 10 16 10 8" />
-          </svg>
-          <span>Ver cómo funciona</span>
-        </a>
-      </div>
-
-      <!-- Metrics Counter Grid -->
-      <div class="hero__metrics">
-        <div class="metric-item">
-          <div class="metric-val">5 min</div>
-          <div class="metric-lbl">Respuesta promedio</div>
-        </div>
-        <div class="metric-sep"></div>
-        <div class="metric-item">
-          <div class="metric-val">4.9 ★</div>
-          <div class="metric-lbl">+12.000 viajes realizados</div>
-        </div>
-        <div class="metric-sep"></div>
-        <div class="metric-item">
-          <div class="metric-val">-40%</div>
-          <div class="metric-lbl">Ahorro promedio</div>
-        </div>
-      </div>
-
-      <!-- Social Proof -->
-      <div class="hero__social-proof">
-        <div class="social-avatars">
-          <div class="avatar-img"
-            style="background-image:url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80')">
-          </div>
-          <div class="avatar-img"
-            style="background-image:url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80')">
-          </div>
-          <div class="avatar-img"
-            style="background-image:url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80')">
-          </div>
-          <div class="avatar-img"
-            style="background-image:url('https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80')">
-          </div>
-        </div>
-        <div class="social-text">
-          <div class="social-stars">★★★★★ <strong>4.9/5 Calificación</strong></div>
-          <div class="social-count">+10.000 clientes satisfechos en CABA, GBA y todo el país</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- HERO RIGHT SHOWCASE -->
-    <div class="hero__right">
-      <div class="hero__carousel-container">
-
-        <!-- Floating Driver Live Card (Top Left) -->
-        <div class="hero__float-card float-card--top">
-          <div class="float-avatar">CR</div>
-          <div class="float-body">
-            <div class="float-name">Carlos R. <span class="float-badge">★ 4.9</span></div>
-            <div class="float-sub">Ford Transit 2021 · <strong>En camino</strong></div>
-          </div>
-          <div class="float-live">ETA 12m</div>
-        </div>
-
-        <!-- Carousel -->
-        <div class="hero__carousel" id="hero-carousel">
-          <div class="carousel__viewport">
-            <div class="carousel__track" id="carousel-track">
-              <div class="carousel__slide active">
-                <img src="assets/images/app-slide-1.jpg" alt="Mudify App Android - Ofertas en tiempo real"
-                  class="hero__app-img" loading="eager">
-                <div class="slide-caption">Ofertas para tu mudanza en minutos</div>
-              </div>
-              <div class="carousel__slide">
-                <img src="assets/images/app-slide-2.jpg" alt="Mudify App Android - Seguimiento GPS en vivo"
-                  class="hero__app-img" loading="lazy">
-                <div class="slide-caption">Seguimiento GPS en tiempo real</div>
-              </div>
-              <div class="carousel__slide">
-                <img src="assets/images/app-slide-3.jpg" alt="Mudify App Android - Reserva y pago seguro"
-                  class="hero__app-img" loading="lazy">
-                <div class="slide-caption">Mudanza confirmada y pago seguro</div>
-              </div>
+    <header class="header" id="header">
+        <div class="header__container">
+            <div class="header__left">
+                <a href="#" class="logo" aria-label="Mudify, inicio">
+                    <img src="assets/images/logo.png" alt="Mudify Logo - Mudanzas y Fletes en Argentina"
+                        class="logo__image">
+                    <span>Mudify</span>
+                </a>
+                <nav class="nav-links">
+                    <a href="#viajar">Para Clientes</a>
+                    <a href="#conducir">Para Conductores</a>
+                    <a href="#como-funciona">Cómo Funciona</a>
+                    <a href="#faq">Ayuda</a>
+                </nav>
             </div>
-          </div>
-
-          <!-- Controls -->
-          <button class="carousel__btn carousel__btn--prev" id="carousel-prev" aria-label="Imagen anterior">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-          <button class="carousel__btn carousel__btn--next" id="carousel-next" aria-label="Siguiente imagen">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
-
-          <!-- Dots -->
-          <div class="carousel__dots" id="carousel-dots">
-            <button class="carousel__dot active" data-index="0" aria-label="Ver slide 1"></button>
-            <button class="carousel__dot" data-index="1" aria-label="Ver slide 2"></button>
-            <button class="carousel__dot" data-index="2" aria-label="Ver slide 3"></button>
-          </div>
-        </div>
-
-        <!-- Floating Guarantee Card (Bottom Right) -->
-        <div class="hero__float-card float-card--bottom">
-          <div class="float-icon">🛡️</div>
-          <div class="float-body">
-            <div class="float-name">Garantía Mudify</div>
-            <div class="float-sub">Pago protegido · Choferes verificados</div>
-          </div>
-        </div>
-
-        <!-- Android App Badge -->
-        <div class="hero__app-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997 0-.551.4482-.9993.9993-.9993.5511 0 .9993.4483.9993.9993 0 .5511-.4482.9997-.9993.9997zm-11.046 0c-.5511 0-.9993-.4486-.9993-.9997 0-.551.4482-.9993.9993-.9993.5511 0 .9993.4483.9993.9993 0 .5511-.4482.9997-.9993.9997zm11.4045-6.02l1.9973-3.4592c.1235-.2137.0504-.4865-.1633-.61-.2137-.1235-.4865-.0504-.61.1633l-2.0223 3.5025c-1.3963-.6373-2.9837-.9993-4.6832-.9993-1.6995 0-3.2869.362-4.6832.9993l-2.0223-3.5025c-.1235-.2137-.3963-.2868-.61-.1633-.2137.1235-.2868.3963-.1633.61l1.9973 3.4592c-3.1517 1.7145-5.321 4.9085-5.5786 8.6366h21.4646c-.2576-3.7281-2.4269-6.9221-5.5786-8.6366z" />
-          </svg>
-          <span>App Oficial Android</span>
-        </div>
-
-      </div>
-
-      <!-- Trust strip -->
-      <div class="hero__trust">
-        <div class="trust-item">
-          <span class="trust-ico">✓</span> Conductores 100% verificados
-        </div>
-        <div class="trust-sep"></div>
-        <div class="trust-item">
-          <span class="trust-ico">✓</span> Ofertas al instante en ARS
-        </div>
-        <div class="trust-sep"></div>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- ===== SERVICIOS (estilo Uber) ===== -->
-  <section class="services-section" id="servicios">
-    <div class="wrap">
-      <h2 class="section-title">Encontrá el servicio<br>que necesitás</h2>
-      <div class="services-grid">
-        <a href="#hero-form" class="svc-card" id="svc-flete">
-          <div class="svc-card__body">
-            <div class="svc-card__icon">📦</div>
-            <h3>Flete de muebles</h3>
-            <p>Desde una silla hasta un departamento entero. El servicio más pedido.</p>
-          </div>
-          <div class="svc-card__footer">
-            Ver opciones <span>→</span>
-          </div>
-        </a>
-        <a href="#hero-form" class="svc-card" id="svc-depto">
-          <div class="svc-card__body">
-            <div class="svc-card__icon">🏠</div>
-            <h3>Departamento</h3>
-            <p>Monoambiente a 3 ambientes. Con o sin embalaje, a tu elección.</p>
-          </div>
-          <div class="svc-card__footer">
-            Ver opciones <span>→</span>
-          </div>
-        </a>
-        <a href="#hero-form" class="svc-card" id="svc-casa">
-          <div class="svc-card__body">
-            <div class="svc-card__icon">🏡</div>
-            <h3>Casa / PH</h3>
-            <p>Garaje, patio, pisos múltiples. Camiones de gran capacidad disponibles.</p>
-          </div>
-          <div class="svc-card__footer">
-            Ver opciones <span>→</span>
-          </div>
-        </a>
-        <a href="#hero-form" class="svc-card" id="svc-oficina">
-          <div class="svc-card__body">
-            <div class="svc-card__icon">🏢</div>
-            <h3>Oficina</h3>
-            <p>Traslado completo sin interrumpir tu operación. Fines de semana o nocturnos.</p>
-          </div>
-          <div class="svc-card__footer">
-            Ver opciones <span>→</span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== COMO FUNCIONA ===== -->
-  <section class="how-section" id="como-funciona">
-    <div class="wrap">
-      <div class="how-header">
-        <span class="section-tag">Cómo funciona</span>
-        <h2 class="section-title">Simple, rápido<br>y sin sorpresas.</h2>
-      </div>
-      <div class="how-steps">
-        <div class="how-step" id="step-1">
-          <div class="how-step__num">1</div>
-          <div class="how-step__body">
-            <h3>Publicás tu mudanza gratis</h3>
-            <p>Origen, destino, tipo y fecha. Listo en 2 minutos. Sin cuenta previa, sin costo.</p>
-          </div>
-        </div>
-        <div class="how-step__arrow" aria-hidden="true">→</div>
-        <div class="how-step" id="step-2">
-          <div class="how-step__num">2</div>
-          <div class="how-step__body">
-            <h3>Recibís ofertas en minutos</h3>
-            <p>Conductores verificados de tu zona te mandan presupuesto con precio y rating real.</p>
-          </div>
-        </div>
-        <div class="how-step__arrow" aria-hidden="true">→</div>
-        <div class="how-step" id="step-3">
-          <div class="how-step__num">3</div>
-          <div class="how-step__body">
-            <h3>Elegís y seguís todo en vivo</h3>
-            <p>Confirmás, pagás seguro y hacés tracking en tiempo real desde el celular.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== DUAL AUDIENCE (estilo Cabify) ===== -->
-  <section class="dual-section" id="dual">
-    <div class="dual-card dual-card--client" id="dual-client">
-      <div class="dual-card__content">
-        <div class="dual-card__tag">Para quienes se mudan</div>
-        <h2>Mudanzas<br>al mejor<br>precio.</h2>
-        <ul class="dual-list">
-          <li><span>✓</span> Publicar es 100% gratis</li>
-          <li><span>✓</span> Múltiples ofertas competitivas</li>
-          <li><span>✓</span> Conductores verificados</li>
-          <li><span>✓</span> Pago protegido en escrow</li>
-          <li><span>✓</span> Tracking en tiempo real</li>
-        </ul>
-        <a href="#hero-form" class="btn-white" id="dual-client-cta">Publicar mudanza gratis</a>
-      </div>
-    </div>
-    <div class="dual-card dual-card--driver" id="dual-driver">
-      <div class="dual-card__content">
-        <div class="dual-card__tag">Para conductores</div>
-        <h2>Ganá dinero<br>con tu<br>camión.</h2>
-        <ul class="dual-list">
-          <li><span>✓</span> Registro gratis, sin cuota mensual</li>
-          <li><span>✓</span> Vos elegís qué trabajos aceptar</li>
-          <li><span>✓</span> Solo 8% por mudanza concretada</li>
-          <li><span>✓</span> Cobro en 24hs</li>
-          <li><span>✓</span> Zona, día y precio: vos decidís</li>
-        </ul>
-        <a href="#conductores" class="btn-dark" id="dual-driver-cta">Registrarme como conductor</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== STATS ===== -->
-  <section class="stats-section" id="stats">
-    <div class="wrap">
-      <div class="stats-grid">
-        <div class="stat-item" id="stat-1">
-          <div class="stat-num counter" data-target="12000" data-suffix="+">0</div>
-          <div class="stat-lbl">Clientes satisfechos</div>
-        </div>
-        <div class="stat-div"></div>
-        <div class="stat-item" id="stat-2">
-          <div class="stat-num counter" data-target="3200" data-suffix="+">0</div>
-          <div class="stat-lbl">Conductores activos</div>
-        </div>
-        <div class="stat-div"></div>
-        <div class="stat-item" id="stat-3">
-          <div class="stat-num">4.9★</div>
-          <div class="stat-lbl">Rating promedio</div>
-        </div>
-        <div class="stat-div"></div>
-        <div class="stat-item" id="stat-4">
-          <div class="stat-num counter" data-target="98" data-suffix="%">0</div>
-          <div class="stat-lbl">Mudanzas exitosas</div>
-        </div>
-        <div class="stat-div"></div>
-        <div class="stat-item" id="stat-5">
-          <div class="stat-num">&lt;30min</div>
-          <div class="stat-lbl">Primera oferta</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== REVIEWS ===== -->
-  <section class="reviews-section" id="reviews">
-    <div class="wrap">
-      <span class="section-tag">Testimonios</span>
-      <h2 class="section-title">Lo que dice<br>nuestra comunidad.</h2>
-      <div class="reviews-grid">
-        <div class="review-card" id="rev-1">
-          <div class="review-stars">★★★★★</div>
-          <p>"Recibí 6 ofertas en 2 horas. Elegí la más barata con buenas reseñas y todo salió perfecto. Mucho más
-            barato que llamar a una mudanza tradicional."</p>
-          <div class="review-footer">
-            <div class="review-av" style="--c:#f97316">LM</div>
-            <div>
-              <strong>Laura M.</strong>
-              <span>Mudanza completa · Belgrano</span>
+            <div class="header__right">
+                <button class="btn btn--text">Iniciar sesión</button>
+                <button class="btn btn--primary">Registrarse</button>
+                <button class="mobile-menu-btn" aria-label="Abrir menú">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
-          </div>
         </div>
-        <div class="review-card" id="rev-2">
-          <div class="review-stars">★★★★★</div>
-          <p>"Trasladamos la oficina de 15 personas en un sábado. Publicamos el viernes y para la noche ya teníamos 4
-            presupuestos. El tracking fue clave."</p>
-          <div class="review-footer">
-            <div class="review-av" style="--c:#8b5cf6">SG</div>
-            <div>
-              <strong>Sofía G.</strong>
-              <span>Mudanza corporativa · Palermo</span>
-            </div>
-          </div>
-        </div>
-        <div class="review-card" id="rev-3">
-          <div class="review-stars">★★★★★</div>
-          <p>"Con Mudify tengo trabajo constante y elijo los viajes que me convienen por zona. La comisión es justa y el
-            pago llega puntual."</p>
-          <div class="review-footer">
-            <div class="review-av" style="--c:#06b6d4">DP</div>
-            <div>
-              <strong>Daniel P.</strong>
-              <span>Conductor · 180 mudanzas</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- ===== PRECIOS ===== -->
-  <section class="pricing-section" id="precios">
-    <div class="wrap">
-      <span class="section-tag">Precios</span>
-      <h2 class="section-title">Transparente<br>desde el primer día.</h2>
-      <p class="pricing-sub">Sin costos ocultos. Sin letra chica.</p>
-      <div class="pricing-grid">
-        <div class="price-card" id="price-client">
-          <div class="price-card__label">Para clientes</div>
-          <div class="price-card__amount">$0</div>
-          <div class="price-card__period">siempre gratis</div>
-          <ul class="price-card__list">
-            <li>Publicar mudanzas ilimitadas</li>
-            <li>Recibir todas las ofertas</li>
-            <li>Chat con conductores</li>
-            <li>Pago protegido (escrow)</li>
-            <li>Tracking en tiempo real</li>
-            <li>Soporte 7 días a la semana</li>
-          </ul>
-          <a href="#hero-form" class="btn-outline-dark price-cta" id="price-client-cta">Empezar gratis</a>
-        </div>
-        <div class="price-card price-card--featured" id="price-driver">
-          <div class="price-card__badge">⚡ Más elegido</div>
-          <div class="price-card__label">Para conductores</div>
-          <div class="price-card__amount">8<small>%</small></div>
-          <div class="price-card__period">por mudanza concretada</div>
-          <ul class="price-card__list">
-            <li>Registro totalmente gratuito</li>
-            <li>Sin suscripción mensual</li>
-            <li>Vos elegís los trabajos</li>
-            <li>Pago en 24hs</li>
-            <li>Badge de verificado</li>
-            <li>Panel de gestión incluido</li>
-          </ul>
-          <a href="#conductores" class="btn-primary price-cta" id="price-driver-cta">Registrarme gratis</a>
-        </div>
-        <div class="price-card" id="price-biz">
-          <div class="price-card__label">Para empresas</div>
-          <div class="price-card__amount" style="font-size:1.8rem;line-height:1.2">A tu<br>medida</div>
-          <div class="price-card__period">para flotas y volumen</div>
-          <ul class="price-card__list">
-            <li>Tarifa negociada</li>
-            <li>Factura A</li>
-            <li>Gestor de cuenta dedicado</li>
-            <li>Reportes mensuales</li>
-            <li>API de integración</li>
-            <li>SLA garantizado</li>
-          </ul>
-          <a href="#cta-email" class="btn-outline-dark price-cta" id="price-biz-cta">Hablar con ventas</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== PARA CONDUCTORES ===== -->
-  <section class="drivers-section" id="conductores">
-    <div class="wrap">
-      <div class="drivers-layout">
-        <div class="drivers-text">
-          <span class="section-tag section-tag--dark">Para conductores</span>
-          <h2 class="drivers-title">Trabajá cuando<br>querés y cuánto<br>querés.</h2>
-          <p class="drivers-sub">Sin jefes. Sin horarios fijos. Sin costos de entrada. Vos manejás tu negocio.</p>
-          <div class="drivers-nums">
-            <div class="d-num">
-              <div class="d-num__val counter" data-target="45000" data-prefix="$">0</div>
-              <div class="d-num__lbl">Ingreso promedio mensual</div>
+    <main>
+        <!-- HERO SECTION: CLEAN PHOTOGRAPHIC -->
+        <section class="hero">
+            <div class="hero__bg" style="background-image: url('assets/images/hero_v2.webp');"></div>
+            <div class="hero__overlay"></div>
+            <div class="hero__content">
+                <h1 class="hero__title">Mudáte sin complicaciones.<br><span class="accent">De punto A <br>a punto
+                        B.</span>
+                </h1>
+                <p class="hero__subtitle">La primera plataforma on-demand de mudanzas y fletes de Argentina. Conductores
+                    verificados, seguimiento en vivo y pago 100% digital.</p>
+                <div class="hero__cta-row">
+                    <a href="#descargar-app" id="hero-cotizar" class="btn btn--hero-primary">Cotizar en la app</a>
+                    <a href="#conducir" id="hero-conductor" class="btn btn--hero-ghost">Quiero conducir</a>
+                </div>
+                <div class="hero__trust-row">
+                    <div class="trust-item">
+                        <strong>+50.000</strong>
+                        <span>mudanzas realizadas</span>
+                    </div>
+                    <div class="trust-divider"></div>
+                    <div class="trust-item">
+                        <strong>★ 4.9</strong>
+                        <span>calificación promedio</span>
+                    </div>
+                    <div class="trust-divider"></div>
+                    <div class="trust-item">
+                        <strong>+3.000</strong>
+                        <span>conductores activos</span>
+                    </div>
+                </div>
             </div>
-            <div class="d-num">
-              <div class="d-num__val counter" data-target="85" data-suffix="%">0</div>
-              <div class="d-num__lbl">Siguen 6+ meses</div>
-            </div>
-          </div>
-          <a href="#cta-email" class="btn-primary" id="drivers-cta-btn">Sumarme como conductor →</a>
-        </div>
-        <div class="drivers-features">
-          <div class="d-feat" id="d-feat-1">
-            <div class="d-feat__ico" aria-hidden="true">🚀</div>
-            <div>
-              <h4>Registro gratis</h4>
-              <p>Sin cuota ni costo de entrada. Pagás 8% solo cuando concretás.</p>
-            </div>
-          </div>
-          <div class="d-feat" id="d-feat-2">
-            <div class="d-feat__ico" aria-hidden="true">🎯</div>
-            <div>
-              <h4>Elegís tus trabajos</h4>
-              <p>Filtrás por zona, tamaño y precio. Aceptás solo lo que te conviene.</p>
-            </div>
-          </div>
-          <div class="d-feat" id="d-feat-3">
-            <div class="d-feat__ico" aria-hidden="true">💳</div>
-            <div>
-              <h4>Cobro garantizado en 24hs</h4>
-              <p>El pago llega a tu cuenta el día siguiente de terminar la mudanza.</p>
-            </div>
-          </div>
-          <div class="d-feat" id="d-feat-4">
-            <div class="d-feat__ico" aria-hidden="true">⭐</div>
-            <div>
-              <h4>Reputación que crece</h4>
-              <p>Mejores reseñas = más trabajo = más ingresos. Simple y directo.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        </section>
 
-  <!-- ===== FAQ ===== -->
-  <section class="faq-section" id="faq">
-    <div class="wrap wrap--narrow">
-      <span class="section-tag">Preguntas frecuentes</span>
-      <h2 class="section-title">Todo lo que<br>necesitás saber.</h2>
-      <div class="faq-list" id="faq-list">
-        <div class="faq-item" id="faq-1">
-          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-1">
-            <span>¿Cómo funcionan los pagos?</span>
-            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-          <div class="faq-answer" id="faq-ans-1">
-            <p>El pago va en escrow hasta que confirmás que la mudanza se completó bien. Tu dinero está protegido en
-              todo momento. Aceptamos tarjeta, transferencia y MercadoPago.</p>
-          </div>
-        </div>
-        <div class="faq-item" id="faq-2">
-          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-2">
-            <span>¿Los conductores están verificados?</span>
-            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-          <div class="faq-answer" id="faq-ans-2">
-            <p>Sí. Validamos DNI, antecedentes penales y revisamos el vehículo antes de aprobarlo. El rating público de
-              la comunidad complementa esa verificación.</p>
-          </div>
-        </div>
-        <div class="faq-item" id="faq-3">
-          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-3">
-            <span>¿Qué pasa si se rompe algo?</span>
-            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-          <div class="faq-answer" id="faq-ans-3">
-            <p>Todas las mudanzas incluyen seguro básico de traslado. Reportás el daño en 24hs y nuestro equipo
-              interviene para resolver. También hay cobertura extendida opcional.</p>
-          </div>
-        </div>
-        <div class="faq-item" id="faq-4">
-          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-4">
-            <span>¿Cuándo llega la primera oferta?</span>
-            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-          <div class="faq-answer" id="faq-ans-4">
-            <p>En AMBA, Rosario y Córdoba la primera oferta llega en menos de 30 minutos. La mayoría de los clientes
-              recibe entre 3 y 8 ofertas en las primeras 2 horas.</p>
-          </div>
-        </div>
-        <div class="faq-item" id="faq-5">
-          <button class="faq-btn" aria-expanded="false" aria-controls="faq-ans-5">
-            <span>¿Puedo cancelar gratis?</span>
-            <svg class="faq-ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2.5">
-              <polyline points="6 9 12 15 18 9" />
-            </svg>
-          </button>
-          <div class="faq-answer" id="faq-ans-5">
-            <p>Sí, cancelás sin cargo hasta 24hs antes de la mudanza. Con menos de 24hs puede aplicar un cargo del 10%
-              para compensar al conductor.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- STATS BAND -->
+        <section class="stats-band" id="estadisticas">
+            <div class="stats-band__inner">
+                <div class="stat-item reveal">
+                    <span class="stat-item__number counter" data-target="50000">0</span><span
+                        class="stat-item__suffix">+</span>
+                    <p>Mudanzas realizadas</p>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item reveal">
+                    <span class="stat-item__number"><span class="counter" data-target="4">0</span>.<span class="counter"
+                            data-target="9">0</span></span>
+                    <p>Calificación promedio</p>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item reveal">
+                    <span class="stat-item__number counter" data-target="3000">0</span><span
+                        class="stat-item__suffix">+</span>
+                    <p>Conductores activos</p>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item reveal">
+                    <span class="stat-item__number counter" data-target="24">0</span>
+                    <p>Provincias cubiertas</p>
+                </div>
+            </div>
+        </section>
 
-  <!-- ===== CTA FINAL ===== -->
-  <section class="cta-section" id="cta-email">
-    <div class="wrap cta-inner">
-      <div class="cta-text">
-        <h2 class="cta-title">¿Listo para tu<br>próxima mudanza?</h2>
-        <p class="cta-sub">Publicás gratis en 2 minutos. Recibís ofertas. Elegís la mejor. Así de fácil.</p>
-        <a href="#hero-form" class="btn-primary btn-lg" id="cta-main-btn">Publicar mudanza gratis →</a>
-      </div>
-      <div class="cta-email-block">
-        <p class="cta-email-title">¿Preferís que te contactemos?</p>
-        <form class="cta-email-form" id="ctaEmailForm" novalidate>
-          <div class="email-row">
-            <input type="email" id="cta-email-input" placeholder="tu@email.com" required aria-label="Tu email">
-            <button type="submit" class="btn-primary" id="cta-email-btn">Enviar</button>
-          </div>
-          <p class="email-note">Sin spam. Te contactamos una sola vez.</p>
-        </form>
-      </div>
-    </div>
-  </section>
+        <!-- FEATURES -->
+        <section class="features" id="viajar">
+            <div class="section-container">
+                <div class="section-header reveal">
+                    <h2>Una nueva forma de mudarse</h2>
+                    <p>Diseñada desde cero para que el proceso más estresante del año se convierta en algo simple.</p>
+                </div>
+                <div class="features__grid">
+                    <div class="feature-card reveal">
+                        <div class="feature-card__icon-wrap" style="--icon-color: #0052cc;">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                                stroke-width="2.5">
+                                <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                        </div>
+                        <h3>Precio fijo antes de salir</h3>
+                        <p>Cotizás antes de confirmar. Sin sorpresas ni negociaciones. El precio que ves es el que
+                            pagás.</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-card__icon-wrap" style="--icon-color: #6d28d9;">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                                stroke-width="2.5">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>
+                        </div>
+                        <h3>Pago 100% digital</h3>
+                        <p>Tu dinero queda retenido hasta que confirmes que todo llegó bien. Tu plata, bajo tu control.
+                        </p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-card__icon-wrap" style="--icon-color: #059669;">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                                stroke-width="2.5">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                        </div>
+                        <h3>Conductores verificados</h3>
+                        <p>Cada transportista pasa por verificación de identidad, antecedentes y revisión del vehículo.
+                        </p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-card__icon-wrap" style="--icon-color: #dc2626;">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                                stroke-width="2.5">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg>
+                        </div>
+                        <h3>Seguimiento en vivo</h3>
+                        <p>Seguí la ubicación exacta de tu flete en tiempo real desde tu celular. Como un GPS para tus
+                            cosas.</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-card__icon-wrap" style="--icon-color: #ea580c;">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                                stroke-width="2.5">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </svg>
+                        </div>
+                        <h3>Chat integrado</h3>
+                        <p>Coordiná detalles con el conductor sin dar tu número personal, todo desde la app.</p>
+                    </div>
+                    <div class="feature-card reveal">
+                        <div class="feature-card__icon-wrap" style="--icon-color: #0891b2;">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff"
+                                stroke-width="2.5">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.38 2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6.29 6.29l.94-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                        </div>
+                        <h3>Soporte 24/7</h3>
+                        <p>Nuestro equipo disponible todos los días a toda hora. Siempre hay alguien del otro lado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- ===== FOOTER ===== -->
-  <footer class="footer">
-    <div class="footer__top">
-      <div class="footer__brand">
-        <a href="#" class="logo" id="footer-logo">
-          <div class="logo__mark">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M10 2L3 14h14L10 2z" fill="white" />
-              <circle cx="10" cy="16" r="2" fill="white" />
-            </svg>
-          </div>
-          <span class="logo__text">Mudify</span>
-        </a>
-        <p>Conectamos personas que necesitan mudarse con conductores independientes verificados en Argentina.</p>
-        <div class="footer-socials">
-          <a href="#" aria-label="X" id="footer-x">𝕏</a>
-          <a href="#" aria-label="Instagram" id="footer-ig">📷</a>
-          <a href="#" aria-label="WhatsApp" id="footer-wa">💬</a>
-        </div>
-      </div>
-      <div class="footer__cols">
-        <div class="footer__col">
-          <h6>Plataforma</h6>
-          <a href="#como-funciona">Cómo funciona</a>
-          <a href="#servicios">Servicios</a>
-          <a href="#conductores">Ser conductor</a>
-          <a href="#precios">Precios</a>
-          <a href="#faq">FAQ</a>
-        </div>
-        <div class="footer__col">
-          <h6>Empresa</h6>
-          <a href="#">Sobre nosotros</a>
-          <a href="#">Blog</a>
-          <a href="#">Prensa</a>
-          <a href="#">Carreras</a>
-        </div>
-        <div class="footer__col">
-          <h6>Soporte</h6>
-          <a href="#">Centro de ayuda</a>
-          <a href="#">Contacto</a>
-          <a href="terminos.html">Términos</a>
-          <a href="privacidad.html">Privacidad</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer__bottom">
-      <p>© 2026 Mudify. Hecho 100% en Argentina. Por Argentinos.</p>
-      <div class="footer__bottom-links">
-        <a href="privacidad.html">Privacidad</a>
-        <a href="terminos.html">Términos</a>
-        <a href="cookies.html">Cookies</a>
-      </div>
-    </div>
-  </footer>
+        <!-- HOW IT WORKS -->
+        <section class="how-it-works" id="como-funciona">
+            <div class="section-container">
+                <div class="section-header section-header--light reveal">
+                    <h2>Tu mudanza en 3 pasos</h2>
+                    <p>Sin llamadas, sin visitas previas, sin papeles. Solo tu teléfono.</p>
+                </div>
+                <div class="steps-timeline">
+                    <div class="step-card reveal">
+                        <div class="step-card__num">01</div>
+                        <div class="step-card__body">
+                            <h3>Publicá tu viaje</h3>
+                            <p>Ingresá el origen, destino, fecha y qué tamaño de vehículo necesitás. Tardás menos de 2
+                                minutos.</p>
+                        </div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-card reveal">
+                        <div class="step-card__num">02</div>
+                        <div class="step-card__body">
+                            <h3>Elegí al conductor</h3>
+                            <p>Recibís múltiples ofertas con precio y reputación del conductor. Vos elegís con quién ir.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="step-card reveal">
+                        <div class="step-card__num">03</div>
+                        <div class="step-card__body">
+                            <h3>Seguí el viaje en vivo</h3>
+                            <p>Seguís la ruta en tiempo real y pagás recién cuando todo llega a destino en perfectas
+                                condiciones.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <button class="btt" id="btt" aria-label="Volver arriba">↑</button>
-  <div class="coming-soon-modal" id="comingSoonModal" aria-hidden="true">
-    <div class="coming-soon-modal__content">
-      <button class="coming-soon-modal__close" id="closeModalBtn" aria-label="Cerrar modal">&times;</button>
-      <div class="coming-soon-modal__icon">🚧</div>
-      <h3>¡Próximamente!</h3>
-      <p>Nuestra aplicación aún no está lista, pero estamos trabajando duro para lanzarla muy pronto. Te mantendremos
-        informado a través de este medio. ¡Mantente atento!</p>
-      <button class="btn-primary coming-soon-modal__btn" id="closeModalActionBtn">Entendido</button>
-    </div>
-  </div>
+        <!-- FLEET -->
+        <section class="fleet">
+            <div class="section-container">
+                <div class="section-header reveal">
+                    <h2>El vehículo exacto para cada mudanza</h2>
+                    <p>6 categorías de vehículos verificados. Desde una caja suelta hasta una mudanza interprovincial
+                        completa. Vos elegís cuál necesitás.</p>
+                </div>
 
-  <script src="js/script.js"></script>
+                <div class="fleet-showcase">
+
+                    <!-- 1. Utilitario chico -->
+                    <div class="veh-card reveal">
+                        <div class="veh-card__media veh-card__media--photo">
+                            <img src="assets/images/fleet_utilitario.webp" alt="Utilitario chico tipo Renault Kangoo">
+                            <span class="veh-tag">Carga ligera</span>
+                        </div>
+                        <div class="veh-card__body">
+                            <div class="veh-card__top">
+                                <div>
+                                    <p class="veh-num">01</p>
+                                    <h3>Utilitario Chico</h3>
+                                    <p class="veh-models">Fiat Fiorino · Renault Kangoo · Peugeot Partner</p>
+                                </div>
+                                <div class="veh-capacity">
+                                    <span>600–800 kg</span>
+                                    <small>carga útil</small>
+                                </div>
+                            </div>
+                            <p class="veh-desc">La opción perfecta para cajas sueltas, valijas, electrodomésticos
+                                individuales como un lavarropas o envíos de e-commerce. Chico, ágil y muy económico para
+                                trayectos cortos en ciudad.</p>
+                            <div class="veh-tags-row">
+                                <span class="veh-pill">📦 Cajas sueltas</span>
+                                <span class="veh-pill">🛒 E-commerce</span>
+                                <span class="veh-pill">🏠 Encomiendas</span>
+                            </div>
+                            <div class="veh-card__footer">
+                                <a href="#descargar-app" class="btn btn--primary btn--sm">Pedir en la App 📲</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Pick-up -->
+                    <div class="veh-card reveal">
+                        <div class="veh-card__media veh-card__media--photo">
+                            <img src="assets/images/fleet_pickup.webp" alt="Pick-up Toyota Hilux con lona">
+                            <span class="veh-tag">Carga abierta</span>
+                        </div>
+                        <div class="veh-card__body">
+                            <div class="veh-card__top">
+                                <div>
+                                    <p class="veh-num">02</p>
+                                    <h3>Pick-up con Lona o Cúpula</h3>
+                                    <p class="veh-models">Toyota Hilux · Ford Ranger · VW Amarok</p>
+                                </div>
+                                <div class="veh-capacity">
+                                    <span>~1 Tn</span>
+                                    <small>carga útil</small>
+                                </div>
+                            </div>
+                            <p class="veh-desc">Ideal para traslados rápidos que no requieren un furgón cerrado:
+                                colchones, muebles de jardín, materiales de construcción livianos o equipos voluminosos.
+                                Resistente y versátil.</p>
+                            <div class="veh-tags-row">
+                                <span class="veh-pill">🛏️ Colchones</span>
+                                <span class="veh-pill">🌿 Muebles jardín</span>
+                                <span class="veh-pill">🧱 Materiales</span>
+                            </div>
+                            <div class="veh-card__footer">
+                                <a href="#descargar-app" class="btn btn--primary btn--sm">Pedir en la App 📲</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Furgón Mediano -->
+                    <div class="veh-card veh-card--highlight reveal">
+                        <div class="veh-card__media veh-card__media--photo">
+                            <img src="assets/images/fleet_furgon_mediano.webp" alt="Furgón Mediano Mercedes Sprinter / Master">
+                            <span class="veh-tag veh-tag--white" style="background: #0052cc; color: white;">⭐ Más elegido</span>
+                        </div>
+                        <div class="veh-card__body">
+                            <div class="veh-card__top">
+                                <div>
+                                    <p class="veh-num veh-num--blue">03</p>
+                                    <h3>Furgón Mediano</h3>
+                                    <p class="veh-models">Mercedes Sprinter Corto · Renault Master · Peugeot Expert</p>
+                                </div>
+                                <div class="veh-capacity veh-capacity--blue">
+                                    <span>1.2–1.5 Tn</span>
+                                    <small>8 a 11 m³</small>
+                                </div>
+                            </div>
+                            <p class="veh-desc">Nuestra unidad estrella para monoambientes y departamentos chicos. Caben
+                                sillones cortos, heladeras verticales, mesas medianas y gran cantidad de cajas.
+                                Conductores con experiencia en mudanzas.</p>
+                            <div class="veh-tags-row">
+                                <span class="veh-pill">🛋️ Monoambiente</span>
+                                <span class="veh-pill">❄️ Heladera</span>
+                                <span class="veh-pill">📦 +50 cajas</span>
+                            </div>
+                            <div class="veh-card__footer">
+                                <a href="#descargar-app" class="btn btn--primary btn--sm">Pedir en la App 📲</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Furgón Grande -->
+                    <div class="veh-card reveal">
+                        <div class="veh-card__media veh-card__media--photo">
+                            <img src="assets/images/fleet_furgon_grande.webp" alt="Furgón Grande Maxicarga Iveco Daily / Transit">
+                            <span class="veh-tag">Alta capacidad</span>
+                        </div>
+                        <div class="veh-card__body">
+                            <div class="veh-card__top">
+                                <div>
+                                    <p class="veh-num">04</p>
+                                    <h3>Furgón Grande / Maxicarga</h3>
+                                    <p class="veh-models">Iveco Daily Furgón · Sprinter Larga · Ford Transit Grande</p>
+                                </div>
+                                <div class="veh-capacity">
+                                    <span>Hasta 2 Tn</span>
+                                    <small>13 a 15 m³</small>
+                                </div>
+                            </div>
+                            <p class="veh-desc">Para mudanzas completas de departamentos de 1 o 2 ambientes. Permite
+                                llevar muebles altos parados y enorme cantidad de cajas. La mejor relación
+                                capacidad/espacio para mudanzas medianas.</p>
+                            <div class="veh-tags-row">
+                                <span class="veh-pill">🏠 1–2 ambientes</span>
+                                <span class="veh-pill">🪑 Muebles altos</span>
+                                <span class="veh-pill">📦 Gran volumen</span>
+                            </div>
+                            <div class="veh-card__footer">
+                                <a href="#descargar-app" class="btn btn--primary btn--sm">Pedir en la App 📲</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Camión liviano -->
+                    <div class="veh-card reveal">
+                        <div class="veh-card__media veh-card__media--photo">
+                            <img src="assets/images/fleet_camion_liviano.webp" alt="Camión Liviano Caja Mudancera Mercedes Accelo">
+                            <span class="veh-tag">Casa completa</span>
+                        </div>
+                        <div class="veh-card__body">
+                            <div class="veh-card__top">
+                                <div>
+                                    <p class="veh-num">05</p>
+                                    <h3>Camión Liviano (Caja Mudancera)</h3>
+                                    <p class="veh-models">Mercedes Accelo · Iveco Daily Chasis · Hyundai HD78</p>
+                                </div>
+                                <div class="veh-capacity">
+                                    <span>3.5–5 Tn</span>
+                                    <small>carga útil</small>
+                                </div>
+                            </div>
+                            <p class="veh-desc">La caja mudancera aprovecha al máximo la altura y el ancho permitido,
+                                ideal para casas familiares o departamentos de 3 ambientes. Puede solicitar 1 o 2
+                                ayudantes adicionales desde la app.</p>
+                            <div class="veh-tags-row">
+                                <span class="veh-pill">🏡 Casa familiar</span>
+                                <span class="veh-pill">🛋️ 3 ambientes</span>
+                                <span class="veh-pill">👷 Ayudantes extra</span>
+                            </div>
+                            <div class="veh-card__footer">
+                                <a href="#descargar-app" class="btn btn--primary btn--sm">Pedir en la App 📲</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. Camión pesado -->
+                    <div class="veh-card reveal">
+                        <div class="veh-card__media veh-card__media--photo">
+                            <img src="assets/images/fleet_camion_pesado.webp" alt="Camión Mediano Pesado Larga Distancia Mercedes Atego">
+                            <span class="veh-tag">Larga distancia</span>
+                        </div>
+                        <div class="veh-card__body">
+                            <div class="veh-card__top">
+                                <div>
+                                    <p class="veh-num">06</p>
+                                    <h3>Camión Mediano / Pesado</h3>
+                                    <p class="veh-models">Mercedes Atego · VW Constellation · Scania (rígidos)</p>
+                                </div>
+                                <div class="veh-capacity">
+                                    <span>+7 Tn</span>
+                                    <small>larga distancia</small>
+                                </div>
+                            </div>
+                            <p class="veh-desc">Para grandes residencias, traslados corporativos de oficinas enteras o
+                                fletes interprovinciales de larga distancia. La solución definitiva cuando el volumen es
+                                máximo o el destino está lejos.</p>
+                            <div class="veh-tags-row">
+                                <span class="veh-pill">🏢 Corporativo</span>
+                                <span class="veh-pill">🗺️ Interprovincial</span>
+                                <span class="veh-pill">📦 Máx. volumen</span>
+                            </div>
+                            <div class="veh-card__footer">
+                                <a href="#descargar-app" class="btn btn--primary btn--sm">Pedir en la App 📲</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div><!-- /fleet-showcase -->
+            </div>
+        </section>
+
+
+        <!-- DRIVER SPLIT -->
+        <section class="split-section" id="conducir">
+            <div class="split-section__image">
+                <img src="assets/images/driver.webp" alt="Conductor profesional en su furgoneta">
+            </div>
+            <div class="split-section__content reveal">
+                <h2 class="section-title">Generá ingresos con tu vehículo</h2>
+                <p class="section-desc">Registrate gratis, recibí solicitudes de mudanzas en tu zona y manejá tu tiempo
+                    como quieras. Sin jefes, sin horarios fijos.</p>
+                <ul class="benefit-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Comisión 0% durante el primer mes
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Pagos acreditados en 24hs hábiles
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Elegís qué viajes aceptar y cuándo trabajar
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0052cc" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        Soporte dedicado 24/7 para conductores
+                    </li>
+                </ul>
+                <a href="#descargar-app" class="btn btn--primary">Descargar App Conductor (APK)</a>
+            </div>
+        </section>
+
+        <!-- B2B -->
+        <section class="b2b-section">
+            <div class="b2b-section__container">
+                <div class="b2b-section__content reveal">
+                    <h2>Mudify Business</h2>
+                    <p>¿E-commerce, constructora o empresa de retail? Gestioná todos tus envíos desde un único panel.
+                        Tarifas corporativas, facturación centralizada y soporte dedicado.</p>
+                    <ul class="benefit-list benefit-list--white">
+                        <li>Integración API con tu plataforma de ventas</li>
+                        <li>Panel de control multi-ruta en tiempo real</li>
+                        <li>Facturación A mensual unificada</li>
+                        <li>Account manager exclusivo</li>
+                    </ul>
+                    <button class="btn btn--secondary btn--large">Hablar con un asesor</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="testimonials">
+            <div class="section-container">
+                <div class="section-header reveal">
+                    <h2>Lo que dicen nuestros usuarios</h2>
+                    <p>Miles de personas y empresas confían en Mudify para sus traslados día a día.</p>
+                </div>
+                <div class="testimonials__grid">
+                    <div class="testimonial-card reveal">
+                        <div class="testimonial-card__stars">★★★★★</div>
+                        <p class="testimonial-card__quote">"Excelente servicio. El chofer llegó puntual con la Fiorino
+                            y me ayudó a cargar todo el monoambiente. Súper recomendable!"</p>
+                        <div class="testimonial-card__author">
+                            <div class="avatar-circle" style="background: #e0f2fe;">👩</div>
+                            <div>
+                                <strong>Valeria M.</strong>
+                                <span>Palermo, CABA</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card reveal">
+                        <div class="testimonial-card__stars">★★★★★</div>
+                        <p class="testimonial-card__quote">"Mudify me cambió la vida. Sin buscar clientes, la app me
+                            manda los pedidos y cobro directo. No hay vuelta atrás."</p>
+                        <div class="testimonial-card__author">
+                            <div class="avatar-circle" style="background: #dcfce7;">🧔</div>
+                            <div>
+                                <strong>Carlos D.</strong>
+                                <span>Transportista — GBA Norte</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card reveal">
+                        <div class="testimonial-card__stars">★★★★★</div>
+                        <p class="testimonial-card__quote">"Que pueda ver en el mapa a dónde están mis cosas en tiempo
+                            real fue lo que más me tranquilizó. El pago digital es un golazo."</p>
+                        <div class="testimonial-card__author">
+                            <div class="avatar-circle" style="background: #fef3c7;">👨‍💻</div>
+                            <div>
+                                <strong>Martín P.</strong>
+                                <span>San Isidro, GBA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- APP DOWNLOAD -->
+        <section class="app-download" id="descargar-app">
+            <div class="app-download__glow-bg"></div>
+            <div class="app-download__container">
+                <div class="app-download__content reveal">
+
+                    <h2 class="app-download__title">Llevá Mudify en tu bolsillo</h2>
+                    <p class="app-download__desc">
+                        La experiencia completa de mudanza: cotizá en segundos, elegí a tu conductor, seguí el viaje en
+                        vivo por GPS y pagá sin efectivo.
+                    </p>
+
+                    <!-- Feature list inside section -->
+                    <div class="app-features-grid">
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon">📍</div>
+                            <div>
+                                <h4>GPS en tiempo real</h4>
+                                <p>Seguimiento en mapa segundo a segundo.</p>
+                            </div>
+                        </div>
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon">⚡</div>
+                            <div>
+                                <h4>Cotización al instante</h4>
+                                <p>Precios claros antes de confirmar.</p>
+                            </div>
+                        </div>
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon">👨‍✈️</div>
+                            <div>
+                                <h4>Choferes verificados</h4>
+                                <p>Identidad y vehículos 100% auditados.</p>
+                            </div>
+                        </div>
+                        <div class="app-feature-item">
+                            <div class="app-feature-icon">💬</div>
+                            <div>
+                                <h4>Chat seguro</h4>
+                                <p>Comunicación sin revelar tu teléfono.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Store Buttons & Direct APK -->
+                    <div class="download-box">
+                        <h4 class="download-box__title">Descargá la app para usuarios o conductores:</h4>
+                        <div class="app-stores-v2">
+                            <a href="#descargar-app" class="store-badge-v2 store-badge-v2--apple">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.31c.64-.78 1.08-1.85.96-2.93-.93.04-2.07.62-2.74 1.4-.59.68-1.11 1.77-.97 2.83 1.05.08 2.11-.52 2.75-1.3" />
+                                </svg>
+                                <div>
+                                    <small>Consíguelo en el</small>
+                                    <strong>App Store</strong>
+                                </div>
+                            </a>
+
+                            <a href="#descargar-app" class="store-badge-v2 store-badge-v2--play">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M3.6 2.25c-.2 0-.4.07-.55.23-.23.23-.23.61 0 .84l9.16 9.16L3.05 21.64c-.23.23-.23.61 0 .84.15.16.35.23.55.23.2 0 .4-.07.55-.23l9.58-9.58 3.51 3.51-12.09 6.8c-.57.32-1.25-.09-1.25-.74V2.99c0-.65.68-1.06 1.25-.74l12.09 6.8-3.51 3.51L4.15 2.48c-.15-.16-.35-.23-.55-.23z" />
+                                </svg>
+                                <div>
+                                    <small>Disponible en</small>
+                                    <strong>Google Play</strong>
+                                </div>
+                            </a>
+
+                            <a href="#descargar-app" class="store-badge-v2 store-badge-v2--apk">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                                <div>
+                                    <small>Descarga Directa</small>
+                                    <strong>Archivo APK (v2.4)</strong>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- QR Code Scanner snippet -->
+                        <div class="qr-scanner-card">
+                            <div class="qr-code-box">
+                                <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#0052cc"
+                                    stroke-width="1.8">
+                                    <path
+                                        d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2" />
+                                    <rect x="7" y="7" width="3" height="3" fill="#0052cc" />
+                                    <rect x="14" y="7" width="3" height="3" fill="#0052cc" />
+                                    <rect x="7" y="14" width="3" height="3" fill="#0052cc" />
+                                    <rect x="14" y="14" width="3" height="3" fill="#0052cc" />
+                                </svg>
+                            </div>
+                            <div class="qr-text">
+                                <strong>Escaneá con tu celular</strong>
+                                <p>Apuntá la cámara de tu teléfono para instalar la app o el APK al instante.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-download__mockup reveal">
+                    <div class="mockup-wrapper">
+                        <!-- Floating status card 1 -->
+                        <div class="mockup-widget widget-top">
+                            <span class="widget-status">🟢 En Camino</span>
+                            <p>Renault Kangoo · AB 123 CD</p>
+                            <small>Llegada estimada: 4 min</small>
+                        </div>
+
+                        <!-- Floating rating badge -->
+                        <div class="mockup-widget widget-bottom">
+                            <span class="star-icon">⭐ 4.9 / 5.0</span>
+                            <small>+12.000 opiniones reales</small>
+                        </div>
+
+                        <!-- Main Image -->
+                        <div class="phone-frame">
+                            <img src="assets/images/app_mockup.webp" alt="App móvil de Mudify" class="app-image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq-section" id="faq">
+            <div class="section-container section-container--narrow">
+                <div class="section-header reveal">
+                    <h2>¿Tenés alguna duda?</h2>
+                </div>
+                <div class="faq-accordion">
+                    <div class="faq-item reveal">
+                        <button class="faq-question">¿Cómo se calcula el precio del viaje? <span
+                                class="icon">+</span></button>
+                        <div class="faq-answer">
+                            <p>El precio se calcula directamente en la app según la distancia, el tipo de vehículo y los
+                                ayudantes solicitados. Ves el monto transparente antes de confirmar.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item reveal">
+                        <button class="faq-question">¿Cómo me registro como conductor? <span
+                                class="icon">+</span></button>
+                        <div class="faq-answer">
+                            <p>Descargá la app de conductores o hacé clic en "Quiero conducir", completá el formulario
+                                con tus datos y documentación del vehículo. Validamos todo en 24hs.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item reveal">
+                        <button class="faq-question">¿Cuándo cobra el conductor? <span class="icon">+</span></button>
+                        <div class="faq-answer">
+                            <p>El pago queda retenido digitalmente hasta que confirmás que tu mudanza llegó bien. Recién
+                                ahí se libera al conductor. Ambos están siempre protegidos.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item reveal">
+                        <button class="faq-question">¿En qué ciudades opera Mudify? <span class="icon">+</span></button>
+                        <div class="faq-answer">
+                            <p>Operamos en Buenos Aires (CABA y GBA), Rosario, Córdoba, La Plata y Mendoza, con
+                                expansión a nuevas ciudades cada mes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FINAL CTA -->
+        <section class="final-cta" style="background-image: url('assets/images/cta_bg.webp');">
+            <div class="final-cta__overlay"></div>
+            <div class="final-cta__container reveal">
+                <h2>¿Listo para tu próxima mudanza?</h2>
+                <p>Descargá la app y cotizá en minutos. Miles de conductores verificados esperando tu pedido.</p>
+                <div class="final-cta__actions">
+                    <a href="#descargar-app" class="btn btn--hero-primary">Descargar la App / APK 📲</a>
+                    <a href="#conducir" class="btn btn--hero-ghost">Quiero conducir</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__brand">
+                <a href="#" class="logo logo--white" aria-label="Mudify, inicio">
+                    <img src="assets/images/logo.png" alt="" class="logo__image">
+                    <span>Mudify</span>
+                </a>
+                <p>Tu mudanza, más simple.</p>
+            </div>
+            <div class="footer__links">
+                <div class="link-group">
+                    <h4>Plataforma</h4>
+                    <a href="#">Clientes</a>
+                    <a href="#">Conductores</a>
+                    <a href="#">Ciudades</a>
+                </div>
+                <div class="link-group">
+                    <h4>Acerca de</h4>
+                    <a href="#">Nuestra historia</a>
+                    <a href="#">Seguridad</a>
+                    <a href="#">Prensa</a>
+                </div>
+                <div class="link-group">
+                    <h4>Legal</h4>
+                    <a href="terminos.html">Términos y condiciones</a>
+                    <a href="privacidad.html">Privacidad</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer__bottom">
+            <p>© 2026 Mudify. Hecho 100% en Argentina. Por Argentinos.</p>
+            <div class="socials">
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
 </body>
 
 </html>

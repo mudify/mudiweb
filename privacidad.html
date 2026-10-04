@@ -1,276 +1,318 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Política de Privacidad | Mudify</title>
-  <meta name="description"
-    content="Publicá tu mudanza, recibí ofertas de conductores verificados y elegí el mejor precio. Gratis para clientes, sin sorpresas.">
+  <title>Mudify | Política de Privacidad y Protección de Datos</title>
+  <meta name="description" content="Política de privacidad, tratamiento de datos personales, geolocalización y seguridad de Mudify conforme a la Ley 25.326 de Argentina.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
-
 <body>
+  <header class="header" id="header">
+    <div class="header__container">
+      <div class="header__left">
+        <a href="index.html" class="logo" aria-label="Mudify, inicio">
+          <img src="assets/images/logo.png" alt="" class="logo__image">
+          <span>Mudify</span>
+        </a>
+        <nav class="nav-links" aria-label="Navegación principal">
+          <a href="index.html#viajar">Para Clientes</a>
+          <a href="index.html#conducir">Para Conductores</a>
+          <a href="index.html#como-funciona">Cómo Funciona</a>
+          <a href="index.html#faq">Ayuda</a>
+        </nav>
+      </div>
+      <div class="header__right">
+        <a href="index.html#descargar-app" class="btn btn--primary header__download">Descargar la app</a>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
 
-  <!-- ===== NAVBAR ===== -->
-  <nav class="nav" id="nav">
-    <div class="nav__inner">
-      <a href="index.html" class="logo" id="logo-home">
-        <div class="logo__mark">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M10 2L3 14h14L10 2z" fill="white" />
-            <circle cx="10" cy="16" r="2" fill="white" />
-          </svg>
+  <main class="terms-page">
+    <div class="terms-page__intro">
+      <p class="terms-page__kicker">Información legal y privacidad</p>
+      <h1>Política de Privacidad y Protección de Datos Personales</h1>
+      <p>Última actualización: 15 de septiembre de 2026</p>
+    </div>
+
+    <div class="terms-layout">
+      <aside class="terms-index" aria-label="Índice de privacidad">
+        <p>En este documento</p>
+        <a href="#intro">Marco General y Principios</a>
+        <a href="#section-1">1. Responsable del Tratamiento</a>
+        <a href="#section-2">2. Categorización de Datos</a>
+        <a href="#section-3">3. Geolocalización y Telemetría</a>
+        <a href="#section-4">4. Finalidades del Tratamiento</a>
+        <a href="#section-5">5. Chat Seguro y Enmascaramiento</a>
+        <a href="#section-6">6. Divulgación y Terceros</a>
+        <a href="#section-7">7. Infraestructura y Servidores</a>
+        <a href="#section-8">8. Medidas de Seguridad (AES/TLS)</a>
+        <a href="#section-9">9. Retención y Destrucción</a>
+        <a href="#section-10">10. Derechos ARCO (Ley 25.326)</a>
+        <a href="#section-11">11. Cookies y Tecnologías Web</a>
+        <a href="#section-12">12. Menores de Edad</a>
+        <a href="#section-13">13. Modificaciones y DPO</a>
+      </aside>
+
+      <article class="terms-content">
+        <p id="intro">La presente Política de Privacidad y Protección de Datos Personales (en adelante, la “Política”) establece los términos, fundamentos jurídicos, aspectos técnicos y procedimientos bajo los cuales <strong>Mudify Technologies</strong> (en adelante, “Mudify”, la “Plataforma” o “nosotros”) recopila, procesa, almacena, transfiere y protege los datos personales de los usuarios (Clientes y Conductores) en el marco del uso de nuestro sitio web, aplicaciones móviles y servicios conexos.</p>
+
+        <p>Esta Política se fundamenta rigurosamente en la <strong>Ley de Protección de los Datos Personales N° 25.326</strong> de la República Argentina, su Decreto Reglamentario N° 1558/2001, las Resoluciones emanadas de la <strong>Agencia de Acceso a la Información Pública (AAIP)</strong> (órgano de control nacional), y adopta voluntariamente estándares elevados de privacidad por diseño y por defecto basados en normativas internacionales de protección de datos.</p>
+
+        <div class="terms-note">
+          <strong>Principios Rectores del Tratamiento:</strong> En cumplimiento del Art. 3, 4 y 6 de la Ley 25.326, los datos personales recopilados por Mudify son exactos, adecuados, pertinentes y no excesivos en relación con el ámbito y finalidad para los que se obtienen. En ningún momento se recolectan datos sensibles (Art. 2) como convicciones religiosas, políticas, afiliaciones ni datos relativos a la salud, salvo requerimientos expresos de seguridad pública.
         </div>
-        <span class="logo__text">Mudify</span>
-      </a>
 
-      <div class="nav__links" id="navLinks">
-        <a href="index.html#servicios" id="nav-servicios">Servicios</a>
-        <a href="index.html#como-funciona" id="nav-como">Cómo funciona</a>
-        <a href="index.html#precios" id="nav-precios">Precios</a>
-        <a href="index.html#conductores" id="nav-conductores">Para conductores</a>
-      </div>
-
-      <div class="nav__actions" id="navActions">
-        <a href="index.html" class="nav__sign-in" id="nav-signin">Conductores</a>
-        <a href="index.html#hero-form" class="btn-nav" id="nav-cta">Clientes</a>
-      </div>
-
-      <button class="nav__burger" id="burger" aria-label="Abrir menú" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- ===== MOBILE MENU ===== -->
-  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-    <div class="mobile-menu__inner">
-      <a href="index.html#servicios" class="mm-link" id="mm-servicios">Servicios</a>
-      <a href="index.html#como-funciona" class="mm-link" id="mm-como">Cómo funciona</a>
-      <a href="index.html#precios" class="mm-link" id="mm-precios">Precios</a>
-      <a href="index.html#conductores" class="mm-link" id="mm-conductores">Para conductores</a>
-      <a href="index.html" class="mm-link" id="mm-signin">Ingresar</a>
-      <a href="index.html#precios" class="btn-primary mm-cta" id="mm-cta">Publicar mudanza gratis</a>
-    </div>
-  </div>
-
-  
-
-        <main class="terms-section">
-    <div class="legal-header">
-      <h1>Aviso de Privacidad</h1>
-      <p class="legal-subtitle">Última actualización: 15 de Septiembre de 2026</p>
-    </div>
-
-    <div class="legal-layout">
-      <nav class="legal-sidebar">
+        <h2 id="section-1">1. Responsable de la Base de Datos y Tratamiento</h2>
+        <p>El responsable legal de las bases de datos registradas y del tratamiento informático de la información es:</p>
         <ul>
-          <li><a href="#intro">Introducción y Alcance</a></li>
-          <li><a href="#responsable">1. Responsable del Tratamiento</a></li>
-          <li><a href="#datos-recopilados">2. Datos Personales que Recopilamos</a></li>
-          <li><a href="#uso-datos">3. Cómo Utilizamos sus Datos</a></li>
-          <li><a href="#compartir">4. Intercambio y Divulgación</a></li>
-          <li><a href="#retencion">5. Retención y Eliminación</a></li>
-          <li><a href="#bases">6. Bases Legales</a></li>
-          <li><a href="#derechos">7. Sus Derechos (ARCO)</a></li>
-          <li><a href="#cookies">8. Cookies y Tecnologías</a></li>
-          <li><a href="#transferencias">9. Transferencias Internacionales</a></li>
-          <li><a href="#seguridad">10. Seguridad de la Información</a></li>
-          <li><a href="#menores">11. Privacidad de Menores</a></li>
-          <li><a href="#actualizaciones">12. Actualizaciones</a></li>
-          <li><a href="#contacto">13. Contacto</a></li>
-        </ul>
-      </nav>
-
-      <div class="legal-content">
-        <p id="intro">Este Aviso de Privacidad describe exhaustivamente cómo Mudify y sus empresas afiliadas (en adelante, "Mudify", "nosotros", "nuestro/a(s)") recopilan, utilizan, almacenan, comparten y protegen los datos personales de las personas que utilizan nuestra plataforma tecnológica, aplicación móvil y sitio web (conjuntamente, los "Servicios").<br><br>
-        Al acceder o utilizar los Servicios, usted acepta de manera expresa las prácticas descritas en este documento, el cual ha sido elaborado en estricto cumplimiento de la Ley de Protección de los Datos Personales N° 25.326 de la República Argentina y la normativa internacional aplicable.</p>
-
-        <h3 id="responsable">1. Responsable del Tratamiento</h3>
-        <p>A los efectos de las leyes de protección de datos aplicables, la entidad responsable del tratamiento de sus datos personales (Responsable de la Base de Datos) es Mudify S.A., con domicilio en Buenos Aires, Argentina. Mudify determina los fines y los medios del tratamiento de la información recopilada a través de la Plataforma.</p>
-
-        <h3 id="datos-recopilados">2. Datos Personales que Recopilamos</h3>
-        <p>Mudify recopila datos de tres fuentes principales:</p>
-        
-        <h4>A. Datos proporcionados directamente por usted</h4>
-        <ul>
-          <li><strong>Datos de perfil y registro:</strong> Al crear o actualizar su cuenta, recopilamos su nombre completo, dirección de correo electrónico, número de teléfono, contraseña, fecha de nacimiento, foto de perfil y número de documento (DNI).</li>
-          <li><strong>Datos de Conductores y Vehículos:</strong> Si usted se registra como Conductor, recopilamos información adicional requerida por motivos normativos y de seguridad, incluyendo antecedentes penales (sujeto a las leyes locales), datos de la licencia de conducir, cédula de identificación del vehículo, póliza de seguro, fotografías de los documentos, y validaciones biométricas (selfies) tomadas en la aplicación.</li>
-          <li><strong>Datos demográficos:</strong> Podemos recopilar datos demográficos a través de encuestas voluntarias a los usuarios.</li>
-          <li><strong>Contenido del usuario:</strong> Recopilamos la información que usted envía cuando se comunica con el servicio de soporte al cliente, proporciona calificaciones, reseñas o felicita a otros usuarios, o cuando se comunica con nosotros de cualquier otra manera.</li>
+          <li><strong>Denominación Social:</strong> Mudify Technologies S.A.</li>
+          <li><strong>Domicilio Legal:</strong> Ciudad Autónoma de Buenos Aires, República Argentina.</li>
+          <li><strong>Registro de Bases de Datos:</strong> Nuestras bases de datos de "Usuarios Clientes", "Conductores Transportistas" y "Transacciones y Georreferenciación" se encuentran formalmente inscriptas en el Registro Nacional de Bases de Datos de la Agencia de Acceso a la Información Pública (AAIP).</li>
         </ul>
 
-        <h4>B. Datos generados al usar nuestros Servicios</h4>
+        <h2 id="section-2">2. Categorización Detallada de los Datos Recopilados</h2>
+        <p>Mudify recopila y categoriza la información personal en función del perfil de usuario y las necesidades operativas de la plataforma:</p>
+
+        <h3>A. Datos del Cliente (Usuario que solicita fletes o mudanzas)</h3>
         <ul>
-          <li><strong>Datos de Geolocalización:</strong> Recopilamos datos de ubicación precisos y aproximados a través de GPS, direcciones IP y Wi-Fi.<br>
-          - <em>Para Conductores:</em> Recopilamos información de ubicación exacta cuando la aplicación de Mudify se ejecuta en primer plano (app abierta) o en segundo plano (app cerrada pero con la cuenta activa y disponible para viajes). Esto es esencial para el envío de solicitudes y el seguimiento de seguridad.<br>
-          - <em>Para Clientes:</em> Recopilamos información de ubicación cuando la aplicación de Mudify se ejecuta en primer plano. Un Cliente puede usar la Plataforma sin permitir la recopilación de ubicación precisa introduciendo las direcciones manualmente, pero esto puede limitar algunas funciones (como el seguimiento de llegada).</li>
-          <li><strong>Información de Transacciones:</strong> Recopilamos detalles de las transacciones relacionadas con el uso de nuestros Servicios, lo que incluye el tipo de servicio solicitado (flete, mudanza), los detalles de la carga declarada, fecha y hora de la prestación, distancia recorrida, monto cobrado y el método de pago utilizado.</li>
-          <li><strong>Datos de Uso e Interacción:</strong> Recopilamos información sobre cómo interactúa con nuestros Servicios, como fechas y horas de acceso, funciones de la aplicación utilizadas, páginas visualizadas, fallos de la aplicación y actividad del sistema.</li>
-          <li><strong>Datos del Dispositivo:</strong> Recopilamos información sobre los dispositivos utilizados para acceder a nuestros Servicios, incluyendo el modelo de hardware, sistema operativo, identificadores únicos del dispositivo, números de serie e información de la red móvil.</li>
-          <li><strong>Comunicaciones dentro de la aplicación:</strong> Mudify permite que Clientes y Conductores se comuniquen entre sí a través de la app. Para brindar este servicio y por razones de seguridad, Mudify recibe y almacena metadatos y el contenido de estas llamadas y mensajes.</li>
+          <li><strong>Datos de Identificación:</strong> Nombre completo, correo electrónico verificado, número de teléfono móvil validado vía código SMS (OTP) y contraseña encriptada mediante algoritmos HASH (Argon2 / bcrypt).</li>
+          <li><strong>Datos de Entrega y Carga:</strong> Direcciones de origen y destino, tipo de inmueble (casa, departamento, ascensor, escalera), descripción y fotografía de los objetos a transportar para la correcta asignación de vehículo.</li>
+          <li><strong>Datos Transaccionales:</strong> Historial de fletes solicitados, montos abonados, método de pago seleccionado, comprobantes electrónicos de pago emitidos y estado de las transacciones.</li>
+          <li><strong>Calificaciones y Reseñas:</strong> Puntuación otorgada al Conductor y comentarios expresados de forma directa o anónima tras finalizar el viaje.</li>
         </ul>
 
-        <h4>C. Datos de otras fuentes</h4>
-        <p>Podemos recibir información de terceros, incluyendo proveedores de verificación de identidad, bases de datos gubernamentales, socios de marketing, y autoridades de seguridad pública.</p>
+        <h3>B. Datos del Conductor (Transportista Independiente)</h3>
+        <ul>
+          <li><strong>Datos de Identidad y Registro Profesional:</strong> Nombre completo, DNI/CUIT, fecha de nacimiento, domicilio real, fotografía de perfil tipo carnet y validación biométrica facial en vivo (Liveness Test) para prevenir la suplantación o alquiler ilegítimo de cuentas.</li>
+          <li><strong>Documentación Vehicular Obligatoria:</strong> Fotografía digitalizada de la Licencia Nacional de Conducir (con categoría apta para carga), Cédula de Identificación del Vehículo (Cédula Verde/Azul), comprobante de Seguro de Responsabilidad Civil Obligatorio contra Terceros vigente, y constancia de antecedentes penales emitida por el Registro Nacional de Reincidencia (cuando sea exigible por regulación local).</li>
+          <li><strong>Datos del Vehículo:</strong> Marca, modelo, año, tipo de carrocería (utilitario, furgón, camión), capacidad de carga útil en kilogramos y metros cúbicos, y patente (matrícula) visible.</li>
+          <li><strong>Datos Bancarios / Cobro:</strong> CBU/CVU, ALIAS y CUIT del titular de la cuenta bancaria o billetera virtual autorizada para la acreditación de sus ganancias por servicios prestados.</li>
+        </ul>
 
-        <h3 id="uso-datos">3. Cómo Utilizamos sus Datos</h3>
-        <p>Mudify utiliza los datos recopilados para los siguientes fines:</p>
+        <h3>C. Datos Técnicos y del Dispositivo (Todos los Usuarios)</h3>
+        <ul>
+          <li><strong>Información del Hardware:</strong> Modelo del dispositivo, marca, sistema operativo y versión (Android/iOS), resolución de pantalla e idioma predeterminado.</li>
+          <li><strong>Identificadores de Conexión:</strong> Dirección IP pública, identificador único de publicidad (GAID en Android / IDFA en iOS), tipo de red (4G, 5G, Wi-Fi), nombre del operador móvil y logs de errores técnicos (Crash Logs).</li>
+        </ul>
+
+        <h2 id="section-3">3. Tratamiento de Geolocalización y Telemetría Precise GPS</h2>
+        <p>Dado que la Plataforma funciona como un canal de intermediación en tiempo real para el transporte de carga, el uso de datos de localización geográfica constituye un elemento técnico indispensable para la prestación del servicio.</p>
+
+        <h3>A. Geolocalización de Conductores (Transportistas)</h3>
+        <ul>
+          <li><strong>Modo Activo / Disponible (Primer y Segundo Plano):</strong> Mientras la aplicación del Conductor permanezca en estado "En Línea" o "Disponible", recopilamos coordenadas de latitud, longitud, rumbo y velocidad en tiempo real, incluso si la app se encuentra minimizada o la pantalla está apagada. Esto permite:
+            <ol>
+              <li>Ofrecer al Conductor solicitudes de fletes cercanas a su posición actual, reduciendo viajes en vacío y consumo de combustible.</li>
+              <li>Mostrar al Cliente el avance del vehículo asignado hacia el punto de carga.</li>
+              <li>Garantizar la seguridad vial y la trazabilidad del transporte de punta a punta.</li>
+            </ol>
+          </li>
+          <li><strong>Modo Desconectado:</strong> En cuanto el Conductor cambia su estado a "Fuera de Línea", se detiene de forma inmediata la captura de geolocalización en segundo plano.</li>
+        </ul>
+
+        <h3>B. Geolocalización de Clientes</h3>
+        <ul>
+          <li><strong>Captura en Primer Plano:</strong> La aplicación recopila la ubicación GPS del Cliente únicamente mientras la pantalla de la app esté abierta y en uso para autocompletar la dirección de recogida o mostrar transportistas cercanos.</li>
+          <li><strong>Ingreso Manual:</strong> El Cliente puede optar por deshabilitar el permiso de GPS preciso en los ajustes de su teléfono e ingresar manualmente las direcciones de origen y destino sin perder la capacidad de pedir el servicio.</li>
+        </ul>
+
+        <h2 id="section-4">4. Finalidades del Tratamiento e Interés Legítimo</h2>
+        <p>Los datos personales son procesados bajo las siguientes finalidades legítimas y legalmente respaldadas (Art. 5 Ley 25.326):</p>
         <ol>
-          <li><strong>Provisión y mantenimiento del servicio:</strong> Crear y actualizar cuentas, conectar Clientes con Conductores, calcular estimaciones de tarifas, procesar pagos y facilitar las soluciones de navegación.</li>
-          <li><strong>Seguridad y prevención de fraude:</strong> Realizar comprobaciones de identidad, requerir reconocimiento facial a los conductores para evitar el uso de cuentas de terceros, monitorear viajes en tiempo real para detectar desviaciones anómalas, y bloquear cuentas fraudulentas.</li>
-          <li><strong>Atención al Cliente (Soporte):</strong> Dirigir sus consultas al agente adecuado, investigar y resolver inquietudes, y supervisar la calidad del soporte.</li>
-          <li><strong>Investigación y Desarrollo (I+D):</strong> Analizar los datos para probar nuevas funciones, mejorar el algoritmo de emparejamiento, corregir errores (bugs) y optimizar el rendimiento de la aplicación.</li>
-          <li><strong>Comunicaciones de marketing y no comerciales:</strong> Enviarle correos electrónicos o notificaciones push sobre recibos, actualizaciones de las políticas, alertas de seguridad, y ofertas promocionales (puede darse de baja del marketing en cualquier momento).</li>
-          <li><strong>Procedimientos legales:</strong> Utilizar la información para investigar o resolver reclamaciones derivadas del uso de los Servicios de Mudify, o cuando lo soliciten los reguladores, autoridades gubernamentales e investigaciones oficiales.</li>
+          <li><strong>Intermediación Tecnológica:</strong> Operar el algoritmo de emparejamiento geográfico entre la solicitud del Cliente y el Conductor calificado más conveniente.</li>
+          <li><strong>Verificación de Seguridad Comunal:</strong> Validar periódicamente que los Conductores cuenten con documentación vigente y que no existan suplantaciones de identidad mediante controles biométricos aleatorios.</li>
+          <li><strong>Cálculo de Tarifas Estimadas:</strong> Procesar las distancias del trayecto en kilómetros a través de APIs de cartografía para sugerir tarifas orientativas justas.</li>
+          <li><strong>Soporte y Resolución de Controversias:</strong> Investigar reclamos por demoras, cancelaciones o discrepancias en la carga utilizando los registros de viaje y geolocalización.</li>
+          <li><strong>Cumplimiento de Obligaciones Fiscales:</strong> Emitir los comprobantes y retenciones impositivas exigidos por la Administración Federal de Ingresos Públicos (AFIP / ARCA) y organismos provinciales.</li>
         </ol>
 
-        <h3 id="compartir">4. Intercambio y Divulgación de Datos</h3>
-        <p>Para que la plataforma funcione, Mudify necesita compartir ciertos datos. <strong>Bajo ninguna circunstancia vendemos sus datos personales a terceros.</strong></p>
+        <h2 id="section-5">5. Chat Seguro y Enmascaramiento de Datos de Contacto</h2>
+        <p>Para proteger la privacidad de ambas partes y evitar el acoso o el uso indebido de datos fuera de la plataforma:</p>
+        <ul>
+          <li><strong>Chat Interno Cifrado:</strong> Las comunicaciones escritas entre Cliente y Conductor durante la prestación del flete se realizan exclusivamente dentro del entorno seguro de la aplicación.</li>
+          <li><strong>Enmascaramiento Telefónico (Privacidad del Número Real):</strong> Si el Cliente o Conductor requieren comunicarse por voz, la llamado o SMS se enruta a través de una central telefónica proxy o servicio de intermediación (Twilio / VoIP). Ninguna de las partes tiene acceso al número de teléfono celular real de la otra.</li>
+        </ul>
+
+        <h2 id="section-6">6. Intercambio y Divulgación de Datos a Terceros</h2>
+        <p>Mudify <strong>no comercializa, vende ni alquila datos personales a terceros</strong>. Únicamente se comparten datos bajo las siguientes circunstancias:</p>
+
+        <h3>A. Transmisión Operativa entre Usuarios</h3>
+        <table style="width:100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: var(--blue-50); text-align: left;">
+              <th style="padding: 10px; border: 1px solid var(--gray-200);">Datos compartidos con el Cliente</th>
+              <th style="padding: 10px; border: 1px solid var(--gray-200);">Datos compartidos con el Conductor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Nombre de pila y foto de perfil del conductor</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Nombre de pila del cliente</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Marca, modelo, color y patente del vehículo</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Dirección exacta de carga y descarga</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Calificación promedio y reseñas públicas</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Detalles declarados de los objetos a trasladar</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Ubicación GPS en vivo durante el traslado</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Calificación promedio del cliente</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>B. Proveedores de Servicios Tecnológicos (Encargados de Tratamiento)</h3>
+        <p>Compartimos información estrictamente necesaria con proveedores contratados que actúan como Encargados del Tratamiento conforme al Art. 25 de la Ley 25.326:</p>
+        <ul>
+          <li><strong>Servicios de Mapas y Rutas:</strong> Google Maps Platform / Mapbox para el renderizado de mapas y cálculo de matriz de distancias.</li>
+          <li><strong>Pasarelas de Pago:</strong> Mercado Pago / Procesadores autorizados por el Banco Central de la República Argentina (BCRA) para el procesamiento de cobros y transferencias.</li>
+          <li><strong>Infraestructura Cloud:</strong> Amazon Web Services (AWS) y Google Cloud Platform (GCP) para el almacenamiento cifrado de datos.</li>
+          <li><strong>Proveedores de Verificación Biométrica:</strong> Servicios de validación facial para verificar la autenticidad de DNI y licencias.</li>
+        </ul>
+
+        <h3>C. Requerimientos Judiciales y Oficiales</h3>
+        <p>Divulgaremos información ante juzgados, fiscalías o fuerzas de seguridad cuando medie una orden judicial motivada u oficio formal fundado en leyes de la República Argentina.</p>
+
+        <h2 id="section-7">7. Infraestructura y Transferencia Internacional de Datos</h2>
+        <p>Los servidores principales de Mudify se alojan en centros de datos de clase mundial (AWS / GCP) ubicados en regiones que cumplen con los estándares de seguridad ISO/IEC 27001, SOC 1/2/3 y PCI-DSS.</p>
+        <p>En caso de realizarse transferencias internacionales de datos a jurisdicciones fuera de la República Argentina, Mudify garantiza que los receptores cuenten con niveles de protección adecuados o suscriban <strong>Cláusulas Contractuales Tipo</strong> aprobadas por la Dirección Nacional de Protección de Datos Personales (Resolución AAIP N° 60-E/2016 y Res. 14/2018).</p>
+
+        <h2 id="section-8">8. Medidas de Seguridad Técnicas y Organizativas</h2>
+        <p>En concordancia con la <strong>Resolución AAIP N° 47/2018</strong> sobre Medidas de Seguridad para el Tratamiento de Datos Personales, implementamos:</p>
+        <ul>
+          <li><strong>Cifrado de Datos en Tránsito:</strong> Toda comunicación entre las aplicaciones móviles, el sitio web y nuestros servidores utiliza protocolos encriptados TLS 1.3 / HTTPS con certificados SSL válidos y HSTS activado.</li>
+          <li><strong>Cifrado de Datos en Reposo:</strong> Las bases de datos relacionales y los archivos de documentación (DNI, licencias, cédulas) se almacenan cifrados mediante algoritmos **AES-256**.</li>
+          <li><strong>Control de Acceso Restringido (RBAC):</strong> El acceso a los datos de los usuarios por parte del personal operativo de Mudify está limitado bajo el principio de menor privilegio (Least Privilege) y requiere autenticación multifactor (MFA).</li>
+          <li><strong>Auditoría y Logs Criptográficos:</strong> Mantenemos registros inalterables de accesos a la base de datos para detectar cualquier consulta no autorizada.</li>
+        </ul>
+
+        <h2 id="section-9">9. Política de Retención y Destrucción de Datos</h2>
+        <p>Los datos personales se conservan únicamente durante el tiempo necesario para cumplir las finalidades descritas o los plazos legales aplicables:</p>
         
-        <h4>A. Intercambio entre Usuarios</h4>
+        <table style="width:100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem;">
+          <thead>
+            <tr style="background: var(--blue-50); text-align: left;">
+              <th style="padding: 10px; border: 1px solid var(--gray-200);">Tipo de Dato</th>
+              <th style="padding: 10px; border: 1px solid var(--gray-200);">Plazo de Conservación</th>
+              <th style="padding: 10px; border: 1px solid var(--gray-200);">Fundamento Legitimador</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Datos de perfil activo</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Mientras la cuenta esté activa + 30 días post-cierre</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Prestación del servicio / Purga de copias de seguridad</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Facturación y comprobantes fiscales</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">10 años</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Art. 328 del Código Civil y Comercial de la Nación</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Trazas de geolocalización GPS</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">90 días (luego se anonimizan para estadística)</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Auditoría de seguridad y reclamos operativos</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Documentación de conductores dados de baja</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">2 años posteriores a la desvinculación</td>
+              <td style="padding: 10px; border: 1px solid var(--gray-200);">Prevención de fraudes y requerimientos judiciales</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="section-10">10. Ejercicio de Derechos ARCO (Ley 25.326)</h2>
+        <p>De conformidad con los Artículos 14, 15 y 16 de la Ley N° 25.326, como titular de los datos personales tienes la facultad de ejercer los siguientes derechos sin costo alguno:</p>
         <ul>
-          <li><strong>Si usted es Cliente:</strong> Compartimos su nombre de pila, su calificación promedio, y la ubicación de recogida y destino con el Conductor. Tras el viaje, el Conductor verá su reseña y calificación, pero no se revelará su identidad si opta por calificar de forma anónima.</li>
-          <li><strong>Si usted es Conductor:</strong> Compartimos con el Cliente su nombre, fotografía de perfil, calificación promedio, marca, modelo y patente (matrícula) de su vehículo, y <strong>su ubicación en tiempo real</strong> antes y durante el servicio.</li>
+          <li><strong>Derecho de Acceso (Art. 14):</strong> Solicitar y obtener información gratuita de tus datos personales incluidos en nuestras bases de datos dentro de los <strong>10 días corridos</strong> de formulada la solicitud.</li>
+          <li><strong>Derecho de Rectificación y Actualización (Art. 16):</strong> Solicitar la corrección de datos inexactos, erróneos o desactualizados en un plazo máximo de <strong>5 días hábiles</strong>.</li>
+          <li><strong>Derecho de Supresión / Cancelación (Art. 16):</strong> Solicitar la eliminación de tus datos personales de nuestros registros, salvo las excepciones legales de conservación fiscal o judicial indicadas en la Sección 9.</li>
+          <li><strong>Derecho de Oposición:</strong> Solicitar el cese del tratamiento de tus datos para acciones publicitarias o de marketing directo.</li>
         </ul>
 
-        <h4>B. Intercambio con Terceros</h4>
+        <h3>Procedimiento para ejercer tus derechos</h3>
+        <p>Para tramitar cualquier solicitud ARCO, envía un correo electrónico a <strong>privacidad@mudify.com.ar</strong> adjuntando:</p>
+        <ol>
+          <li>Copia legible de tu DNI o documento de identidad para validar la titularidad.</li>
+          <li>Descripción clara del derecho que deseas ejercer (Acceso, Rectificación, Supresión u Oposición).</li>
+          <li>Detalle de los datos objeto de la solicitud.</li>
+        </ol>
+
+        <div class="terms-warning">
+          <strong>Aviso Legal del Órgano de Control (AAIP):</strong><br>
+          "LA AGENCIA DE ACCESO A LA INFORMACIÓN PÚBLICA, en su carácter de Órgano de Control de la Ley N° 25.326, tiene la atribución de atender las denuncias y reclamos que interpongan quienes resulten afectados en sus derechos por incumplimiento de las normas vigentes en materia de protección de datos personales."<br>
+          <em>Sitio web oficial: <a href="https://www.argentina.gob.ar/aaip" target="_blank" rel="noopener">www.argentina.gob.ar/aaip</a></em>
+        </div>
+
+        <h2 id="section-11">11. Cookies y Tecnologías de Seguimiento Web</h2>
+        <p>En nuestra plataforma web y webapps empleamos las siguientes categorías de cookies y tecnologías similares:</p>
         <ul>
-          <li><strong>Proveedores de servicios:</strong> Compartimos información con consultores y socios comerciales que necesitan acceso a dichos datos para realizar trabajos en nuestro nombre. Estos incluyen pasarelas de pago, proveedores de almacenamiento en la nube, proveedores de mapas (ej. Google Maps) y empresas de verificación de antecedentes.</li>
-          <li><strong>Autoridades legales:</strong> Podemos compartir sus datos personales con organismos policiales, judiciales o autoridades fiscales si creemos que la divulgación es razonablemente necesaria para cumplir con la ley, normativas o procesos legales válidos de la República Argentina.</li>
+          <li><strong>Cookies Estrictamente Necesarias:</strong> Imprescindibles para la autenticación de sesión mediante tokens de seguridad (JWT) y la navegación por la plataforma. No pueden desactivarse.</li>
+          <li><strong>Cookies Analíticas y de Rendimiento:</strong> Nos permiten medir el número de visitantes, identificar patrones de tráfico y detectar fallos técnicos (ej. Google Analytics con IP anonimizada).</li>
+          <li><strong>Gestión de Cookies:</strong> Puedes ajustar las preferencias de cookies en cualquier momento desde la configuración de tu navegador web (Chrome, Firefox, Safari, Edge).</li>
         </ul>
 
-        <h3 id="retencion">5. Retención y Eliminación de Datos</h3>
-        <p>Mudify retiene su perfil, transacciones y demás datos personales durante el tiempo que mantenga activa su cuenta en la Plataforma.</p>
-        <p>Los usuarios pueden solicitar la eliminación de su cuenta en cualquier momento mediante la sección "Privacidad" o "Ajustes" de la aplicación. Tras recibir una solicitud de eliminación:</p>
+        <h2 id="section-12">12. Protección y Privacidad de Menores de Edad</h2>
+        <p>Mudify es una plataforma exclusiva para personas mayores de 18 años con capacidad legal para contratar. No recopilamos intencionalmente información personal de menores de edad. Si detectamos que un usuario menor de 18 años ha creado una cuenta o proporcionado datos sin consentimiento verificado de sus padres o tutores legales, procederemos a la cancelación inmediata de la cuenta y al borrado de todos los datos asociados.</p>
+
+        <h2 id="section-13">13. Modificaciones a la Política y Oficial de Privacidad (DPO)</h2>
+        <p>Mudify podrá actualizar periódicamente esta Política de Privacidad para reflejar cambios legislativos, mejoras tecnológicas o nuevas funcionalidades de la aplicación. Cualquier modificación sustancial será notificada con al menos 10 días de anticipación mediante un aviso destacado en la aplicación móvil o por correo electrónico.</p>
+
+        <p>Para cualquier consulta, sugerencia o reclamo relacionado con el tratamiento de tu información personal, puedes contactar a nuestro Oficial de Protección de Datos (DPO):</p>
         <ul>
-          <li>Mudify procederá a eliminar la cuenta y los datos no esenciales de sus servidores de producción.</li>
-          <li><strong>Retención Obligatoria:</strong> Mudify retendrá cierta información después de la solicitud si está obligada a hacerlo para cumplir con obligaciones legales (retención fiscal/tributaria de facturación por un mínimo de 10 años en Argentina) o por motivos de seguridad y prevención de fraudes (ej. si el usuario fue expulsado de la app y se debe evitar que vuelva a registrarse).</li>
+          <li><strong>Oficial de Protección de Datos:</strong> Departamento de Legales y Privacidad Mudify</li>
+          <li><strong>Correo electrónico:</strong> <a href="mailto:privacidad@mudify.com.ar">privacidad@mudify.com.ar</a></li>
+          <li><strong>Mesa de Ayuda:</strong> Sección "Privacidad y Soporte" dentro de la aplicación móvil Mudify.</li>
+          <li><strong>Jurisdicción:</strong> Ciudad Autónoma de Buenos Aires, República Argentina.</li>
         </ul>
-
-        <h3 id="bases">6. Bases Legales para el Tratamiento</h3>
-        <p>Solo procesamos datos personales cuando tenemos una base legal válida, que incluye:</p>
-        <ul>
-          <li><strong>Ejecución del contrato:</strong> Necesario para cumplir con nuestros Términos y Condiciones y prestarle el servicio (ej. compartir la ubicación).</li>
-          <li><strong>Interés Legítimo:</strong> Para proteger la seguridad de nuestros usuarios, prevenir fraudes, o mejorar el diseño de la app.</li>
-          <li><strong>Obligación Legal:</strong> Para cumplir con normativas fiscales y requerimientos judiciales.</li>
-          <li><strong>Consentimiento:</strong> En casos específicos donde requerimos su permiso explícito (ej. acceso a la cámara o notificaciones push), el cual puede revocar en cualquier momento.</li>
-        </ul>
-
-        <h3 id="derechos">7. Sus Derechos de Privacidad (Derechos ARCO)</h3>
-        <p>Conforme a la Ley 25.326, usted tiene los siguientes derechos sobre sus datos:</p>
-        <ul>
-          <li><strong>Acceso:</strong> Derecho a conocer qué datos tenemos sobre usted y obtener una copia de los mismos (de forma gratuita a intervalos no inferiores a seis meses).</li>
-          <li><strong>Rectificación:</strong> Derecho a solicitar la corrección de datos inexactos o incompletos.</li>
-          <li><strong>Cancelación (Supresión):</strong> Derecho a solicitar la eliminación de sus datos, sujeto a las retenciones obligatorias explicadas en la Sección 5.</li>
-          <li><strong>Oposición:</strong> Derecho a oponerse al tratamiento de sus datos para fines específicos, como el marketing directo.</li>
-        </ul>
-        <p>La Dirección Nacional de Protección de Datos Personales es el órgano de control que atiende las denuncias y reclamos ante el incumplimiento de las normas sobre protección de datos.</p>
-
-        <h3 id="cookies">8. Cookies y Tecnologías de Terceros</h3>
-        <p>Mudify y sus socios utilizan cookies, píxeles, balizas web y otras tecnologías de seguimiento en nuestro sitio web y aplicaciones para:</p>
-        <ul>
-          <li>Autenticar a los usuarios.</li>
-          <li>Recordar las preferencias y ajustes.</li>
-          <li>Analizar el tráfico del sitio y las tendencias.</li>
-          <li>Realizar campañas publicitarias segmentadas en sitios web de terceros.</li>
-        </ul>
-        <p>Puede configurar su navegador o dispositivo móvil para rechazar ciertas cookies, aunque esto puede afectar la funcionalidad de la Plataforma. Para más información, consulte nuestra Política de Cookies (si estuviera disponible de forma independiente).</p>
-
-        <h3 id="transferencias">9. Transferencias Internacionales</h3>
-        <p>Dado que Mudify utiliza infraestructuras tecnológicas globales (como Amazon Web Services o Google Cloud), sus datos personales pueden ser transferidos y procesados en servidores ubicados fuera de la República Argentina (por ejemplo, en los Estados Unidos). Mudify garantiza que dichas transferencias se realizan bajo mecanismos que aseguran un nivel adecuado de protección conforme a los estándares internacionales y a la normativa local.</p>
-
-        <h3 id="seguridad">10. Seguridad de la Información</h3>
-        <p>Adoptamos estrictas medidas de seguridad técnicas, físicas y administrativas para proteger sus datos personales. Esto incluye el uso de encriptación TLS en tránsito, almacenamiento cifrado, firewalls, y acceso restringido a la base de datos únicamente al personal autorizado que necesite conocer dicha información. Sin embargo, dado que ningún método de transmisión por Internet es 100% infalible, no podemos garantizar la seguridad absoluta de sus datos.</p>
-
-        <h3 id="menores">11. Privacidad de los Menores</h3>
-        <p>Nuestros servicios no están dirigidos a personas menores de 18 años y no recopilamos intencionalmente datos personales de menores. Si descubrimos que hemos recopilado datos de un menor sin el consentimiento verificable de sus padres o tutores, tomaremos medidas para eliminar dicha información de inmediato. Los menores solo pueden utilizar el servicio si están acompañados y supervisados por el titular mayor de edad de la cuenta.</p>
-
-        <h3 id="actualizaciones">12. Actualizaciones de esta Política</h3>
-        <p>Ocasionalmente actualizaremos este Aviso de Privacidad para reflejar cambios en la ley, en nuestras prácticas de recopilación de datos, o en las características de la aplicación. En caso de cambios sustanciales, se lo notificaremos a través de un aviso destacado en la Aplicación o mediante correo electrónico. Le recomendamos revisar esta página periódicamente.</p>
-
-        <h3 id="contacto">13. Datos de Contacto</h3>
-        <p>Si tiene preguntas, comentarios o reclamos sobre este Aviso de Privacidad o sobre cómo tratamos sus datos, puede contactarnos a través de los siguientes canales:</p>
-        <p><strong>Correo electrónico:</strong> privacidad@mudify.com.ar<br>
-        <strong>Mesa de ayuda:</strong> A través de la sección "Soporte" dentro de la aplicación móvil.</p>
-
-      </div>
+      </article>
     </div>
   </main>
-<footer class="footer">
-    <div class="footer__top">
+
+  <footer class="footer">
+    <div class="footer__container">
       <div class="footer__brand">
-        <a href="index.html" class="logo" id="footer-logo">
-          <div class="logo__mark">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M10 2L3 14h14L10 2z" fill="white" />
-              <circle cx="10" cy="16" r="2" fill="white" />
-            </svg>
-          </div>
-          <span class="logo__text">Mudify</span>
+        <a href="index.html" class="logo logo--white" aria-label="Mudify, inicio">
+          <img src="assets/images/logo.png" alt="" class="logo__image">
+          <span>Mudify</span>
         </a>
-        <p>Conectamos personas que necesitan mudarse con conductores independientes verificados en Argentina.</p>
-        <div class="footer-socials">
-          <a href="index.html" aria-label="X" id="footer-x">𝕏</a>
-          <a href="index.html" aria-label="Instagram" id="footer-ig">📷</a>
-          <a href="index.html" aria-label="WhatsApp" id="footer-wa">💬</a>
-        </div>
+        <p>Tu mudanza, más simple.</p>
       </div>
-      <div class="footer__cols">
-        <div class="footer__col">
-          <h6>Plataforma</h6>
+      <div class="footer__links">
+        <div class="link-group">
+          <h4>Plataforma</h4>
+          <a href="index.html#viajar">Clientes</a>
+          <a href="index.html#conducir">Conductores</a>
+          <a href="index.html#descargar-app">Descargar la app</a>
+        </div>
+        <div class="link-group">
+          <h4>Ayuda</h4>
+          <a href="index.html#faq">Preguntas frecuentes</a>
           <a href="index.html#como-funciona">Cómo funciona</a>
-          <a href="index.html#servicios">Servicios</a>
-          <a href="index.html#conductores">Ser conductor</a>
-          <a href="index.html#precios">Precios</a>
-          <a href="index.html#faq">FAQ</a>
         </div>
-        <div class="footer__col">
-          <h6>Empresa</h6>
-          <a href="index.html">Sobre nosotros</a>
-          <a href="index.html">Blog</a>
-          <a href="index.html">Prensa</a>
-          <a href="index.html">Carreras</a>
-        </div>
-        <div class="footer__col">
-          <h6>Soporte</h6>
-          <a href="index.html">Centro de ayuda</a>
-          <a href="index.html">Contacto</a>
-          <a href="terminos.html">Términos</a>
+        <div class="link-group">
+          <h4>Legal</h4>
+          <a href="terminos.html">Términos y condiciones</a>
           <a href="privacidad.html">Privacidad</a>
         </div>
       </div>
     </div>
     <div class="footer__bottom">
-      <p>© 2026 Mudify. Hecho 100% en Argentina. Por Argentinos.</p>
-      <div class="footer__bottom-links">
-        <a href="privacidad.html">Privacidad</a>
-        <a href="terminos.html">Términos</a>
-        <a href="index.html">Cookies</a>
-      </div>
+      <p>© 2026 Mudify. Hecho 100% en Argentina.</p>
+      <div class="socials"><a href="index.html">Instagram</a><a href="index.html">LinkedIn</a></div>
     </div>
   </footer>
 
-  <button class="btt" id="btt" aria-label="Volver arriba">↑</button>
-  <div class="coming-soon-modal" id="comingSoonModal" aria-hidden="true">
-    <div class="coming-soon-modal__content">
-      <button class="coming-soon-modal__close" id="closeModalBtn" aria-label="Cerrar modal">&times;</button>
-      <div class="coming-soon-modal__icon">🚧</div>
-      <h3>¡Próximamente!</h3>
-      <p>Nuestra aplicación aún no está lista, pero estamos trabajando duro para lanzarla muy pronto. Te mantendremos informado a través de este medio. ¡Mantente atento!</p>
-      <button class="btn-primary coming-soon-modal__btn" id="closeModalActionBtn">Entendido</button>
-    </div>
-  </div>
-
   <script src="js/script.js"></script>
 </body>
-
 </html>
