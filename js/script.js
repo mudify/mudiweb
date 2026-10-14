@@ -25,12 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
       e.preventDefault();
       const targetId = this.getAttribute('href');
-      
-      if(targetId === '#') return;
-      
+
+      if (targetId === '#') return;
+
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
         window.scrollTo({
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Mobile menu
-  let closeMobileMenu = () => {};
+  let closeMobileMenu = () => { };
   if (mobileMenuBtn) {
     const mobileMenu = document.createElement('div');
     mobileMenu.className = 'mobile-menu';
@@ -94,13 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // FAQ Accordion logic
   const faqQuestions = document.querySelectorAll('.faq-question');
-  
+
   faqQuestions.forEach(question => {
     question.addEventListener('click', () => {
       // Toggle current answer
       const answer = question.nextElementSibling;
       const isActive = question.classList.contains('active');
-      
+
       // Close all other answers (optional accordion behavior)
       document.querySelectorAll('.faq-question').forEach(q => {
         q.classList.remove('active');
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
           setTimeout(updateCount, 15);
         } else {
           // Format with commas if it's a large number
-          if(target > 999) {
+          if (target > 999) {
             counter.innerText = target.toLocaleString('es-AR');
           } else {
             counter.innerText = target;
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (b2bForm) {
     b2bForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      
+
       const empresa = document.getElementById('empresaNombre')?.value || '';
       const flota = document.getElementById('empresaFlota')?.value || '';
       const peones = document.getElementById('empresaPeones')?.value || '';
@@ -263,13 +263,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ========================================================
-  // SISTEMA DE AUTENTICACIÓN GOOGLE (LOGIN Y REGISTRO)
+  // SISTEMA DE AUTENTICACIÓN GOOGLE Y BASE DE DATOS (FIREBASE)
   // ========================================================
 
-  // Configuración de Google OAuth 2.0 / Google Identity Services
-  // Para conectar un Google Client ID real de Google Cloud Console:
-  const GOOGLE_CLIENT_ID = 'TU_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+  // Configuración oficial de Firebase para Mudify Web
+  const firebaseConfig = {
+    apiKey: "AIzaSyCawyfIZozyoWixe4sH3SoJ9qbcgZeRFDQ",
+    authDomain: "mudiweb-7d4a2.firebaseapp.com",
+    projectId: "mudiweb-7d4a2",
+    storageBucket: "mudiweb-7d4a2.firebasestorage.app",
+    messagingSenderId: "94905247875",
+    appId: "1:94905247875:web:36a8c9a5922b3b181213b6",
+    measurementId: "G-0YM8ZT13J5"
+  };
+
   const AUTH_STORAGE_KEY = 'mudify_user_session';
+
+  // Inicialización de servicios de Firebase (Auth y Firestore Database)
+  let firebaseAuth = null;
+  let firestoreDb = null;
+  let googleAuthProvider = null;
+
+  try {
+    if (window.firebase && !window.firebase.apps.length) {
+      window.firebase.initializeApp(firebaseConfig);
+    }
+    if (window.firebase) {
+      firebaseAuth = window.firebase.auth();
+      firestoreDb = window.firebase.firestore();
+      googleAuthProvider = new window.firebase.auth.GoogleAuthProvider();
+      googleAuthProvider.setCustomParameters({ prompt: 'select_account' });
+    }
+  } catch (err) {
+    console.error('Error inicializando Firebase SDK:', err);
+  }
 
   // Elementos del Header
   const headerAuthGuest = document.getElementById('headerAuthGuest');
@@ -302,16 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const googleAuthBtn = document.getElementById('googleAuthBtn');
   const googleBtnLabel = document.getElementById('googleBtnLabel');
   const authGooglePrompt = document.getElementById('authGooglePrompt');
-
-  // Elementos del Diálogo Selector de Cuentas Google
-  const googleChooserModal = document.getElementById('googleChooserModal');
-  const closeGoogleChooserBtn = document.getElementById('closeGoogleChooser');
-  const googleAccountButtons = document.querySelectorAll('.google-account-btn[data-account]');
-  const btnCustomGoogle = document.getElementById('btnCustomGoogle');
-  const googleCustomForm = document.getElementById('googleCustomForm');
-  const customGoogleName = document.getElementById('customGoogleName');
-  const customGoogleEmail = document.getElementById('customGoogleEmail');
-  const btnCancelCustomGoogle = document.getElementById('btnCancelCustomGoogle');
 
   let currentAuthTab = 'login'; // 'login' | 'register'
   let selectedUserRole = 'cliente'; // 'cliente' | 'conductor' | 'empresa'
@@ -488,10 +505,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  let pendingPlanType = null;
+
   // Abrir y cerrar Modal de Autenticación
-  const openAuthModal = (tab = 'login', role = 'cliente') => {
+  const openAuthModal = (tab = 'login', role = 'cliente', plan = null) => {
     currentAuthTab = tab;
     selectedUserRole = role;
+    pendingPlanType = plan;
 
     // Configurar Tabs
     if (tab === 'register') {
@@ -595,103 +615,122 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Cerrar Sesión
+  // Cerrar Sesión con Firebase
   if (dropdownLogoutBtn) {
-    dropdownLogoutBtn.addEventListener('click', () => {
+    dropdownLogoutBtn.addEventListener('click', async () => {
+      try {
+        if (firebaseAuth) {
+          await firebaseAuth.signOut();
+        }
+      } catch (e) {
+        console.warn('Aviso al cerrar sesión en Firebase:', e);
+      }
       clearUserSession();
       showToast('Sesión finalizada', 'Has cerrado sesión en Mudify correctamente.', 'info');
     });
   }
 
   // ========================================================
-  // INTEGRACIÓN GOOGLE SIGN-IN / SELECTOR DE CUENTAS
+  // AUTENTICACIÓN GOOGLE REAL CON FIREBASE AUTH Y FIRESTORE
   // ========================================================
-  const accountsData = {
-    '1': {
-      name: 'Camila Rodríguez',
-      email: 'camila.rodriguez@gmail.com',
-      picture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80'
-    },
-    '2': {
-      name: 'Martín González',
-      email: 'martin.gonzalez@gmail.com',
-      picture: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80'
-    }
-  };
 
-  const openGoogleChooser = () => {
-    if (googleChooserModal) {
-      googleChooserModal.classList.add('open');
-      googleChooserModal.setAttribute('aria-hidden', 'false');
-    }
-  };
-
-  const closeGoogleChooser = () => {
-    if (googleChooserModal) {
-      googleChooserModal.classList.remove('open');
-      googleChooserModal.setAttribute('aria-hidden', 'true');
-      if (googleCustomForm) googleCustomForm.style.display = 'none';
-    }
-  };
-
-  const completeGoogleLogin = (account) => {
-    const isRegister = currentAuthTab === 'register';
-    const userRole = isRegister ? selectedUserRole : 'cliente';
-
-    // Inicializar suscripción con 60 días de gracia bonificados (fleteros y empresas) o exención (clientes)
+  const processFirebaseUser = async (fbUser, isRegister, chosenRole) => {
+    let role = chosenRole || 'cliente';
     let subscriptionData = null;
-    const now = new Date();
-    const trialEnd = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
 
-    if (userRole === 'conductor') {
-      subscriptionData = {
-        status: 'trial_active',
-        planName: 'Plan Fletero Pro',
-        trialDaysTotal: 60,
-        daysRemaining: 60,
-        startDate: now.toLocaleDateString('es-AR'),
-        endDate: trialEnd.toLocaleDateString('es-AR'),
-        price: 0,
-        currency: 'ARS'
-      };
-    } else if (userRole === 'empresa') {
-      subscriptionData = {
-        status: 'trial_active',
-        planName: 'Plan Flota Business',
-        trialDaysTotal: 60,
-        daysRemaining: 60,
-        startDate: now.toLocaleDateString('es-AR'),
-        endDate: trialEnd.toLocaleDateString('es-AR'),
-        price: 0,
-        currency: 'ARS'
-      };
-    } else {
-      subscriptionData = {
-        status: 'exempt',
-        planName: 'Cuenta Cliente Gratuita',
-        description: 'Exenta de suscripción (100% Gratis)'
-      };
+    // 1. Intentar leer perfil existente en la colección 'usuarios' de Firestore
+    if (firestoreDb) {
+      try {
+        const userDocRef = firestoreDb.collection('usuarios').doc(fbUser.uid);
+        const userDocSnap = await userDocRef.get();
+
+        if (userDocSnap.exists) {
+          const data = userDocSnap.data();
+          if (data.role) role = data.role;
+          if (data.subscription) subscriptionData = data.subscription;
+        }
+      } catch (err) {
+        console.warn('Aviso al leer de Firestore (se continúa con sesión activa):', err);
+      }
     }
 
+    // 2. Si es nuevo usuario o no tiene suscripción registrada, inicializarla según el rol y plan
+    if (!subscriptionData) {
+      const now = new Date();
+      const trialEnd = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
+
+      if (role === 'conductor') {
+        subscriptionData = {
+          status: 'trial_active',
+          planType: 'fletero_pro',
+          planName: 'Plan Fletero Pro (1 Vehículo)',
+          trialDaysTotal: 60,
+          daysRemaining: 60,
+          startDate: now.toLocaleDateString('es-AR'),
+          endDate: trialEnd.toLocaleDateString('es-AR'),
+          price: 0,
+          currency: 'ARS'
+        };
+      } else if (role === 'empresa') {
+        const isDashboard = pendingPlanType === 'dashboard_completo';
+        subscriptionData = {
+          status: 'trial_active',
+          planType: isDashboard ? 'dashboard_completo' : 'flota_vehiculos',
+          planName: isDashboard ? 'Plan Flota Enterprise (Dashboard Completo)' : 'Plan Flota por Vehículos',
+          trialDaysTotal: 60,
+          daysRemaining: 60,
+          startDate: now.toLocaleDateString('es-AR'),
+          endDate: trialEnd.toLocaleDateString('es-AR'),
+          price: 0,
+          currency: 'ARS'
+        };
+      } else {
+        subscriptionData = {
+          status: 'exempt',
+          planName: 'Cuenta Cliente Gratuita',
+          description: 'Exenta de suscripción (100% Gratis)'
+        };
+      }
+    }
+
+    // 3. Crear objeto de sesión unificado con datos reales de Google
     const userObj = {
-      id: 'g_' + Date.now(),
-      name: account.name,
-      email: account.email,
-      picture: account.picture || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80',
-      role: userRole,
+      uid: fbUser.uid,
+      name: fbUser.displayName || 'Usuario Google',
+      email: fbUser.email,
+      picture: fbUser.photoURL || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80',
+      role: role,
       provider: 'google',
       subscription: subscriptionData,
-      registeredAt: new Date().toISOString()
+      lastLoginAt: new Date().toISOString()
     };
 
+    // 4. Guardar/actualizar en la base de datos Firestore
+    if (firestoreDb) {
+      try {
+        await firestoreDb.collection('usuarios').doc(fbUser.uid).set({
+          uid: userObj.uid,
+          name: userObj.name,
+          email: userObj.email,
+          picture: userObj.picture,
+          role: userObj.role,
+          subscription: userObj.subscription,
+          updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+        console.log('Usuario sincronizado en base de datos Firestore:', userObj.email);
+      } catch (err) {
+        console.warn('Aviso al guardar en Firestore:', err);
+      }
+    }
+
     saveUserSession(userObj);
-    closeGoogleChooser();
     closeAuthModal();
+    pendingPlanType = null;
 
     if (isRegister) {
-      if (userRole === 'conductor') {
-        showToast('🎉 ¡60 días gratis activados!', `Bienvenido a Mudify, ${userObj.name}. Tu período de gracia de 60 días como Conductor / Fletero ya está activo ($0 ARS).`, 'success', 6000);
-      } else if (userRole === 'empresa') {
+      if (role === 'conductor') {
+        showToast('🎉 ¡60 días gratis activados!', `Bienvenido a Mudify, ${userObj.name}. Tu período de gracia de 60 días como Fletero Pro ya está activo ($0 ARS).`, 'success', 6000);
+      } else if (role === 'empresa') {
         showToast('🎉 ¡Flota bonificada por 60 días!', `Bienvenido a Mudify, ${userObj.name}. Tu empresa cuenta con 60 días sin costo de suscripción.`, 'success', 6000);
       } else {
         showToast('¡Cuenta creada con éxito!', `Bienvenido a Mudify, ${userObj.name}. Tu cuenta de Cliente es 100% gratuita para pedir mudanzas y fletes.`, 'success', 5000);
@@ -701,85 +740,86 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Botón Principal Continuar con Google
+  // Botón Principal Continuar con Google (Firebase Popup)
   if (googleAuthBtn) {
-    googleAuthBtn.addEventListener('click', () => {
-      // Si el cliente ID es válido y no el placeholder predeterminado, intentar usar Google Identity Services
-      const hasRealClientId = GOOGLE_CLIENT_ID && !GOOGLE_CLIENT_ID.startsWith('TU_GOOGLE');
+    googleAuthBtn.addEventListener('click', async () => {
+      if (!firebaseAuth || !googleAuthProvider) {
+        showToast('Servicio no disponible', 'No se pudo conectar con Firebase Auth. Verificá tu conexión a internet.', 'error');
+        return;
+      }
 
-      if (hasRealClientId && window.google && window.google.accounts && window.google.accounts.id) {
-        try {
-          google.accounts.id.prompt((notification) => {
-            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-              // Si Google One Tap es bloqueado o cancelado, abrir selector visual
-              openGoogleChooser();
-            }
-          });
-        } catch (err) {
-          openGoogleChooser();
+      const prevText = googleBtnLabel ? googleBtnLabel.textContent : 'Continuar con Google';
+      if (googleBtnLabel) googleBtnLabel.textContent = 'Conectando con Google...';
+      googleAuthBtn.style.pointerEvents = 'none';
+      googleAuthBtn.style.opacity = '0.7';
+
+      try {
+        const result = await firebaseAuth.signInWithPopup(googleAuthProvider);
+        if (result && result.user) {
+          await processFirebaseUser(result.user, currentAuthTab === 'register', selectedUserRole);
         }
-      } else {
-        // En entorno local o modo demostración, abrir selector interactivo de Google
-        openGoogleChooser();
+      } catch (error) {
+        console.error('Error durante autenticación con Google:', error);
+        if (error.code === 'auth/popup-blocked') {
+          showToast('Ventana bloqueada', 'El navegador bloqueó la ventana emergente de Google. Intentando redirección...', 'info');
+          try {
+            await firebaseAuth.signInWithRedirect(googleAuthProvider);
+          } catch (redErr) {
+            showToast('Error de acceso', 'No se pudo completar el inicio de sesión.', 'error');
+          }
+        } else if (error.code === 'auth/popup-closed-by-user') {
+          showToast('Inicio cancelado', 'Se cerró la ventana de Google antes de finalizar.', 'info');
+        } else if (error.code === 'auth/operation-not-supported-in-this-environment' || window.location.protocol === 'file:') {
+          showToast('Servidor local requerido', 'Google Sign-In requiere un servidor web (http://localhost o Live Server) y no abrir el archivo directamente (file://).', 'error', 9000);
+        } else if (error.code === 'auth/unauthorized-domain') {
+          showToast('Dominio no autorizado', `Debes autorizar "${window.location.hostname}" en Firebase Console > Authentication > Settings > Authorized domains.`, 'error', 9000);
+        } else {
+          showToast('Error de autenticación', error.message || 'No se pudo conectar con Google.', 'error');
+        }
+      } finally {
+        if (googleBtnLabel) googleBtnLabel.textContent = prevText;
+        googleAuthBtn.style.pointerEvents = 'auto';
+        googleAuthBtn.style.opacity = '1';
       }
     });
   }
 
-  // Cuentas del Selector de Google
-  googleAccountButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const accId = btn.getAttribute('data-account');
-      const acc = accountsData[accId];
-      if (acc) {
-        completeGoogleLogin(acc);
+  // Escuchar estado de autenticación de Firebase en tiempo real
+  if (firebaseAuth) {
+    firebaseAuth.onAuthStateChanged(async (fbUser) => {
+      if (fbUser) {
+        const stored = getStoredUser();
+        if (!stored || stored.uid !== fbUser.uid) {
+          await processFirebaseUser(fbUser, false, selectedUserRole);
+        } else {
+          renderAuthState();
+        }
       }
     });
-  });
 
-  // Opción "Usar otra cuenta de Google"
-  if (btnCustomGoogle && googleCustomForm) {
-    btnCustomGoogle.addEventListener('click', () => {
-      googleCustomForm.style.display = 'flex';
-      if (customGoogleName) customGoogleName.focus();
-    });
-  }
-
-  if (btnCancelCustomGoogle && googleCustomForm) {
-    btnCancelCustomGoogle.addEventListener('click', () => {
-      googleCustomForm.style.display = 'none';
-    });
-  }
-
-  if (googleCustomForm) {
-    googleCustomForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = customGoogleName?.value.trim() || 'Usuario Google';
-      const email = customGoogleEmail?.value.trim() || 'usuario@gmail.com';
-      completeGoogleLogin({
-        name: name,
-        email: email,
-        picture: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80'
-      });
-    });
-  }
-
-  if (closeGoogleChooserBtn) {
-    closeGoogleChooserBtn.addEventListener('click', closeGoogleChooser);
-  }
-
-  if (googleChooserModal) {
-    googleChooserModal.addEventListener('click', (e) => {
-      if (e.target === googleChooserModal) closeGoogleChooser();
+    // Procesar retorno de redirección si se usó signInWithRedirect
+    firebaseAuth.getRedirectResult().then(async (result) => {
+      if (result && result.user) {
+        await processFirebaseUser(result.user, currentAuthTab === 'register', selectedUserRole);
+      }
+    }).catch((err) => {
+      if (err.code !== 'auth/credential-already-in-use') {
+        console.warn('Aviso en redirect de Firebase:', err);
+      }
     });
   }
 
   // ========================================================
   // SISTEMA DE SUSCRIPCIONES Y PERÍODO DE GRACIA (60 DÍAS)
   // ========================================================
+  const btnToggleTodos = document.getElementById('btnToggleTodos');
   const btnToggleFleteros = document.getElementById('btnToggleFleteros');
-  const btnToggleEmpresas = document.getElementById('btnToggleEmpresas');
+  const btnToggleFlota = document.getElementById('btnToggleFlota');
+  const btnToggleDashboard = document.getElementById('btnToggleDashboard');
+
   const planFleteros = document.getElementById('planFleteros');
-  const planEmpresas = document.getElementById('planEmpresas');
+  const planFlotaVehiculos = document.getElementById('planFlotaVehiculos');
+  const planDashboardCompleto = document.getElementById('planDashboardCompleto');
   const btnActivateTrials = document.querySelectorAll('.btn-activate-trial');
 
   // Modal de Suscripción
@@ -800,33 +840,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const subBenefitsList = document.getElementById('subBenefitsList');
   const subNoticeBox = document.getElementById('subNoticeBox');
 
-  // Alternar pestañas de audiencia (Fleteros vs Empresas)
+  // Alternar pestañas de audiencia y planes
   const setPricingAudience = (type) => {
-    if (type === 'fleteros') {
+    const allBtns = [btnToggleTodos, btnToggleFleteros, btnToggleFlota, btnToggleDashboard];
+    const allCards = [planFleteros, planFlotaVehiculos, planDashboardCompleto];
+
+    allBtns.forEach(b => {
+      b?.classList.remove('active');
+      b?.setAttribute('aria-selected', 'false');
+    });
+
+    if (type === 'todos') {
+      btnToggleTodos?.classList.add('active');
+      btnToggleTodos?.setAttribute('aria-selected', 'true');
+      allCards.forEach(c => c?.classList.add('active'));
+    } else if (type === 'fleteros') {
       btnToggleFleteros?.classList.add('active');
       btnToggleFleteros?.setAttribute('aria-selected', 'true');
-      btnToggleEmpresas?.classList.remove('active');
-      btnToggleEmpresas?.setAttribute('aria-selected', 'false');
-
+      allCards.forEach(c => c?.classList.remove('active'));
       planFleteros?.classList.add('active');
-      planEmpresas?.classList.remove('active');
-    } else {
-      btnToggleEmpresas?.classList.add('active');
-      btnToggleEmpresas?.setAttribute('aria-selected', 'true');
-      btnToggleFleteros?.classList.remove('active');
-      btnToggleFleteros?.setAttribute('aria-selected', 'false');
-
-      planEmpresas?.classList.add('active');
-      planFleteros?.classList.remove('active');
+      if (window.innerWidth <= 768 && planFleteros) {
+        window.scrollTo({ top: planFleteros.offsetTop - 90, behavior: 'smooth' });
+      }
+    } else if (type === 'flota') {
+      btnToggleFlota?.classList.add('active');
+      btnToggleFlota?.setAttribute('aria-selected', 'true');
+      allCards.forEach(c => c?.classList.remove('active'));
+      planFlotaVehiculos?.classList.add('active');
+      if (window.innerWidth <= 768 && planFlotaVehiculos) {
+        window.scrollTo({ top: planFlotaVehiculos.offsetTop - 90, behavior: 'smooth' });
+      }
+    } else if (type === 'dashboard') {
+      btnToggleDashboard?.classList.add('active');
+      btnToggleDashboard?.setAttribute('aria-selected', 'true');
+      allCards.forEach(c => c?.classList.remove('active'));
+      planDashboardCompleto?.classList.add('active');
+      if (window.innerWidth <= 768 && planDashboardCompleto) {
+        window.scrollTo({ top: planDashboardCompleto.offsetTop - 90, behavior: 'smooth' });
+      }
     }
   };
 
-  if (btnToggleFleteros) {
-    btnToggleFleteros.addEventListener('click', () => setPricingAudience('fleteros'));
-  }
-  if (btnToggleEmpresas) {
-    btnToggleEmpresas.addEventListener('click', () => setPricingAudience('empresas'));
-  }
+  if (btnToggleTodos) btnToggleTodos.addEventListener('click', () => setPricingAudience('todos'));
+  if (btnToggleFleteros) btnToggleFleteros.addEventListener('click', () => setPricingAudience('fleteros'));
+  if (btnToggleFlota) btnToggleFlota.addEventListener('click', () => setPricingAudience('flota'));
+  if (btnToggleDashboard) btnToggleDashboard.addEventListener('click', () => setPricingAudience('dashboard'));
 
   // Modal de Suscripción Interactivo
   const openSubscriptionModal = () => {
@@ -845,13 +903,26 @@ document.addEventListener('DOMContentLoaded', () => {
       if (subClientCard) subClientCard.style.display = 'none';
 
       const isConductor = user.role === 'conductor';
+      const planType = user.subscription?.planType || (isConductor ? 'fletero_pro' : 'dashboard_completo');
       const daysLeft = user.subscription?.daysRemaining ?? 60;
       const totalDays = user.subscription?.trialDaysTotal ?? 60;
       const pct = Math.max(5, Math.min(100, Math.round((daysLeft / totalDays) * 100)));
 
       if (subModalStatusBadge) subModalStatusBadge.textContent = 'PERÍODO DE GRACIA ACTIVO';
-      if (subModalTitle) subModalTitle.textContent = isConductor ? 'Tu Cuenta de Conductor / Fletero' : 'Tu Cuenta de Flota Empresarial';
-      if (subModalPlanName) subModalPlanName.textContent = user.subscription?.planName || (isConductor ? 'Plan Fletero Pro' : 'Plan Flota Business');
+      if (subModalTitle) {
+        if (planType === 'fletero_pro') {
+          subModalTitle.textContent = 'Tu Cuenta de Conductor / Fletero';
+        } else if (planType === 'flota_vehiculos') {
+          subModalTitle.textContent = 'Tu Cuenta de Flota Multi-Vehículo';
+        } else {
+          subModalTitle.textContent = 'Tu Cuenta Enterprise con Dashboard';
+        }
+      }
+      if (subModalPlanName) {
+        subModalPlanName.textContent = user.subscription?.planName ||
+          (planType === 'fletero_pro' ? 'Plan Fletero Pro (1 Vehículo)' :
+            planType === 'flota_vehiculos' ? 'Plan Flota por Vehículos' : 'Plan Flota Enterprise (Dashboard Completo)');
+      }
       if (subDaysRemaining) subDaysRemaining.textContent = daysLeft;
       if (subCurrentCost) subCurrentCost.textContent = '$0 ARS';
       if (subProgressFill) subProgressFill.style.width = `${pct}%`;
@@ -859,21 +930,32 @@ document.addEventListener('DOMContentLoaded', () => {
       if (subEndDate) subEndDate.textContent = user.subscription?.endDate || new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR');
 
       if (subBenefitsList) {
-        if (isConductor) {
+        if (planType === 'fletero_pro') {
           subBenefitsList.innerHTML = `
-            <li><span class="check">✓</span> 0% de costo fijo de suscripción por 60 días</li>
-            <li><span class="check">✓</span> Viajes y fletes en tiempo real según tu radio de cobertura</li>
-            <li><span class="check">✓</span> Cobros asegurados acreditados en 24hs hábiles</li>
-            <li><span class="check">✓</span> Retornos programados para no viajar con la caja vacía</li>
-            <li><span class="check">✓</span> Asistencia y soporte preferencial por WhatsApp</li>
+            <li><span class="check">✓</span> 1 vehículo habilitado con 60 días bonificados ($0 de costo fijo)</li>
+            <li><span class="check">✓</span> Solicitudes de viajes y fletes en tiempo real por GPS</li>
+            <li><span class="check">✓</span> Cobro 100% directo con el cliente (0% comisión por viaje para Mudify)</li>
+            <li><span class="check">✓</span> Registro de números y viajes: estadísticas de tus fletes completados</li>
+            <li><span class="check">✓</span> Retornos coordinados para nunca volver vacío</li>
+            <li><span class="check">✓</span> Soporte operativo preferencial por WhatsApp</li>
+          `;
+        } else if (planType === 'flota_vehiculos') {
+          subBenefitsList.innerHTML = `
+            <li><span class="check">✓</span> Suscripción bonificada por cantidad de vehículos (hasta 3 unidades)</li>
+            <li><span class="check">✓</span> Cobro directo de tus clientes a tu empresa sin intermediación de fondos</li>
+            <li><span class="check">✓</span> Registro centralizado de números de flota: estadísticas de volumen y kilómetros</li>
+            <li><span class="check">✓</span> Perfiles y turnos individuales por chofer</li>
+            <li><span class="check">✓</span> Asignación según porte: utilitarios, furgones y camiones</li>
+            <li><span class="check">✓</span> Retornos interprovinciales coordinados para toda la flota</li>
           `;
         } else {
           subBenefitsList.innerHTML = `
-            <li><span class="check">✓</span> Suscripción bonificada por 60 días para toda tu flota</li>
-            <li><span class="check">✓</span> Habilitación de camiones, choferes y ayudantes ilimitados</li>
-            <li><span class="check">✓</span> Despacho de traslados de casas, oficinas y larga distancia</li>
-            <li><span class="check">✓</span> Facturación corporativa unificada y reportes quincenales</li>
-            <li><span class="check">✓</span> Ejecutivo de cuentas asignado a tu empresa</li>
+            <li><span class="check">✓</span> Dashboard Web Centralizado Full con torre de control de despacho</li>
+            <li><span class="check">✓</span> Telemetría GPS en tiempo real de toda tu flota en mapa interactivo</li>
+            <li><span class="check">✓</span> Consola de registro de números, cotizaciones históricas y estadísticas de flota</li>
+            <li><span class="check">✓</span> Cobro directo de todos los viajes entre cliente y empresa (0% retención de dinero)</li>
+            <li><span class="check">✓</span> Gestión de cuadrillas y peones de carga para mudanzas integrales</li>
+            <li><span class="check">✓</span> Ejecutivo corporativo asignado y soporte prioritario 24/7</li>
           `;
         }
       }
@@ -881,7 +963,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (subNoticeBox) {
         subNoticeBox.innerHTML = `
           <span class="info-icon">💡</span>
-          <p>Estás operando bajo el <strong>Período de Gracia de Lanzamiento de Mudify</strong>. No tenés cargos fijos ni tarjetas adheridas. Disfrutá de la demanda de clientes sin costo.</p>
+          <p>Estás operando bajo el <strong>Período de Gracia de Lanzamiento de Mudify</strong>. Mudify únicamente cobra la suscripción mensual fija (bonificada por 60 días a $0) y registra los números de tus operaciones. Los cobros de los viajes se realizan <strong>100% de forma directa</strong> entre el cliente y vos/tu empresa, sin comisiones por flete.</p>
         `;
       }
     } else {
@@ -898,14 +980,14 @@ document.addEventListener('DOMContentLoaded', () => {
           <li><span class="check">✓</span> Sin cuota mensual ni costos ocultos ($0 de suscripción de por vida)</li>
           <li><span class="check">✓</span> Cotizaciones inmediatas y conductores verificados</li>
           <li><span class="check">✓</span> Seguimiento satelital por GPS en vivo de tu mudanza</li>
-          <li><span class="check">✓</span> Pagos protegidos con Mercado Pago y tarjetas</li>
+          <li><span class="check">✓</span> Trato y pago 100% directo con tu chofer o empresa acordada (sin comisiones de intermediación)</li>
         `;
       }
 
       if (subNoticeBox) {
         subNoticeBox.innerHTML = `
           <span class="info-icon">📦</span>
-          <p>Los clientes de Mudify <strong>nunca abonan suscripciones</strong>. Solo pagás el traslado que contratás con tu chofer o empresa elegida.</p>
+          <p>Los clientes de Mudify <strong>nunca abonan suscripciones</strong>. Solo acordás y abonás el valor del traslado directamente a tu conductor o empresa de mudanzas elegida.</p>
         `;
       }
     }
@@ -943,33 +1025,43 @@ document.addEventListener('DOMContentLoaded', () => {
   btnActivateTrials.forEach(btn => {
     btn.addEventListener('click', () => {
       const role = btn.getAttribute('data-role') || 'conductor';
+      const planType = btn.getAttribute('data-plan') || (role === 'conductor' ? 'fletero_pro' : 'dashboard_completo');
       const user = getStoredUser();
 
+      let planName = 'Plan Fletero Pro (1 Vehículo)';
+      if (planType === 'flota_vehiculos') {
+        planName = 'Plan Flota por Vehículos';
+      } else if (planType === 'dashboard_completo') {
+        planName = 'Plan Flota Enterprise (Dashboard Completo)';
+      }
+
       if (!user) {
-        openAuthModal('register', role);
+        openAuthModal('register', role, planType);
       } else {
-        if (user.role === role) {
-          openSubscriptionModal();
-          showToast('Período de gracia activo', `Ya contás con tu período de gracia de 60 días bonificados como ${role === 'conductor' ? 'Fletero' : 'Empresa'}.`, 'success');
-        } else {
-          // Si el usuario registrado era cliente y decide sumarse como fletero o empresa
-          const now = new Date();
-          const trialEnd = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
-          user.role = role;
-          user.subscription = {
-            status: 'trial_active',
-            planName: role === 'conductor' ? 'Plan Fletero Pro' : 'Plan Flota Business',
-            trialDaysTotal: 60,
-            daysRemaining: 60,
-            startDate: now.toLocaleDateString('es-AR'),
-            endDate: trialEnd.toLocaleDateString('es-AR'),
-            price: 0,
-            currency: 'ARS'
-          };
-          saveUserSession(user);
-          openSubscriptionModal();
-          showToast('🎉 ¡Período de gracia activado!', `Has activado tus 60 días bonificados para operar como ${role === 'conductor' ? 'Fletero Pro' : 'Empresa con Flota'}.`, 'success', 5000);
+        const now = new Date();
+        const trialEnd = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
+        user.role = role;
+        user.subscription = {
+          status: 'trial_active',
+          planType: planType,
+          planName: planName,
+          trialDaysTotal: 60,
+          daysRemaining: 60,
+          startDate: now.toLocaleDateString('es-AR'),
+          endDate: trialEnd.toLocaleDateString('es-AR'),
+          price: 0,
+          currency: 'ARS'
+        };
+        saveUserSession(user);
+        if (firestoreDb && user.uid) {
+          firestoreDb.collection('usuarios').doc(user.uid).set({
+            role: role,
+            subscription: user.subscription,
+            updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true }).catch(e => console.warn('Aviso Firestore:', e));
         }
+        openSubscriptionModal();
+        showToast('🎉 ¡Período de gracia activado!', `Has activado tus 60 días bonificados para el ${planName}.`, 'success', 5000);
       }
     });
   });
@@ -977,9 +1069,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Tecla Escape para cerrar modales y menús
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      if (googleChooserModal && googleChooserModal.classList.contains('open')) {
-        closeGoogleChooser();
-      } else if (authModal && authModal.classList.contains('open')) {
+      if (authModal && authModal.classList.contains('open')) {
         closeAuthModal();
       } else if (subscriptionModal && subscriptionModal.classList.contains('open')) {
         closeSubscriptionModal();

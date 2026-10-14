@@ -2522,188 +2522,7 @@ h1, h2, h3 { font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
   font-weight: 500;
 }
 
-/* ========================================================
-   GOOGLE ACCOUNT CHOOSER (DEMO / SIMULATION DIALOG)
-   ======================================================== */
-.google-chooser-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.25rem;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
-}
 
-.google-chooser-overlay.open {
-  opacity: 1;
-  visibility: visible;
-}
-
-.google-chooser-card {
-  background: #FFFFFF;
-  width: 100%;
-  max-width: 440px;
-  border-radius: 14px;
-  padding: 2rem 1.75rem 1.5rem;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
-  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
-  transform: scale(0.96);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.google-chooser-overlay.open .google-chooser-card {
-  transform: scale(1);
-}
-
-.google-chooser-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.google-chooser-header h4 {
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: #202124;
-  margin: 0.6rem 0 0.2rem;
-}
-
-.google-chooser-header p {
-  font-size: 0.88rem;
-  color: #5f6368;
-}
-
-.google-accounts-list {
-  display: flex;
-  flex-direction: column;
-  border-top: 1px solid #dadce0;
-  border-bottom: 1px solid #dadce0;
-}
-
-.google-account-btn {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 10px;
-  border: none;
-  background: transparent;
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-  border-bottom: 1px solid #f1f3f4;
-  transition: background 0.15s ease;
-}
-
-.google-account-btn:last-child {
-  border-bottom: none;
-}
-
-.google-account-btn:hover {
-  background: #F8FAFC;
-}
-
-.google-acc-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.google-acc-icon-custom {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #E8F0FE;
-  color: #1a73e8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  flex-shrink: 0;
-}
-
-.google-acc-meta {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.google-acc-meta strong {
-  font-size: 0.94rem;
-  color: #202124;
-  font-weight: 500;
-}
-
-.google-acc-meta span {
-  font-size: 0.8rem;
-  color: #5f6368;
-}
-
-.google-custom-form {
-  padding: 1rem 0 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.google-custom-form input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #dadce0;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-family: inherit;
-}
-
-.google-custom-form input:focus {
-  outline: none;
-  border-color: #1a73e8;
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
-}
-
-.google-custom-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.google-chooser-footer {
-  margin-top: 1.4rem;
-  font-size: 0.75rem;
-  color: #70757a;
-  line-height: 1.45;
-}
-
-.google-chooser-footer a {
-  color: #1a73e8;
-  text-decoration: underline;
-}
-
-.btn--google-cancel {
-  margin-top: 1rem;
-  width: 100%;
-  padding: 9px;
-  border: 1px solid #dadce0;
-  border-radius: 6px;
-  background: #FFFFFF;
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: #1a73e8;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.btn--google-cancel:hover {
-  background: #f8f9fa;
-}
 
 /* ========================================================
    TOAST NOTIFICATION SYSTEM
@@ -2941,9 +2760,9 @@ h1, h2, h3 { font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
 /* Pricing Cards Container */
 .pricing-cards-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  max-width: 1040px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  max-width: 1240px;
   margin: 0 auto 4rem;
 }
 
@@ -2951,7 +2770,7 @@ h1, h2, h3 { font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
   background: var(--white);
   border: 2px solid var(--gray-200);
   border-radius: 24px;
-  padding: 2.75rem 2.25rem 2.25rem;
+  padding: 2.75rem 2rem 2.25rem;
   position: relative;
   overflow: hidden;
   box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
@@ -2971,6 +2790,32 @@ h1, h2, h3 { font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
   box-shadow: 0 20px 40px -10px rgba(0, 82, 204, 0.16);
 }
 
+.pricing-card--featured {
+  border-color: #0052cc;
+  box-shadow: 0 20px 45px -10px rgba(0, 82, 204, 0.18);
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+}
+
+.pricing-card--featured:hover {
+  border-color: #0052cc;
+  box-shadow: 0 25px 50px -10px rgba(0, 82, 204, 0.26);
+}
+
+.plan-featured-badge {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  background: #FEF3C7;
+  border: 1px solid #FDE68A;
+  color: #92400E;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  z-index: 5;
+}
+
 .pricing-card__ribbon {
   position: absolute;
   top: 18px;
@@ -2983,6 +2828,11 @@ h1, h2, h3 { font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
   transform: rotate(45deg);
   letter-spacing: 0.05em;
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+
+.pricing-card__ribbon--blue {
+  background: linear-gradient(135deg, #0052cc 0%, #1D4ED8 100%);
+  box-shadow: 0 2px 8px rgba(0, 82, 204, 0.4);
 }
 
 .pricing-card__ribbon--gold {
@@ -3008,6 +2858,11 @@ h1, h2, h3 { font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
   justify-content: center;
   font-size: 1.75rem;
   flex-shrink: 0;
+}
+
+.plan-icon-wrap--blue {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
 }
 
 .plan-icon-wrap--gold {
@@ -3369,7 +3224,14 @@ h1, h2, h3 { font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
 }
 
 /* Responsive adjustments for Pricing */
-@media (max-width: 860px) {
+@media (max-width: 1120px) {
+  .pricing-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 860px;
+  }
+}
+
+@media (max-width: 768px) {
   .pricing-cards-container {
     grid-template-columns: 1fr;
     max-width: 520px;
@@ -3395,9 +3257,10 @@ h1, h2, h3 { font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; }
   }
 
   .pricing-toggle-btn {
-    padding: 8px 14px;
-    font-size: 0.85rem;
+    padding: 8px 12px;
+    font-size: 0.8rem;
   }
 }
+
 
 
