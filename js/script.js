@@ -266,15 +266,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // SISTEMA DE AUTENTICACIÓN GOOGLE Y BASE DE DATOS (FIREBASE)
   // ========================================================
 
-  // Configuración oficial de Firebase para Mudify Web
+  // Configuración oficial de Firebase para Mudify Web (mudapp-a9d40)
   const firebaseConfig = {
-    apiKey: "AIzaSyCawyfIZozyoWixe4sH3SoJ9qbcgZeRFDQ",
-    authDomain: "mudiweb-7d4a2.firebaseapp.com",
-    projectId: "mudiweb-7d4a2",
-    storageBucket: "mudiweb-7d4a2.firebasestorage.app",
-    messagingSenderId: "94905247875",
-    appId: "1:94905247875:web:36a8c9a5922b3b181213b6",
-    measurementId: "G-0YM8ZT13J5"
+    apiKey: "AIzaSyCP2lXT7muCMQgUmnenCbAa4WAibfaECRw",
+    authDomain: "mudapp-a9d40.firebaseapp.com",
+    projectId: "mudapp-a9d40",
+    storageBucket: "mudapp-a9d40.firebasestorage.app",
+    messagingSenderId: "715192552282"
   };
 
   const AUTH_STORAGE_KEY = 'mudify_user_session';
@@ -406,23 +404,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (userChipRole) userChipRole.textContent = roleLabel;
 
-      // Personalizar accesos según el rol
+      // Personalizar accesos según el rol hacia panel.html
       if (dropdownRoleLink && dropdownRoleIcon && dropdownRoleTitle && dropdownRoleSubtitle) {
         if (user.role === 'conductor') {
           dropdownRoleIcon.textContent = '🚛';
           dropdownRoleTitle.textContent = 'Mi Panel de Conductor';
-          dropdownRoleSubtitle.textContent = 'Viajes disponibles y ganancias';
-          dropdownRoleLink.setAttribute('href', '#conducir');
+          dropdownRoleSubtitle.textContent = 'Despacho y agenda operativa';
+          dropdownRoleLink.setAttribute('href', 'panel.html#despacho-agenda');
         } else if (user.role === 'empresa') {
           dropdownRoleIcon.textContent = '🏢';
           dropdownRoleTitle.textContent = 'Panel Mudify Business';
-          dropdownRoleSubtitle.textContent = 'Gestión de flota y despachos';
-          dropdownRoleLink.setAttribute('href', '#empresas');
+          dropdownRoleSubtitle.textContent = 'Torre de control y flota';
+          dropdownRoleLink.setAttribute('href', 'panel.html#torre-de-control');
         } else {
           dropdownRoleIcon.textContent = '📦';
           dropdownRoleTitle.textContent = 'Mis Mudanzas y Cotizaciones';
           dropdownRoleSubtitle.textContent = 'Ver solicitudes y presupuestos';
-          dropdownRoleLink.setAttribute('href', '#descargar-app');
+          dropdownRoleLink.setAttribute('href', 'panel.html#solicitudes-cotizaciones');
         }
       }
 
@@ -705,19 +703,22 @@ document.addEventListener('DOMContentLoaded', () => {
       lastLoginAt: new Date().toISOString()
     };
 
-    // 4. Guardar/actualizar en la base de datos Firestore
+    // 4. Guardar/actualizar en la base de datos Firestore (colecciones 'users' y 'usuarios')
     if (firestoreDb) {
       try {
-        await firestoreDb.collection('usuarios').doc(fbUser.uid).set({
+        const userPayload = {
           uid: userObj.uid,
           name: userObj.name,
           email: userObj.email,
+          photoUrl: userObj.picture,
           picture: userObj.picture,
           role: userObj.role,
           subscription: userObj.subscription,
           updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-        console.log('Usuario sincronizado en base de datos Firestore:', userObj.email);
+        };
+        await firestoreDb.collection('users').doc(fbUser.uid).set(userPayload, { merge: true });
+        await firestoreDb.collection('usuarios').doc(fbUser.uid).set(userPayload, { merge: true });
+        console.log('Usuario sincronizado en base de datos Firestore (users):', userObj.email);
       } catch (err) {
         console.warn('Aviso al guardar en Firestore:', err);
       }
@@ -727,17 +728,32 @@ document.addEventListener('DOMContentLoaded', () => {
     closeAuthModal();
     pendingPlanType = null;
 
+    // Determinar destino del panel según el rol
+    let targetPanelUrl = 'panel.html';
+    if (role === 'conductor') {
+      targetPanelUrl = 'panel.html#despacho-agenda';
+    } else if (role === 'empresa') {
+      targetPanelUrl = 'panel.html#torre-de-control';
+    } else {
+      targetPanelUrl = 'panel.html#solicitudes-cotizaciones';
+    }
+
     if (isRegister) {
       if (role === 'conductor') {
-        showToast('🎉 ¡60 días gratis activados!', `Bienvenido a Mudify, ${userObj.name}. Tu período de gracia de 60 días como Fletero Pro ya está activo ($0 ARS).`, 'success', 6000);
+        showToast('🎉 ¡Registro exitoso!', `Bienvenido a Mudify, ${userObj.name}. Redirigiendo a tu panel de despacho...`, 'success', 3000);
       } else if (role === 'empresa') {
-        showToast('🎉 ¡Flota bonificada por 60 días!', `Bienvenido a Mudify, ${userObj.name}. Tu empresa cuenta con 60 días sin costo de suscripción.`, 'success', 6000);
+        showToast('🎉 ¡Bienvenida Empresa!', `Bienvenido ${userObj.name}. Redirigiendo a la Torre de Control...`, 'success', 3000);
       } else {
-        showToast('¡Cuenta creada con éxito!', `Bienvenido a Mudify, ${userObj.name}. Tu cuenta de Cliente es 100% gratuita para pedir mudanzas y fletes.`, 'success', 5000);
+        showToast('🎉 ¡Cuenta Creada!', `Bienvenido a Mudify, ${userObj.name}. Redirigiendo a tu panel...`, 'success', 3000);
       }
     } else {
-      showToast('¡Hola de nuevo!', `Has iniciado sesión correctamente como ${userObj.name}.`, 'success');
+      showToast('¡Hola de nuevo!', `Bienvenido ${userObj.name}. Redirigiendo a tu panel...`, 'success', 2500);
     }
+
+    // Redirección inmediata al panel correspondiente
+    setTimeout(() => {
+      window.location.href = targetPanelUrl;
+    }, 1000);
   };
 
   // Botón Principal Continuar con Google (Firebase Popup)

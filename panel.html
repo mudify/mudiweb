@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="web_dashboard" name="shell-type">
+  <title>Mudify PRO — Fleet Logistics &amp; Enterprise Dashboard</title>
+  
+  <!-- Tipografía Google Fonts Plus Jakarta Sans e Iconos Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+  
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+
+  <!-- Tailwind CSS CDN con Tokens de Diseño Oficiales de Stitch -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-fixed": "#002113",
+            "surface-container-low": "#f0f3ff",
+            "secondary-container": "#fd651e",
+            "on-tertiary": "#ffffff",
+            "outline": "#737786",
+            "primary-fixed-dim": "#b2c5ff",
+            "surface-dim": "#cfdaf5",
+            "secondary-fixed": "#ffdbce",
+            "inverse-primary": "#b2c5ff",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-container": "#1d68ed",
+            "secondary-fixed-dim": "#ffb599",
+            "on-secondary": "#ffffff",
+            "on-background": "#101c2f",
+            "surface-bright": "#f9f9ff",
+            "surface": "#f9f9ff",
+            "on-primary-container": "#f5f5ff",
+            "tertiary-fixed": "#6ffbbe",
+            "secondary": "#a73a00",
+            "error-container": "#ffdad6",
+            "primary-fixed": "#dae2ff",
+            "tertiary": "#006545",
+            "on-tertiary-container": "#daffe8",
+            "surface-container-lowest": "#ffffff",
+            "on-error": "#ffffff",
+            "inverse-surface": "#253145",
+            "error": "#ba1a1a",
+            "on-surface-variant": "#424654",
+            "on-secondary-container": "#571a00",
+            "on-error-container": "#93000a",
+            "outline-variant": "#c2c6d7",
+            "on-secondary-fixed": "#370e00",
+            "on-secondary-fixed-variant": "#7f2b00",
+            "surface-container-high": "#dfe8ff",
+            "on-surface": "#101c2f",
+            "tertiary-container": "#008158",
+            "on-primary": "#ffffff",
+            "primary": "#0050c4",
+            "surface-container-highest": "#d7e3fd",
+            "surface-container": "#e8eeff",
+            "on-primary-fixed-variant": "#0040a0",
+            "inverse-on-surface": "#ecf0ff",
+            "background": "#f9f9ff",
+            "surface-tint": "#0056d1",
+            "tertiary-fixed-dim": "#4edea3",
+            "surface-variant": "#d7e3fd",
+            "on-primary-fixed": "#001847"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "gutter": "1rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "margin": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem",
+            "space-md": "1rem"
+          },
+          fontFamily: {
+            "body-md": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Plus Jakarta Sans"]
+          },
+          fontSize: {
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "display-lg": ["34px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "headline-lg": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+            "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Firebase SDK Compat v10.12.0 (Preparado para enlace con Base de Datos) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
+
+  <!-- ======================================================== -->
+  <!-- 1. SIDEBAR LATERAL NAVEGACIÓN (STITCH OFFICIAL LAYOUT)   -->
+  <!-- ======================================================== -->
+  <aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="flex flex-col flex-1 overflow-y-auto">
+      <!-- Brand Header -->
+      <div class="h-16 px-space-lg flex items-center gap-space-sm">
+        <div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+          <span class="material-symbols-outlined text-[20px]">local_shipping</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-headline-sm text-headline-sm text-on-surface font-extrabold tracking-tight">Mudify <span class="text-primary-container">PRO</span></span>
+          <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider" id="sidebar-brand-subtitle">Conductor Independiente</span>
+        </div>
+      </div>
+
+      <!-- Live Network Badge -->
+      <div class="px-space-md py-space-sm">
+        <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
+          <div class="flex items-center gap-space-xs">
+            <span class="w-2.5 h-2.5 rounded-full bg-tertiary-container animate-pulse"></span>
+            <span class="font-label-sm text-label-sm text-on-surface font-semibold" id="sidebar-network-title">Estado Operativo</span>
+          </div>
+          <span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-surface-container-highest text-primary font-bold" id="sidebar-ontime-badge">100% En Línea</span>
+        </div>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="flex-1 px-space-sm py-space-xs flex flex-col gap-1" id="main-sidebar-nav">
+        <a class="flex items-center gap-space-sm px-space-md py-2.5 transition-all bg-primary-container text-on-primary-container font-bold rounded-xl" data-path="torre-de-control" href="#torre">
+          <span class="material-symbols-outlined text-[20px]">monitoring</span>
+          <span id="nav-label-torre">Torre de Control</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container hover:text-on-surface transition-all" data-path="solicitudes-cotizaciones" href="#cotizaciones">
+          <span class="material-symbols-outlined text-[20px]">request_quote</span>
+          <span id="nav-label-cotizaciones">Cotizaciones B2B</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container hover:text-on-surface transition-all" data-path="despacho-agenda" href="#agenda">
+          <span class="material-symbols-outlined text-[20px]">calendar_month</span>
+          <span id="nav-label-agenda">Despacho &amp; Agenda</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container hover:text-on-surface transition-all" data-path="flota-mantenimiento" href="#flota">
+          <span class="material-symbols-outlined text-[20px]">directions_bus</span>
+          <span id="nav-label-flota">Mi Vehículo &amp; Flota</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container hover:text-on-surface transition-all" data-path="choferes-cuadrillas" href="#choferes">
+          <span class="material-symbols-outlined text-[20px]">badge</span>
+          <span id="nav-label-choferes">Choferes &amp; Cuadrillas</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container hover:text-on-surface transition-all" data-path="facturacion-remitos" href="#facturacion">
+          <span class="material-symbols-outlined text-[20px]">receipt_long</span>
+          <span id="nav-label-facturacion">Facturación &amp; Remitos</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container hover:text-on-surface transition-all" data-path="reportes-rentabilidad" href="#reportes">
+          <span class="material-symbols-outlined text-[20px]">query_stats</span>
+          <span id="nav-label-reportes">Reportes &amp; Métricas</span>
+        </a>
+        <a class="flex items-center gap-space-sm px-space-md py-2.5 rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container hover:text-on-surface transition-all" data-path="configuracion-empresa" href="#configuracion">
+          <span class="material-symbols-outlined text-[20px]">tune</span>
+          <span id="nav-label-configuracion">Configuración</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Sidebar Bottom Support -->
+    <div class="p-space-md bg-surface-container-low m-space-sm rounded-xl flex items-center justify-between">
+      <div class="flex flex-col">
+        <span class="font-label-sm text-label-sm text-outline">Soporte Central 24/7</span>
+        <span class="font-label-lg text-label-lg text-on-surface font-bold">Canal de Enlace</span>
+      </div>
+      <button class="w-8 h-8 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary-container shadow-[0_1px_8px_rgba(0,0,0,0.04)] hover:bg-primary-container hover:text-on-primary transition-colors" id="btn-support-channel" title="Abrir canal de soporte">
+        <span class="material-symbols-outlined text-[18px]">headset_mic</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ======================================================== -->
+  <!-- 2. CONTENIDO PRINCIPAL & TOPBAR                           -->
+  <!-- ======================================================== -->
+  <div class="pl-72">
+    <!-- TOPBAR OFICIAL STITCH -->
+    <header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+      <div class="h-16 w-full px-space-lg flex items-center justify-between">
+        <!-- Hub Selector & Telemetry Summary -->
+        <div class="flex items-center gap-space-md">
+          <div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1.5 rounded-xl">
+            <span class="material-symbols-outlined text-[18px] text-primary-container">warehouse</span>
+            <select aria-label="Seleccionar base operativa" class="bg-transparent font-label-md text-label-md text-on-surface font-semibold focus:outline-none cursor-pointer" id="topbar-hub-select">
+              <!-- Inyectado dinámicamente desde MudifyEnterpriseService -->
+            </select>
+          </div>
+          <!-- Live Telemetry Counts (Inyectados dinámicamente) -->
+          <div class="hidden xl:flex items-center gap-space-md text-label-md font-label-md text-on-surface-variant pl-space-sm" id="topbar-telemetry-counters">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Topbar Right Profile, Mode Switcher & Actions -->
+        <div class="flex items-center gap-space-md">
+          <!-- Switcher Conductor Independiente vs Empresa de Mudanzas -->
+          <div class="flex items-center bg-surface-container-low p-1 rounded-xl shadow-sm border border-surface-container-high/40" id="topbar-mode-switcher">
+            <button id="btn-mode-conductor" class="px-3 py-1.5 rounded-lg text-label-sm font-bold transition-all flex items-center gap-1.5 bg-primary-container text-on-primary shadow-sm" title="Panel exclusivo de conductor independiente">
+              <span class="material-symbols-outlined text-[16px]">local_shipping</span>
+              <span>Conductor</span>
+            </button>
+            <button id="btn-mode-empresa" class="px-3 py-1.5 rounded-lg text-label-sm font-bold transition-all flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container" title="Panel de gestión de empresa y flota completa">
+              <span class="material-symbols-outlined text-[16px]">domain</span>
+              <span>Empresa</span>
+            </button>
+          </div>
+
+          <button aria-label="Buscar despachos o unidades" class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" id="btn-topbar-search">
+            <span class="material-symbols-outlined text-[20px]">search</span>
+          </button>
+          <button aria-label="Alertas operativas" class="relative w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" id="btn-topbar-alerts">
+            <span class="material-symbols-outlined text-[20px]">notifications</span>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary-container" id="topbar-alerts-dot"></span>
+          </button>
+          <div class="h-6 w-px bg-surface-container-high"></div>
+          <div class="flex items-center gap-space-sm pl-space-xs">
+            <div class="flex flex-col text-right">
+              <span class="font-label-md text-label-md text-on-surface font-bold leading-none" id="topbar-user-name">...</span>
+              <span class="font-label-sm text-label-sm text-outline" id="topbar-user-role">...</span>
+            </div>
+            <img alt="Profile" class="w-8 h-8 rounded-full object-cover" id="topbar-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80">
+            <button aria-label="Cerrar sesión de Google" class="w-8 h-8 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-error transition-colors" id="btn-topbar-logout" title="Cerrar sesión de Google">
+              <span class="material-symbols-outlined text-[18px]">logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main class="relative pt-16 bg-surface min-h-screen">
+
+      <!-- ======================================================== -->
+      <!-- VISTA 1: TORRE DE CONTROL OPERATIVO                      -->
+      <!-- ======================================================== -->
+      <section class="panel-view" id="view-torre-de-control">
+        <div class="flex flex-col w-full">
+          <div class="p-space-lg flex flex-col gap-space-lg w-full max-w-[1720px] mx-auto">
+            
+            <!-- Subheader Strip & Actions -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+              <div>
+                <div class="flex items-center gap-space-xs mb-1">
+                  <span class="inline-block w-2 h-2 rounded-full bg-tertiary-container animate-pulse"></span>
+                  <span class="font-label-sm text-label-sm text-tertiary font-bold uppercase tracking-wider">Telemetría Satelital · Feed En Tiempo Real</span>
+                  <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm font-semibold" id="tc-hub-badge">Hub Activo</span>
+                </div>
+                <h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Torre de Control Operativo</h1>
+              </div>
+              <div class="flex flex-wrap items-center gap-space-sm">
+                <div class="flex items-center bg-surface-container-lowest px-space-sm py-2 rounded-xl shadow-sm">
+                  <span class="material-symbols-outlined text-[18px] text-outline mr-2">calendar_today</span>
+                  <span class="font-label-md text-label-md text-on-surface font-semibold" id="live-timestamp">Sincronizando...</span>
+                </div>
+                <button class="h-10 px-space-md rounded-xl bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-all flex items-center gap-1.5 shadow-sm" id="btn-export-manifests">
+                  <span class="material-symbols-outlined text-[18px]">sim_card_download</span>
+                  Exportar Manifiestos
+                </button>
+                <button class="h-10 px-space-lg rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg hover:opacity-95 active:scale-[0.98] transition-all flex items-center gap-2 shadow-[0_8px_20px_-2px_rgba(29,104,237,0.35)]" id="btn-new-b2b-dispatch">
+                  <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                  Nuevo Despacho B2B
+                </button>
+              </div>
+            </div>
+
+            <!-- 1. KPI Metric Ribbon (4 CARDS DINÁMICAS INYECTADAS DESDE JS) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md" id="tc-kpis-container">
+              <!-- Inyectado 100% dinámicamente desde MudifyEnterpriseService.getKPIs() -->
+            </div>
+
+            <!-- 2 & 3. Main Operational Split (Telemetry Map + Live Priority Dispatches) -->
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg">
+              
+              <!-- Map & Telemetry Dashboard (7 Cols) -->
+              <div class="xl:col-span-7 flex flex-col gap-space-md">
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+                  <!-- Toolbar del Mapa -->
+                  <div class="p-space-md bg-surface-container-lowest flex flex-wrap items-center justify-between gap-space-sm">
+                    <div class="flex items-center gap-space-sm">
+                      <div class="w-3 h-3 rounded-full bg-secondary-container animate-ping"></div>
+                      <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Monitoreo Satelital GPS · AMBA</h2>
+                    </div>
+                    <div class="flex items-center gap-1.5" id="tc-map-toolbar-actions">
+                      <button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-label-sm text-label-sm font-bold hover:bg-surface-container-high transition-colors" id="btn-toggle-traffic">
+                        Tráfico en Vivo
+                      </button>
+                      <button class="px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm hover:bg-surface-container transition-colors" id="btn-toggle-zones">
+                        Zonas de Descarga
+                      </button>
+                      <button class="w-8 h-8 rounded-lg bg-surface-container-low text-on-surface flex items-center justify-center hover:bg-surface-container" id="btn-center-map" title="Centrar Mapa">
+                        <span class="material-symbols-outlined text-[18px]">my_location</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Sub-toolbar con Filtros de Unidades -->
+                  <div class="px-space-md pb-space-sm flex items-center justify-between border-b border-surface-container-high/40">
+                    <div class="flex items-center gap-space-sm text-label-sm font-label-sm text-on-surface-variant">
+                      <span>Móviles:</span>
+                      <div class="flex items-center gap-1" id="tc-map-type-filters">
+                        <button class="px-2 py-0.5 rounded bg-primary-container text-on-primary font-bold" data-filter="todos">Todos</button>
+                        <button class="px-2 py-0.5 rounded hover:bg-surface-container" data-filter="pesado">Pesados</button>
+                        <button class="px-2 py-0.5 rounded hover:bg-surface-container" data-filter="furgon">Furgones</button>
+                      </div>
+                    </div>
+                    <span class="text-tertiary font-label-sm text-[11px] font-bold flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-tertiary-container animate-pulse"></span>
+                      Telemetría en Vivo OK
+                    </span>
+                  </div>
+
+                  <!-- Canvas Interactivo del Mapa Satelital -->
+                  <div class="relative h-[380px] bg-surface-container-highest overflow-hidden" id="tc-map-canvas-wrapper">
+                    <!-- Mapa Satelital / Vectorial de Fondo -->
+                    <div class="absolute inset-0 bg-[#0b1c30] flex items-center justify-center overflow-hidden">
+                      <!-- Grid Satelital de Coordenadas -->
+                      <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px); background-size: 32px 32px;"></div>
+                      
+                      <!-- Anillo de Barrido Radar -->
+                      <div class="w-[360px] h-[360px] rounded-full border border-primary/30 flex items-center justify-center animate-[spin_12s_linear_infinite]">
+                        <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+                      </div>
+
+                      <!-- Coordenadas AMBA de Referencia -->
+                      <span class="absolute bottom-3 left-3 text-[10px] text-white/40 font-mono">GPS: -34.6037° S, -58.3816° W (CABA / AMBA)</span>
+                    </div>
+
+                    <!-- Contenedor Dinámico de Pines de Vehículos -->
+                    <div class="absolute inset-0 z-20 pointer-events-none" id="radar-dynamic-pins">
+                      <!-- Inyectado 100% dinámicamente desde MudifyEnterpriseService.getVehicles() -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ficha Telemática Lateral & Stream en Vivo (5 Cols) -->
+              <div class="xl:col-span-5 flex flex-col gap-space-md">
+                <!-- Ficha de Unidad Seleccionada -->
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col justify-between" id="active-vehicle-card">
+                  <!-- Inyectado 100% dinámicamente para la unidad activa seleccionada -->
+                </div>
+
+                <!-- Stream Rápido de Flota en Vivo -->
+                <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col">
+                  <div class="flex items-center justify-between pb-space-xs mb-space-xs border-b border-surface-container-high/60">
+                    <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">Feed Rápido de Flota</span>
+                    <span class="text-primary font-label-sm text-label-sm font-bold cursor-pointer hover:underline" onclick="window.MudifyUI.switchView('flota-mantenimiento')">Ver Todo</span>
+                  </div>
+                  <div class="divide-y divide-surface-container-high/40 max-h-[190px] overflow-y-auto" id="tc-fleet-stream-container">
+                    <!-- Inyectado 100% dinámicamente -->
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Despachos Prioritarios & Alertas Preventivas (Split Inferior) -->
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg">
+              <!-- Despachos Prioritarios (8 Cols) -->
+              <div class="xl:col-span-8 flex flex-col gap-space-sm bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+                <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-high/60">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-primary-container">local_shipping</span>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Despachos Prioritarios</h2>
+                  </div>
+                  <span class="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm font-semibold" id="tc-priority-count-badge">0 Activos</span>
+                </div>
+                <div class="flex flex-col gap-space-sm mt-space-sm" id="priority-dispatches-container">
+                  <!-- Inyectado 100% dinámicamente -->
+                </div>
+              </div>
+
+              <!-- Alertas Preventivas de Flota & Cumplimiento Legal (4 Cols) -->
+              <div class="xl:col-span-4 flex flex-col gap-space-sm bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+                <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-high/60">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-secondary">verified_user</span>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Alertas &amp; Cumplimiento Legal</h2>
+                  </div>
+                  <span class="w-2.5 h-2.5 rounded-full bg-tertiary-container animate-pulse"></span>
+                </div>
+                <div class="flex flex-col gap-space-sm mt-space-sm" id="legal-alerts-container">
+                  <!-- Inyectado 100% dinámicamente -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- VISTA 2: DESPACHO & AGENDA OPERATIVA                    -->
+      <!-- ======================================================== -->
+      <section class="panel-view hidden" id="view-despacho-agenda">
+        <div class="flex flex-col w-full">
+          <!-- Toolbar Superior de Agenda -->
+          <div class="px-space-lg pt-space-lg pb-space-md flex flex-col gap-space-md bg-surface-container-lowest shadow-sm">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+                  <span class="material-symbols-outlined text-[22px]">calendar_month</span>
+                </div>
+                <div>
+                  <h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Despacho &amp; Agenda Operativa</h1>
+                  <div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+                    <span class="flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[16px] text-outline">schedule</span>
+                      <span id="agenda-active-shift-text">Sincronizando turno...</span>
+                    </span>
+                    <span>•</span>
+                    <span class="text-tertiary font-semibold" id="agenda-capacity-gauge-text">Cálculo de franjas activas</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-space-xs">
+                <div class="flex rounded-xl bg-surface-container-low p-1 text-label-sm font-label-sm" id="agenda-timeframe-switch">
+                  <button class="px-3 py-1 rounded-lg bg-surface-container-lowest text-on-surface font-bold shadow-sm" data-frame="hoy">Hoy</button>
+                  <button class="px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface" data-frame="semana">Semana</button>
+                  <button class="px-3 py-1 rounded-lg text-on-surface-variant hover:text-on-surface" data-frame="mes">Mes</button>
+                </div>
+                <button class="h-10 px-space-md rounded-xl bg-primary-container text-on-primary font-label-md text-label-md hover:opacity-95 transition-all flex items-center gap-1.5 shadow-sm" id="btn-manual-move">
+                  <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                  + Programar Mudanza Manual
+                </button>
+              </div>
+            </div>
+
+            <!-- Filtros de Hub y Portes -->
+            <div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs border-t border-surface-container-high/40">
+              <div class="flex flex-wrap items-center gap-space-sm">
+                <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Centro Logístico:</span>
+                <div class="flex items-center gap-1 bg-surface-container-low px-space-sm py-1 rounded-xl">
+                  <span class="material-symbols-outlined text-[16px] text-primary">warehouse</span>
+                  <select aria-label="Seleccionar Base Logística" class="bg-transparent font-label-md text-label-md text-on-surface focus:outline-none cursor-pointer pr-2" id="agenda-hub-select">
+                    <!-- Inyectado dinámicamente -->
+                  </select>
+                </div>
+                <div class="flex items-center gap-1 bg-surface-container-low px-space-sm py-1 rounded-xl">
+                  <span class="material-symbols-outlined text-[16px] text-outline">tune</span>
+                  <select aria-label="Filtrar por porte de vehículo" class="bg-transparent font-label-md text-label-md text-on-surface-variant focus:outline-none cursor-pointer pr-2" id="agenda-porte-filter">
+                    <option value="todos" selected>Todos los Portes</option>
+                    <option value="furgon">Furgones Rápidos (&lt; 18 m³)</option>
+                    <option value="chasis">Chasis Mediano (19 a 35 m³)</option>
+                    <option value="pesado">Camión Pesado (&gt; 40 m³)</option>
+                  </select>
+                </div>
+                <!-- Resumen Rápido -->
+                <div class="hidden md:flex items-center gap-space-sm pl-space-sm text-label-sm font-label-sm text-on-surface-variant" id="agenda-quick-stats">
+                  <!-- Inyectado dinámicamente -->
+                </div>
+              </div>
+              <div class="flex items-center gap-space-sm bg-surface-container-low px-space-md py-1.5 rounded-xl">
+                <div class="w-24 bg-surface-container-highest h-2 rounded-full overflow-hidden">
+                  <div class="bg-primary-container h-full rounded-full transition-all duration-500" id="agenda-capacity-bar" style="width: 85%;"></div>
+                </div>
+                <span class="font-label-sm text-label-sm text-on-surface font-bold" id="agenda-capacity-pct-text">85% Ocupado</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Matriz Gantt & Servicios por Asignar -->
+          <div class="p-space-lg grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+            <!-- PANEL IZQUIERDO (8 Cols): Matriz Horaria Gantt -->
+            <div class="xl:col-span-8 flex flex-col gap-space-md">
+              <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+                <div class="p-space-md bg-surface-container-low flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[20px]">local_shipping</span>
+                    <span class="font-headline-sm text-headline-sm text-on-surface font-bold">Cronograma Diario de Flota</span>
+                  </div>
+                  <div class="flex items-center gap-space-sm text-label-sm font-label-sm">
+                    <span class="flex items-center gap-1 text-tertiary"><span class="w-2.5 h-2.5 rounded-full bg-tertiary-container"></span>Completado</span>
+                    <span class="flex items-center gap-1 text-primary"><span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span>En curso</span>
+                    <span class="flex items-center gap-1 text-outline"><span class="w-2.5 h-2.5 rounded-full bg-surface-dim"></span>Disponible</span>
+                  </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                  <div class="min-w-[880px] p-space-md">
+                    <!-- Escala de Horas (07:00 a 19:00) -->
+                    <div class="grid grid-cols-13 gap-1 mb-space-sm pl-56 text-center font-label-sm text-label-sm text-outline">
+                      <div>07:00</div>
+                      <div>08:00</div>
+                      <div>09:00</div>
+                      <div>10:00</div>
+                      <div>11:00</div>
+                      <div>12:00</div>
+                      <div>13:00</div>
+                      <div>14:00</div>
+                      <div>15:00</div>
+                      <div>16:00</div>
+                      <div>17:00</div>
+                      <div>18:00</div>
+                      <div>19:00</div>
+                    </div>
+                    <!-- Filas Dinámicas de Vehículos Gantt -->
+                    <div class="flex flex-col gap-space-md" id="gantt-vehicle-rows-container">
+                      <!-- Inyectado 100% dinámicamente desde MudifyEnterpriseService.getTimelineSchedule() -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANEL DERECHO (4 Cols): Servicios por Asignar & Cuadrillas -->
+            <div class="xl:col-span-4 flex flex-col gap-space-lg">
+              <!-- Servicios por Asignar -->
+              <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-sm">
+                <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high/60">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-[20px]">assignment_late</span>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Servicios por Asignar</h2>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-full bg-secondary-container/10 text-secondary-container font-label-sm text-label-sm font-bold" id="pending-services-badge">0</span>
+                </div>
+                <div class="flex flex-col gap-space-sm mt-space-xs" id="pending-services-container">
+                  <!-- Inyectado 100% dinámicamente -->
+                </div>
+              </div>
+
+              <!-- Cuadrillas para Turno Tarde -->
+              <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md flex flex-col gap-space-sm">
+                <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high/60">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[20px]">groups</span>
+                    <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">Cuadrillas Turno Tarde</h2>
+                  </div>
+                  <button class="px-2 py-0.5 rounded-lg bg-surface-container-low text-primary text-xs font-bold hover:bg-surface-container" id="btn-broadcast-crew">
+                    Mensaje Masivo
+                  </button>
+                </div>
+                <div class="flex flex-col gap-space-sm mt-space-xs" id="afternoon-crews-container">
+                  <!-- Inyectado 100% dinámicamente -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- VISTA 3: FLOTA DE VEHÍCULOS & MANTENIMIENTO              -->
+      <!-- ======================================================== -->
+      <section class="panel-view hidden" id="view-flota-mantenimiento">
+        <div class="flex flex-col w-full">
+          <!-- Toolbar Superior de Flota -->
+          <div class="px-space-xl pt-space-lg pb-space-md flex flex-col gap-space-md bg-surface-container-lowest shadow-sm">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+                  <span class="material-symbols-outlined text-[22px]">directions_bus</span>
+                </div>
+                <div>
+                  <h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Control de Flota, Talleres &amp; Documentación</h1>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant" id="fleet-header-status">
+                    Sincronizando estado técnico y habilitaciones de unidades...
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center gap-space-xs">
+                <button class="h-10 px-space-md rounded-xl bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-all flex items-center gap-1.5 shadow-sm" id="btn-export-fleet">
+                  <span class="material-symbols-outlined text-[18px]">download</span>
+                  Exportar Planilla
+                </button>
+                <button class="h-10 px-space-md rounded-xl bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-all flex items-center gap-1.5 shadow-sm" id="btn-consorcios-cert">
+                  <span class="material-symbols-outlined text-[18px]">verified_user</span>
+                  No-Repetición Consorcios
+                </button>
+                <button class="h-10 px-space-md rounded-xl bg-primary-container text-on-primary font-label-md text-label-md hover:opacity-95 transition-all flex items-center gap-1.5 shadow-sm" id="btn-open-add-vehicle">
+                  <span class="material-symbols-outlined text-[18px]">add</span>
+                  + Registrar Nuevo Vehículo
+                </button>
+              </div>
+            </div>
+
+            <!-- Filtros de Pestañas y Buscador -->
+            <div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs border-t border-surface-container-high/40">
+              <div class="flex flex-wrap items-center gap-space-xs" id="fleet-filter-tabs">
+                <button class="filter-tab active px-space-md py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-space-xs shadow-sm transition-all" data-filter="todos">
+                  <span>Todos</span>
+                  <span class="px-1.5 py-0.2 rounded-full bg-white/20 text-[11px]" id="count-todos">0</span>
+                </button>
+                <button class="filter-tab px-space-md py-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center gap-space-xs transition-all" data-filter="en_ruta">
+                  <span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+                  <span>En Ruta / Operando</span>
+                  <span class="px-1.5 py-0.2 rounded-full bg-surface-container-high text-[11px]" id="count-en-ruta">0</span>
+                </button>
+                <button class="filter-tab px-space-md py-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center gap-space-xs transition-all" data-filter="disponible">
+                  <span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                  <span>Disponible en Base</span>
+                  <span class="px-1.5 py-0.2 rounded-full bg-surface-container-high text-[11px]" id="count-disponible">0</span>
+                </button>
+                <button class="filter-tab px-space-md py-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md flex items-center gap-space-xs transition-all" data-filter="taller">
+                  <span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+                  <span>En Taller / Service</span>
+                  <span class="px-1.5 py-0.2 rounded-full bg-surface-container-high text-[11px]" id="count-taller">0</span>
+                </button>
+              </div>
+
+              <!-- Input de Búsqueda -->
+              <div class="w-full lg:w-80 relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+                <input class="w-full pl-9 pr-space-md py-2 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" id="fleet-search-input" placeholder="Buscar patente, interno o chofer..." type="text">
+              </div>
+            </div>
+          </div>
+
+          <!-- Matriz Interactiva de Flota (TABLA DINÁMICA INYECTADA) -->
+          <div class="px-space-xl py-space-lg">
+            <div class="bg-surface-container-lowest rounded-xl shadow-[0_2px_16px_rgba(16,28,47,0.05)] overflow-hidden">
+              <!-- Encabezado de la Tabla -->
+              <div class="grid grid-cols-12 px-space-lg py-space-md bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider items-center font-bold">
+                <div class="col-span-3">Móvil e Identificación</div>
+                <div class="col-span-3">Capacidad &amp; Estiba Especial</div>
+                <div class="col-span-2">Chofer &amp; Cuadrilla Asignada</div>
+                <div class="col-span-2">Estado &amp; Destino</div>
+                <div class="col-span-2 text-right">Documentación / Gestión</div>
+              </div>
+              <!-- Filas de Flota (100% DINÁMICAS INYECTADAS POR JS) -->
+              <div class="divide-y divide-surface-container-high/60" id="fleet-table-body">
+                <!-- Inyectado dinámicamente desde MudifyEnterpriseService.getVehicles() -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Tablas Inferiores: Mantenimiento Preventivo & Bóveda de Pólizas -->
+          <div class="px-space-xl pb-space-xl grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+            <!-- Mantenimiento Preventivo & Taller (7 Cols) -->
+            <div class="lg:col-span-7 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+              <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high/60">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[20px] text-secondary">build_circle</span>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Mantenimiento Preventivo &amp; Taller</h3>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm font-semibold" id="fleet-maintenance-badge">1 Activo</span>
+              </div>
+              <div class="divide-y divide-surface-container-high/40" id="fleet-maintenance-list">
+                <!-- Inyectado dinámicamente -->
+              </div>
+            </div>
+
+            <!-- Bóveda de Pólizas & ART (5 Cols) -->
+            <div class="lg:col-span-5 bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+              <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high/60">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[20px] text-tertiary">folder_special</span>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Bóveda de Pólizas &amp; ART</h3>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full bg-tertiary-container/10 text-tertiary-container font-label-sm text-label-sm font-bold">Al Día</span>
+              </div>
+              <div class="flex flex-col gap-space-sm" id="fleet-vault-list">
+                <!-- Inyectado dinámicamente -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- VISTA 4: COTIZACIONES B2B                                -->
+      <!-- ======================================================== -->
+      <section class="panel-view hidden" id="view-solicitudes-cotizaciones">
+        <div class="p-space-lg flex flex-col gap-space-lg w-full max-w-[1720px] mx-auto">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+            <div>
+              <div class="flex items-center gap-space-xs mb-1">
+                <span class="inline-block w-2 h-2 rounded-full bg-primary-container"></span>
+                <span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Ventas Corporativas</span>
+              </div>
+              <h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Cotizaciones B2B &amp; Clientes Empresariales</h1>
+              <p class="font-body-md text-body-md text-on-surface-variant">Licitaciones, presupuestos volumétricos y contratos logísticos de mudanza.</p>
+            </div>
+            <button class="h-10 px-space-lg rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg hover:opacity-95 transition-all flex items-center gap-2 shadow-md" id="btn-nueva-cotizacion">
+              <span class="material-symbols-outlined text-[20px]">add_circle</span>
+              Emitir Nueva Cotización
+            </button>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md divide-y divide-surface-container-high/40" id="b2b-quotes-container">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- VISTA 5: CHOFERES & CUADRILLAS                           -->
+      <!-- ======================================================== -->
+      <section class="panel-view hidden" id="view-choferes-cuadrillas">
+        <div class="p-space-lg flex flex-col gap-space-lg w-full max-w-[1720px] mx-auto">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+            <div>
+              <div class="flex items-center gap-space-xs mb-1">
+                <span class="inline-block w-2 h-2 rounded-full bg-tertiary-container"></span>
+                <span class="font-label-sm text-label-sm text-tertiary font-bold uppercase tracking-wider">Personal Operativo</span>
+              </div>
+              <h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Choferes, Estibadores &amp; Legajos</h1>
+              <p class="font-body-md text-body-md text-on-surface-variant">Profesionales registrados con habilitación LINTI y pólizas de ART activas.</p>
+            </div>
+            <button class="h-10 px-space-lg rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg hover:opacity-95 transition-all flex items-center gap-2 shadow-md" id="btn-alta-personal">
+              <span class="material-symbols-outlined text-[20px]">person_add</span>
+              Alta de Personal
+            </button>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md" id="crew-list-container">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- VISTA 6: FACTURACIÓN & REMITOS                           -->
+      <!-- ======================================================== -->
+      <section class="panel-view hidden" id="view-facturacion-remitos">
+        <div class="p-space-lg flex flex-col gap-space-lg w-full max-w-[1720px] mx-auto">
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+            <div>
+              <div class="flex items-center gap-space-xs mb-1">
+                <span class="inline-block w-2 h-2 rounded-full bg-tertiary-container"></span>
+                <span class="font-label-sm text-label-sm text-tertiary font-bold uppercase tracking-wider">Finanzas &amp; Facturación</span>
+              </div>
+              <h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Facturación Mensual &amp; Remitos Digitales</h1>
+              <p class="font-body-md text-body-md text-on-surface-variant">Liquidaciones con clientes corporativos, remitos firmados y recaudación directa.</p>
+            </div>
+            <button class="h-10 px-space-lg rounded-xl bg-surface-container-high text-on-surface font-label-lg text-label-lg hover:bg-surface-container-highest transition-all flex items-center gap-2 shadow-sm" id="btn-descargar-balance">
+              <span class="material-symbols-outlined text-[20px]">download</span>
+              Exportar Balance
+            </button>
+          </div>
+          <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-md" id="invoices-list-container">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- VISTA 7: REPORTES & MÉTRICAS                             -->
+      <!-- ======================================================== -->
+      <section class="panel-view hidden" id="view-reportes-rentabilidad">
+        <div class="p-space-lg flex flex-col gap-space-lg w-full max-w-[1720px] mx-auto">
+          <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+            <h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Reportes &amp; Métricas Operativas</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Rendimiento por unidad, horas de estiba y cumplimiento del SLA de puntualidad.</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg" id="reports-metrics-container">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== -->
+      <!-- VISTA 8: CONFIGURACIÓN & ESTADO BD                       -->
+      <!-- ======================================================== -->
+      <section class="panel-view hidden" id="view-configuracion-empresa">
+        <div class="p-space-lg flex flex-col gap-space-lg w-full max-w-[1720px] mx-auto">
+          <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+            <h1 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Configuración &amp; Enlace de Base de Datos</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant">Parámetros del sistema, credenciales de Cloud Firestore y estado de sincronización.</p>
+          </div>
+          <div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md" id="settings-form-container">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: FICHA TÉCNICA DINÁMICA (DISEÑADO EN STITCH)       -->
+  <!-- ======================================================== -->
+  <div class="fixed inset-0 bg-inverse-surface/50 backdrop-blur-sm z-50 flex items-center justify-center p-space-md hidden" id="modal-ficha">
+    <div class="bg-surface-container-lowest rounded-xl max-w-2xl w-full p-space-lg shadow-2xl overflow-y-auto max-h-[90vh]">
+      <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-high/60">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+            <span class="material-symbols-outlined text-[24px]">local_shipping</span>
+          </div>
+          <div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold" id="modal-title">Ficha Técnica Integral</h3>
+            <span class="font-label-md text-label-md text-outline" id="modal-patente">Cargando datos...</span>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors" id="btn-close-modal">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+      <!-- Detalles dinámicos inyectados por JS (Cero hardcoded) -->
+      <div class="grid grid-cols-2 gap-space-md mt-space-md" id="modal-ficha-details">
+        <!-- Inyectado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL / OVERLAY: ACCESO EXCLUSIVO CON GOOGLE (ESTÁNDAR #1) -->
+  <!-- ======================================================== -->
+  <div class="fixed inset-0 bg-surface/95 backdrop-blur-md z-[100] flex items-center justify-center p-space-md transition-all duration-300 hidden" id="panel-auth-overlay">
+    <div class="bg-surface-container-lowest max-w-md w-full rounded-2xl shadow-2xl p-space-xl border border-surface-container-high/60 flex flex-col items-center text-center">
+      <div class="w-16 h-16 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center mb-space-md shadow-lg">
+        <span class="material-symbols-outlined text-[36px]">local_shipping</span>
+      </div>
+      <h2 class="font-headline-lg text-headline-lg text-on-surface font-extrabold tracking-tight">Mudify PRO Enterprise</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1 mb-space-lg">
+        Torre de control y gestión operativa. Estándar de seguridad exclusivo mediante inicio de sesión con cuenta de Google.
+      </p>
+
+      <div class="w-full flex flex-col gap-space-sm">
+        <button class="w-full flex items-center justify-center gap-3 py-3.5 px-6 rounded-xl bg-surface-container-lowest border-2 border-outline-variant hover:border-primary hover:bg-surface-container-low transition-all shadow-sm font-label-lg text-label-lg font-bold text-on-surface cursor-pointer" id="btn-panel-google-login">
+          <svg class="w-5 h-5" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span id="btn-panel-google-text">Acceder con Cuenta de Google</span>
+        </button>
+
+        <div class="flex items-center justify-center gap-1.5 text-label-sm text-[11px] text-outline mt-2">
+          <span class="material-symbols-outlined text-[14px] text-tertiary">lock</span>
+          <span>Google OAuth 2.0 · Acceso Cifrado de Extremo a Extremo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS CONTAINER -->
+  <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-2" id="toast-container"></div>
+
+  <!-- Capa de Datos y Estado Reactivo Enterprise (Sin datos hardcodeados) -->
+  <script src="js/panel-service.js?v=3"></script>
+
+  <!-- Controlador Dinámico del Panel Stitch -->
+  <script src="js/panel.js?v=3"></script>
+
+</body>
+</html>
