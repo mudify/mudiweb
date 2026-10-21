@@ -399,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (dropdownUserEmail) dropdownUserEmail.textContent = user.email || '';
 
       let roleLabel = 'Cliente';
-      if (user.role === 'conductor') roleLabel = 'Conductor';
+      if (user.role === 'conductor') roleLabel = 'Conductor Independiente';
       if (user.role === 'empresa') roleLabel = 'Empresa';
 
       if (userChipRole) userChipRole.textContent = roleLabel;
@@ -558,6 +558,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  window.openAuthModal = openAuthModal;
+  window.closeAuthModal = closeAuthModal;
+
   // Manejo de tabs en el modal
   if (tabBtnLogin) {
     tabBtnLogin.addEventListener('click', () => openAuthModal('login', selectedUserRole));
@@ -636,24 +639,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let role = chosenRole || 'cliente';
     let subscriptionData = null;
 
-    // 1. Intentar leer perfil existente en la colección 'usuarios' de Firestore
+    // 1. Intentar leer perfil existente en la colección 'users' o 'usuarios' de Firestore
     if (firestoreDb) {
       try {
-        const userDocRef = firestoreDb.collection('usuarios').doc(fbUser.uid);
-        const userDocSnap = await userDocRef.get();
+        let userDocRef = firestoreDb.collection('users').doc(fbUser.uid);
+        let userDocSnap = await userDocRef.get();
+        if (!userDocSnap.exists) {
+          userDocRef = firestoreDb.collection('usuarios').doc(fbUser.uid);
+          userDocSnap = await userDocRef.get();
+        }
 
         if (userDocSnap.exists) {
           const data = userDocSnap.data();
-          if (data.role) role = data.role;
-          if (data.subscription) subscriptionData = data.subscription;
+          // REGLA CRÍTICA: Si ya está registrado como empresa, queda bloqueado como empresa
+          if (data.role === 'empresa') {
+            role = 'empresa';
+          } else if (isRegister && chosenRole) {
+            // Si el usuario se está registrando explícitamente con un rol (ej: empresa), ese rol MANDA
+            role = chosenRole;
+          } else if (data.role) {
+            role = data.role;
+          } else if (chosenRole) {
+            role = chosenRole;
+          }
+          if (data.subscription && (!isRegister || role !== 'empresa')) {
+            subscriptionData = data.subscription;
+          }
         }
       } catch (err) {
         console.warn('Aviso al leer de Firestore (se continúa con sesión activa):', err);
       }
     }
 
-    // 2. Si es nuevo usuario o no tiene suscripción registrada, inicializarla según el rol y plan
-    if (!subscriptionData) {
+    // 2. Si es nuevo usuario o se registra como empresa/conductor, inicializar suscripción
+    if (!subscriptionData || (isRegister && (role === 'empresa' || role === 'conductor'))) {
       const now = new Date();
       const trialEnd = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
 
@@ -667,20 +686,22 @@ document.addEventListener('DOMContentLoaded', () => {
           startDate: now.toLocaleDateString('es-AR'),
           endDate: trialEnd.toLocaleDateString('es-AR'),
           price: 0,
-          currency: 'ARS'
+          currency: 'ARS',
+          maxVehicles: 1
         };
       } else if (role === 'empresa') {
         const isDashboard = pendingPlanType === 'dashboard_completo';
         subscriptionData = {
           status: 'trial_active',
           planType: isDashboard ? 'dashboard_completo' : 'flota_vehiculos',
-          planName: isDashboard ? 'Plan Flota Enterprise (Dashboard Completo)' : 'Plan Flota por Vehículos',
+          planName: isDashboard ? 'Plan Flota Enterprise (Dashboard Completo)' : 'Plan Flota por Vehículos (Empresa)',
           trialDaysTotal: 60,
           daysRemaining: 60,
           startDate: now.toLocaleDateString('es-AR'),
           endDate: trialEnd.toLocaleDateString('es-AR'),
           price: 0,
-          currency: 'ARS'
+          currency: 'ARS',
+          maxVehicles: 10
         };
       } else {
         subscriptionData = {
@@ -712,13 +733,14 @@ document.addEventListener('DOMContentLoaded', () => {
           email: userObj.email,
           photoUrl: userObj.picture,
           picture: userObj.picture,
-          role: userObj.role,
-          subscription: userObj.subscription,
+          role: role,
+          isEmpresa: role === 'empresa',
+          subscription: subscriptionData,
           updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
         };
         await firestoreDb.collection('users').doc(fbUser.uid).set(userPayload, { merge: true });
         await firestoreDb.collection('usuarios').doc(fbUser.uid).set(userPayload, { merge: true });
-        console.log('Usuario sincronizado en base de datos Firestore (users):', userObj.email);
+        console.log('Usuario sincronizado con éxito en Firestore (users & usuarios):', userObj.email, 'con rol:', role);
       } catch (err) {
         console.warn('Aviso al guardar en Firestore:', err);
       }
@@ -808,6 +830,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!stored || stored.uid !== fbUser.uid) {
           await processFirebaseUser(fbUser, false, selectedUserRole);
         } else {
+          // Verificar en Firestore si hubo actualización de rol (ej: registro como empresa)
+          if (firestoreDb) {
+            try {
+              let snap = await firestoreDb.collection('users').doc(fbUser.uid).get();
+              if (!snap.exists) snap = await firestoreDb.collection('usuarios').doc(fbUser.uid).get();
+              if (snap.exists) {
+                const freshData = snap.data();
+                if (freshData.role && freshData.role !== stored.role) {
+                  stored.role = freshData.role;
+                  if (freshData.subscription) stored.subscription = freshData.subscription;
+                  saveUserSession(stored);
+                }
+              }
+            } catch (e) {
+              console.warn('Aviso sincronizando sesión con Firestore:', e);
+            }
+          }
           renderAuthState();
         }
       }

@@ -1,0 +1,116 @@
+.hero {
+  position: relative;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  overflow: hidden;
+  background-color: #0b132b;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.35;
+  filter: saturate(1.2);
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(11, 28, 48, 0.4) 0%, rgba(11, 28, 48, 0.95) 100%);
+}
+
+.hero__content {
+  position: relative;
+  z-index: 10;
+  max-width: 860px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.hero__title {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+}
+
+.hero__title-accent {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #fd651e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero__subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  color: #cbd5e1;
+  max-width: 680px;
+  margin: 0 auto 36px;
+}
+
+.hero__cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+.hero__trust-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  padding: 16px 32px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-full);
+}
+
+.hero__trust-item {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.hero__trust-item strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.hero__trust-item span {
+  font-size: 11px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hero__trust-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 640px) {
+  .hero__trust-row {
+    flex-direction: column;
+    gap: 12px;
+    border-radius: var(--radius-lg);
+    width: 100%;
+  }
+
+  .hero__trust-divider {
+    display: none;
+  }
+}

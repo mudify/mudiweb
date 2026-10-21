@@ -142,10 +142,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   // =========================================================================
   const updateModeSwitcherUI = () => {
     const mode = service.getAccountMode();
+    const storedUser = JSON.parse(localStorage.getItem('mudify_user_session') || '{}');
+    const isEmpresaAccount = storedUser.role === 'empresa';
+
     const btnConductor = document.getElementById('btn-mode-conductor');
     const btnEmpresa = document.getElementById('btn-mode-empresa');
     const sidebarSubtitle = document.getElementById('sidebar-brand-subtitle');
     const sidebarNetworkTitle = document.getElementById('sidebar-network-title');
+
+    if (isEmpresaAccount) {
+      if (btnConductor) {
+        btnConductor.style.opacity = '0.4';
+        btnConductor.style.cursor = 'not-allowed';
+        btnConductor.title = 'Cuenta registrada como Empresa. No podés operar como conductor independiente.';
+      }
+    }
 
     // Adaptar etiquetas del Sidebar según el modo
     const labelTorre = document.getElementById('nav-label-torre');
@@ -154,7 +165,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const labelFacturacion = document.getElementById('nav-label-facturacion');
     const labelCotizaciones = document.getElementById('nav-label-cotizaciones');
 
-    if (mode === 'conductor') {
+    if (mode === 'conductor' && !isEmpresaAccount) {
       if (btnConductor) btnConductor.className = 'px-3 py-1.5 rounded-lg text-label-sm font-bold transition-all flex items-center gap-1.5 bg-primary-container text-on-primary shadow-sm';
       if (btnEmpresa) btnEmpresa.className = 'px-3 py-1.5 rounded-lg text-label-sm font-bold transition-all flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container';
       if (sidebarSubtitle) sidebarSubtitle.textContent = 'Conductor Independiente';
@@ -195,6 +206,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnConductor && !btnConductor.dataset.bound) {
       btnConductor.dataset.bound = 'true';
       btnConductor.addEventListener('click', async () => {
+        const storedUser = JSON.parse(localStorage.getItem('mudify_user_session') || '{}');
+        if (storedUser.role === 'empresa') {
+          showToast('Acceso Restringido', 'Tu cuenta está registrada como Empresa de Mudanzas. Por política de seguridad, no podés operar como conductor independiente.', 'error');
+          return;
+        }
         await service.setAccountMode('conductor');
         updateModeSwitcherUI();
         showToast('Modo Conductor', 'Cargando únicamente tus viajes, vehículo y ganancias personales.', 'info');
@@ -278,6 +294,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const sideBadge = document.getElementById('sidebar-ontime-badge');
     if (sideBadge) sideBadge.textContent = mode === 'conductor' ? (kpis.fleetRunning > 0 ? '100% En Línea' : 'Desconectado') : `${kpis.movesOnSchedulePct}% On-Time`;
+
+    // Suscripción & Límites en Sidebar
+    const sub = service.getSubscription();
+    const maxVeh = service.getMaxVehiclesAllowed();
+    const allVeh = await service.getVehicles('todos');
+    const sideSubBadge = document.getElementById('sidebar-sub-badge');
+    const sideVehLimit = document.getElementById('sidebar-sub-veh-limit');
+    if (sideSubBadge) {
+      sideSubBadge.textContent = sub ? sub.planName : (mode === 'conductor' ? 'Plan Fletero Pro' : 'Plan Flota Enterprise');
+    }
+    if (sideVehLimit) {
+      const limitText = maxVeh === Infinity ? 'Ilimitados' : maxVeh;
+      sideVehLimit.textContent = `Límite de flota: ${allVeh.length} / ${limitText} vehículo(s)`;
+    }
   };
 
   // =========================================================================
@@ -537,9 +567,520 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderFleetStream(vehicles);
     renderPriorityDispatches(vehicles);
     renderLegalAlerts(alerts);
+    await renderActiveTripControl();
+  };
+
+  // =========================================================================
+  // CONTROLADOR DEL CICLO DE VIDA DEL VIAJE ACTIVO & CÓDIGO OTP
+  // =========================================================================
+  const renderActiveTripControl = async () => {
+    const container = document.getElementById('tc-active-trip-control');
+    if (!container) return;
+
+    const trips = (service.state.rawTrips && service.state.rawTrips.length > 0)
+      ? service.state.rawTrips
+      : [];
+
+    const activeStatuses = ['accepted', 'goingToOrigin', 'arrivedAtOrigin', 'goingToDestination', 'waitingClientSignature'];
+    const activeTrip = trips.find(t => activeStatuses.includes(t.status));
+
+    if (!activeTrip) {
+      container.innerHTML = `
+        <div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm border border-surface-container-high/60 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-tertiary-container/15 text-tertiary-container flex items-center justify-center font-bold">
+              <span class="material-symbols-outlined text-[22px]">radio_button_checked</span>
+            </div>
+            <div>
+              <h4 class="font-bold text-on-surface text-sm">Estado Operativo: Disponible</h4>
+              <span class="text-xs text-outline">Tu unidad se encuentra lista para recibir nuevos fletes y mudanzas en tiempo real.</span>
+            </div>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-tertiary-container/10 text-tertiary font-bold text-xs flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+            Radar Conectado
+          </span>
+        </div>
+      `;
+      return;
+    }
+
+    const steps = [
+      { key: 'accepted', label: '1. Aceptado', desc: 'Esperando salida' },
+      { key: 'goingToOrigin', label: '2. En Camino', desc: 'Rumbo al origen' },
+      { key: 'arrivedAtOrigin', label: '3. En Origen', desc: 'Cargando bultos' },
+      { key: 'goingToDestination', label: '4. En Traslado', desc: 'Rumbo al destino' },
+      { key: 'waitingClientSignature', label: '5. En Destino', desc: 'Validación OTP' }
+    ];
+
+    const currentStepIndex = steps.findIndex(s => s.key === activeTrip.status);
+
+    const clientName = activeTrip.clientName || activeTrip.usuarioNombre || 'Cliente Mudify';
+    const clientPhone = activeTrip.clientPhone || activeTrip.telefono || '';
+    const origin = activeTrip.originAddress || activeTrip.origen || 'Origen no especificado';
+    const destination = activeTrip.destinationAddress || activeTrip.destino || 'Destino no especificado';
+    const cargo = activeTrip.itemsSummary || activeTrip.descripcion || 'Muebles y enseres de mudanza';
+    const price = (activeTrip.totalPrice || activeTrip.precio || 0).toLocaleString('es-AR');
+
+    let actionBtnHtml = '';
+    if (activeTrip.status === 'accepted') {
+      actionBtnHtml = `
+        <button id="btn-advance-trip" class="px-5 py-2.5 rounded-xl bg-primary-container text-on-primary font-bold text-xs flex items-center gap-2 shadow-md hover:opacity-95 transition-all">
+          <span class="material-symbols-outlined text-[18px]">navigation</span>
+          Iniciar Viaje al Origen
+        </button>
+      `;
+    } else if (activeTrip.status === 'goingToOrigin') {
+      actionBtnHtml = `
+        <button id="btn-advance-trip" class="px-5 py-2.5 rounded-xl bg-primary-container text-on-primary font-bold text-xs flex items-center gap-2 shadow-md hover:opacity-95 transition-all">
+          <span class="material-symbols-outlined text-[18px]">where_to_vote</span>
+          Marcar Llegada al Origen
+        </button>
+      `;
+    } else if (activeTrip.status === 'arrivedAtOrigin') {
+      actionBtnHtml = `
+        <button id="btn-advance-trip" class="px-5 py-2.5 rounded-xl bg-primary-container text-on-primary font-bold text-xs flex items-center gap-2 shadow-md hover:opacity-95 transition-all">
+          <span class="material-symbols-outlined text-[18px]">local_shipping</span>
+          Carga Completa - Salir a Destino
+        </button>
+      `;
+    } else if (activeTrip.status === 'goingToDestination') {
+      actionBtnHtml = `
+        <button id="btn-advance-trip" class="px-5 py-2.5 rounded-xl bg-primary-container text-on-primary font-bold text-xs flex items-center gap-2 shadow-md hover:opacity-95 transition-all">
+          <span class="material-symbols-outlined text-[18px]">check_circle</span>
+          Llegué a Destino (Solicitar OTP)
+        </button>
+      `;
+    } else if (activeTrip.status === 'waitingClientSignature') {
+      actionBtnHtml = `
+        <div class="flex items-center gap-2">
+          <input type="text" id="input-trip-otp" maxlength="6" placeholder="Código OTP (4 dígitos)" 
+                 class="px-3 py-2 rounded-xl bg-surface-container-low border border-primary text-on-surface font-mono font-bold text-center w-44 text-sm focus:outline-none">
+          <button id="btn-complete-otp" class="px-5 py-2.5 rounded-xl bg-tertiary-container text-on-tertiary font-bold text-xs flex items-center gap-2 shadow-md hover:opacity-95 transition-all">
+            <span class="material-symbols-outlined text-[18px]">verified</span>
+            Validar y Finalizar Mudanza
+          </button>
+        </div>
+      `;
+    }
+
+    container.innerHTML = `
+      <div class="bg-surface-container-lowest rounded-2xl p-space-md border-2 border-primary-container/40 shadow-lg">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between pb-space-sm border-b border-surface-container-high/60 gap-2">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center font-bold">
+              <span class="material-symbols-outlined text-[20px] animate-pulse">local_shipping</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-primary-container/15 text-primary-container font-mono text-xs font-bold">VIAJE EN CURSO</span>
+                <span class="text-xs text-outline font-mono">#${(activeTrip.id || '').substring(0, 8).toUpperCase()}</span>
+              </div>
+              <h4 class="font-extrabold text-on-surface text-base mt-0.5">${origin} ➔ ${destination}</h4>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <span class="text-[11px] text-outline font-semibold uppercase">Monto a Liquidar</span>
+              <div class="text-lg font-extrabold text-tertiary-container">$${price} ARS</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5-Stage Stepper -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 my-space-md">
+          ${steps.map((st, idx) => {
+            const isCompleted = idx < currentStepIndex;
+            const isCurrent = idx === currentStepIndex;
+
+            let badgeClass = 'bg-surface-container text-outline';
+            let icon = 'radio_button_unchecked';
+            if (isCompleted) {
+              badgeClass = 'bg-tertiary-container/20 text-tertiary-container border border-tertiary-container/40';
+              icon = 'check_circle';
+            } else if (isCurrent) {
+              badgeClass = 'bg-primary-container text-on-primary ring-2 ring-primary-container ring-offset-2';
+              icon = 'play_circle';
+            }
+
+            return `
+              <div class="p-2.5 rounded-xl ${badgeClass} flex flex-col transition-all">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-bold">${st.label}</span>
+                  <span class="material-symbols-outlined text-[16px]">${icon}</span>
+                </div>
+                <span class="text-[10px] opacity-80">${st.desc}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <!-- Trip Details & Actions -->
+        <div class="flex flex-col md:flex-row items-center justify-between pt-space-xs gap-3">
+          <div class="flex items-center gap-4 text-xs text-on-surface-variant">
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px] text-primary">person</span>
+              <span class="font-bold text-on-surface">${clientName}</span>
+              ${clientPhone ? `<a href="tel:${clientPhone}" class="text-primary hover:underline font-mono">(${clientPhone})</a>` : ''}
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px] text-outline">inventory_2</span>
+              <span class="truncate max-w-[200px]">${cargo}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            ${actionBtnHtml}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Event binding
+    const btnAdvance = document.getElementById('btn-advance-trip');
+    if (btnAdvance) {
+      btnAdvance.addEventListener('click', async () => {
+        btnAdvance.disabled = true;
+        btnAdvance.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span> Actualizando...';
+        const nextSteps = {
+          'accepted': 'goingToOrigin',
+          'goingToOrigin': 'arrivedAtOrigin',
+          'arrivedAtOrigin': 'goingToDestination',
+          'goingToDestination': 'waitingClientSignature'
+        };
+        const next = nextSteps[activeTrip.status];
+        if (next) {
+          try {
+            await service.advanceTripStep(activeTrip.id, next);
+            showToast('Viaje Actualizado', `Estado cambiado a: ${next}`, 'success');
+            await renderTorreDeControl();
+          } catch (err) {
+            showToast('Error', err.message || 'No se pudo actualizar el viaje.', 'error');
+            btnAdvance.disabled = false;
+          }
+        }
+      });
+    }
+
+    const btnCompleteOtp = document.getElementById('btn-complete-otp');
+    if (btnCompleteOtp) {
+      btnCompleteOtp.addEventListener('click', async () => {
+        const inputOtp = document.getElementById('input-trip-otp');
+        const otpVal = inputOtp ? inputOtp.value.trim() : '';
+        if (!otpVal) {
+          showToast('Código Requerido', 'Por favor ingresa el código OTP proporcionado por el cliente.', 'error');
+          return;
+        }
+        btnCompleteOtp.disabled = true;
+        btnCompleteOtp.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span> Verificando OTP...';
+        try {
+          await service.completeTripWithOTP(activeTrip.id, otpVal);
+          showToast('¡Mudanza Completada!', 'El viaje ha sido finalizado con éxito y los fondos han sido acreditados.', 'success');
+          await renderTorreDeControl();
+        } catch (err) {
+          showToast('Validación Fallida', err.message || 'Código OTP inválido.', 'error');
+          btnCompleteOtp.disabled = false;
+          btnCompleteOtp.innerHTML = '<span class="material-symbols-outlined text-[18px]">verified</span> Validar y Finalizar Mudanza';
+        }
+      });
+    }
+  };
+
+  // =========================================================================
+  // INTEGRACIÓN GOOGLE MAPS REAL & POSICIONAMIENTO GPS DEL TELÉFONO
+  // =========================================================================
+  let googleMapInstance = null;
+  let googleMapMarkers = [];
+  let deviceGpsMarker = null;
+  let deviceAccuracyCircle = null;
+  let deviceGpsWatchId = null;
+  let hasAutoCenteredOnDevice = false;
+  let currentDeviceCoords = null;
+
+  const updateDeviceOnGoogleMap = (coords) => {
+    if (!googleMapInstance || typeof window.google === 'undefined' || !window.google.maps) return;
+
+    const latLng = { lat: coords.lat, lng: coords.lng };
+
+    // 1. Crear o actualizar Marcador del Teléfono
+    if (!deviceGpsMarker) {
+      deviceGpsMarker = new google.maps.Marker({
+        position: latLng,
+        map: googleMapInstance,
+        title: "📱 Mi Teléfono (Posicionamiento en Vivo)",
+        zIndex: 999,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 8,
+          fillColor: "#2563eb",
+          fillOpacity: 1,
+          strokeWeight: 3,
+          strokeColor: "#ffffff"
+        }
+      });
+
+      const infoWindow = new google.maps.InfoWindow({
+        content: `
+          <div style="color: #0f172a; font-family: sans-serif; font-size: 12px; padding: 6px;">
+            <strong style="color: #2563eb; font-size: 13px;">📱 Mi Teléfono (GPS en Vivo)</strong><br>
+            <span style="font-family: monospace; font-weight: bold;">Lat: ${coords.lat.toFixed(5)}, Lng: ${coords.lng.toFixed(5)}</span><br>
+            <span>Precisión: ±${Math.round(coords.accuracy)} metros</span><br>
+            <span>Velocidad: ${Math.round((coords.speed || 0) * 3.6)} km/h</span><br>
+            <span style="color: #10b981; font-weight: bold;">● Sincronizado con Cloud Firestore</span>
+          </div>
+        `
+      });
+
+      deviceGpsMarker.addListener('click', () => {
+        infoWindow.open(googleMapInstance, deviceGpsMarker);
+      });
+    } else {
+      deviceGpsMarker.setPosition(latLng);
+    }
+
+    // 2. Crear o actualizar Círculo de Precisión GPS
+    if (!deviceAccuracyCircle) {
+      deviceAccuracyCircle = new google.maps.Circle({
+        strokeColor: "#3b82f6",
+        strokeOpacity: 0.6,
+        strokeWeight: 1.5,
+        fillColor: "#3b82f6",
+        fillOpacity: 0.15,
+        map: googleMapInstance,
+        center: latLng,
+        radius: coords.accuracy || 20
+      });
+    } else {
+      deviceAccuracyCircle.setCenter(latLng);
+      deviceAccuracyCircle.setRadius(coords.accuracy || 20);
+    }
+
+    // Auto-centrar en el teléfono en la primera detección
+    if (!hasAutoCenteredOnDevice) {
+      googleMapInstance.panTo(latLng);
+      googleMapInstance.setZoom(15);
+      hasAutoCenteredOnDevice = true;
+    }
+  };
+
+  const startDeviceGeolocationTracking = () => {
+    if (!navigator.geolocation) {
+      console.warn("Geolocalización no soportada por el navegador.");
+      return;
+    }
+
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 20000,
+      maximumAge: 5000
+    };
+
+    const handleSuccess = async (pos) => {
+      currentDeviceCoords = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+        accuracy: pos.coords.accuracy,
+        heading: pos.coords.heading,
+        speed: pos.coords.speed
+      };
+
+      // Notificar al servicio para sincronizar con Firestore
+      await service.updateDriverLiveLocation(currentDeviceCoords);
+
+      // Actualizar etiqueta del radar fallback
+      const fallbackLabel = document.getElementById('tc-fallback-gps-label');
+      if (fallbackLabel) {
+        fallbackLabel.textContent = `GPS Teléfono: ${currentDeviceCoords.lat.toFixed(5)}° S, ${currentDeviceCoords.lng.toFixed(5)}° W (±${Math.round(currentDeviceCoords.accuracy)}m)`;
+      }
+
+      // Si Google Maps está montado, actualizar el marcador del teléfono
+      updateDeviceOnGoogleMap(currentDeviceCoords);
+    };
+
+    const handleError = (err) => {
+      console.warn("Aviso de geolocalización GPS:", err.message);
+    };
+
+    if (deviceGpsWatchId !== null) {
+      navigator.geolocation.clearWatch(deviceGpsWatchId);
+    }
+    deviceGpsWatchId = navigator.geolocation.watchPosition(handleSuccess, handleError, options);
+  };
+
+  const initOrUpdateGoogleRadarMap = (vehicles) => {
+    const mapDiv = document.getElementById('tc-google-map');
+    const fallbackDiv = document.getElementById('tc-radar-fallback');
+    const pinsBox = document.getElementById('radar-dynamic-pins');
+
+    if (!mapDiv || typeof window.google === 'undefined' || !window.google.maps) {
+      if (fallbackDiv) fallbackDiv.style.display = 'flex';
+      if (pinsBox) pinsBox.style.display = 'block';
+      return false;
+    }
+
+    try {
+      if (!googleMapInstance) {
+        // Centro inicial: posición del teléfono si existe, o CABA
+        const initialCenter = currentDeviceCoords 
+          ? { lat: currentDeviceCoords.lat, lng: currentDeviceCoords.lng }
+          : { lat: -34.6037, lng: -58.3816 };
+
+        googleMapInstance = new google.maps.Map(mapDiv, {
+          center: initialCenter,
+          zoom: currentDeviceCoords ? 15 : 12,
+          disableDefaultUI: true,
+          zoomControl: true,
+          styles: [
+            { elementType: "geometry", stylers: [{ color: "#0b1c30" }] },
+            { elementType: "labels.text.stroke", stylers: [{ color: "#0b1c30" }] },
+            { elementType: "labels.text.fill", stylers: [{ color: "#8a99ad" }] },
+            {
+              featureType: "administrative.locality",
+              elementType: "labels.text.fill",
+              stylers: [{ color: "#60a5fa" }]
+            },
+            {
+              featureType: "road",
+              elementType: "geometry",
+              stylers: [{ color: "#1e293b" }]
+            },
+            {
+              featureType: "road",
+              elementType: "geometry.stroke",
+              stylers: [{ color: "#0f172a" }]
+            },
+            {
+              featureType: "road.highway",
+              elementType: "geometry",
+              stylers: [{ color: "#2563eb" }]
+            },
+            {
+              featureType: "water",
+              elementType: "geometry",
+              stylers: [{ color: "#020617" }]
+            }
+          ]
+        });
+      }
+
+      // Si tenemos ubicación del teléfono, representarla
+      if (currentDeviceCoords) {
+        updateDeviceOnGoogleMap(currentDeviceCoords);
+      }
+
+      // Limpiar marcadores anteriores de flota
+      googleMapMarkers.forEach(m => m.setMap(null));
+      googleMapMarkers = [];
+
+      const baseCoords = [
+        { lat: -34.6037, lng: -58.3816 }, // Obelisco
+        { lat: -34.5828, lng: -58.4208 }, // Palermo
+        { lat: -34.5614, lng: -58.4560 }, // Belgrano
+        { lat: -34.6177, lng: -58.4458 }, // Caballito
+        { lat: -34.6214, lng: -58.3731 }  // San Telmo
+      ];
+
+      const isConductor = service.getAccountMode() === 'conductor';
+
+      vehicles.forEach((veh, idx) => {
+        // En modo conductor, la unidad toma la ubicación real del teléfono
+        let lat = veh.coords?.lat || baseCoords[idx % baseCoords.length].lat;
+        let lng = veh.coords?.lng || baseCoords[idx % baseCoords.length].lng;
+        if (isConductor && idx === 0 && currentDeviceCoords) {
+          lat = currentDeviceCoords.lat;
+          lng = currentDeviceCoords.lng;
+        }
+
+        const isSelected = veh.id === activeVehicleId;
+
+        const marker = new google.maps.Marker({
+          position: { lat, lng },
+          map: googleMapInstance,
+          title: `${veh.brandModel} (${veh.plate})`,
+          icon: {
+            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+            scale: isSelected ? 7 : 5.5,
+            fillColor: isSelected ? "#3b82f6" : (veh.status === 'en_ruta' ? "#10b981" : "#f59e0b"),
+            fillOpacity: 1,
+            strokeWeight: 2,
+            strokeColor: "#ffffff",
+            rotation: currentDeviceCoords?.heading || 45
+          }
+        });
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+            <div style="color: #0f172a; font-family: sans-serif; font-size: 12px; padding: 4px;">
+              <strong>${veh.brandModel}</strong><br>
+              <span style="font-family: monospace; font-weight: bold;">${veh.plate}</span><br>
+              <span>Estado: ${veh.status === 'en_ruta' ? 'En ruta' : 'Disponible'}</span><br>
+              <span style="font-size: 11px; color: #3b82f6;">${isConductor ? '📍 Posición vinculada al GPS del teléfono' : '🛰 Telemetría Flota'}</span>
+            </div>
+          `
+        });
+
+        marker.addListener('click', () => {
+          infoWindow.open(googleMapInstance, marker);
+          activeVehicleId = veh.id;
+          renderActiveVehicleCard(veh);
+        });
+
+        googleMapMarkers.push(marker);
+      });
+
+      // Evento del botón centrar en el teléfono
+      const btnCenterGps = document.getElementById('btn-center-device-gps');
+      if (btnCenterGps && !btnCenterGps.dataset.bound) {
+        btnCenterGps.dataset.bound = 'true';
+        btnCenterGps.addEventListener('click', () => {
+          if (currentDeviceCoords && googleMapInstance) {
+            googleMapInstance.panTo({ lat: currentDeviceCoords.lat, lng: currentDeviceCoords.lng });
+            googleMapInstance.setZoom(16);
+            showToast('Ubicación del Teléfono', 'Centrado en las coordenadas GPS de tu dispositivo.', 'success');
+          } else if (navigator.geolocation) {
+            btnCenterGps.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span> Buscando...';
+            navigator.geolocation.getCurrentPosition(
+              (pos) => {
+                currentDeviceCoords = {
+                  lat: pos.coords.latitude,
+                  lng: pos.coords.longitude,
+                  accuracy: pos.coords.accuracy,
+                  heading: pos.coords.heading,
+                  speed: pos.coords.speed
+                };
+                if (googleMapInstance) {
+                  googleMapInstance.panTo({ lat: currentDeviceCoords.lat, lng: currentDeviceCoords.lng });
+                  googleMapInstance.setZoom(16);
+                }
+                updateDeviceOnGoogleMap(currentDeviceCoords);
+                btnCenterGps.innerHTML = '<span class="material-symbols-outlined text-[16px] text-primary">my_location</span><span>Mi Teléfono</span>';
+                showToast('Ubicación Obtenida', `GPS detectado: ±${Math.round(currentDeviceCoords.accuracy)}m`, 'success');
+              },
+              (err) => {
+                btnCenterGps.innerHTML = '<span class="material-symbols-outlined text-[16px] text-primary">my_location</span><span>Mi Teléfono</span>';
+                showToast('Aviso de GPS', 'Activa los permisos de ubicación en tu navegador para ver tu posición exacta.', 'error');
+              },
+              { enableHighAccuracy: true, timeout: 10000 }
+            );
+          }
+        });
+      }
+
+      if (fallbackDiv) fallbackDiv.style.display = 'none';
+      if (pinsBox) pinsBox.style.display = 'none';
+      return true;
+    } catch (e) {
+      console.warn("Google Maps no pudo inicializar en el radar, usando fallback.", e);
+      if (fallbackDiv) fallbackDiv.style.display = 'flex';
+      if (pinsBox) pinsBox.style.display = 'block';
+      return false;
+    }
   };
 
   const renderRadarPins = (vehicles) => {
+    const isGoogleMapLoaded = initOrUpdateGoogleRadarMap(vehicles);
+    if (isGoogleMapLoaded) return;
+
     const pinsBox = document.getElementById('radar-dynamic-pins');
     if (!pinsBox) return;
 
@@ -648,13 +1189,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           <span class="font-body-sm text-body-sm text-on-surface-variant text-[11px] truncate">${task.client || '-'}</span>
         </div>
 
-        <!-- Telemetría: Velocidad y Carga -->
+        <!-- Telemetría: Velocidad, Coordenadas y Carga -->
         <div class="grid grid-cols-2 gap-space-sm">
           <div class="p-space-sm rounded-xl bg-surface-container-low flex flex-col justify-between">
             <span class="font-label-sm text-label-sm text-outline uppercase">Velocidad GPS</span>
-            <span class="font-headline-lg text-headline-lg text-on-surface font-extrabold mt-1">${telem.speedKmH || 0} <span class="text-sm font-semibold">km/h</span></span>
+            <span class="font-headline-lg text-headline-lg text-on-surface font-extrabold mt-1">${currentDeviceCoords ? Math.round((currentDeviceCoords.speed || 0) * 3.6) : (telem.speedKmH || 0)} <span class="text-sm font-semibold">km/h</span></span>
             <span class="text-tertiary font-label-sm text-[11px] font-bold flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span> ${telem.signal || '4G OK'}
+              <span class="w-1.5 h-1.5 rounded-full bg-tertiary-container animate-pulse"></span> ${currentDeviceCoords ? `GPS ±${Math.round(currentDeviceCoords.accuracy)}m` : (telem.signal || '4G OK')}
             </span>
           </div>
           <div class="p-space-sm rounded-xl bg-surface-container-low flex flex-col justify-between">
@@ -665,6 +1206,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
           </div>
         </div>
+
+        ${currentDeviceCoords ? `
+          <div class="px-3 py-2 rounded-xl bg-primary-container/10 border border-primary-container/20 flex items-center justify-between text-xs">
+            <span class="font-semibold text-primary flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">smartphone</span>
+              GPS Teléfono Activo:
+            </span>
+            <span class="font-mono font-bold text-on-surface">${currentDeviceCoords.lat.toFixed(5)}°, ${currentDeviceCoords.lng.toFixed(5)}°</span>
+          </div>
+        ` : ''}
 
         <!-- Botones de Acción -->
         <div class="flex items-center gap-2 mt-1">
@@ -1255,17 +1806,201 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!container) return;
     const kpis = await service.getKPIs();
     const mode = service.getAccountMode();
+    const rates = await service.getDriverRates();
+    const cvuActual = rates.cvuMercadoPago || '';
+    const objDiarioActual = rates.objetivoDiario || 50000;
+    const completedTrips = (service.state.rawTrips || []).filter(t => t.status === 'completed');
+
+    const totalFacturado = kpis.monthlyBilling || 0;
+    const pctObjetivo = Math.min(Math.round((totalFacturado / (objDiarioActual || 1)) * 100), 100);
 
     container.innerHTML = `
-      <div class="p-6 text-center text-on-surface-variant font-semibold">
-        <div class="w-12 h-12 rounded-full bg-surface-container mx-auto flex items-center justify-center text-primary mb-3">
-          <span class="material-symbols-outlined text-[24px]">receipt_long</span>
+      <div class="flex flex-col gap-6">
+        <!-- Tarjetas Superiores: Saldo, Objetivo y Mercado Pago -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Saldo Disponible / Facturación -->
+          <div class="bg-surface-container-low p-5 rounded-2xl border border-surface-container-high/60 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-outline uppercase tracking-wider">${mode === 'conductor' ? 'Ganancias Acumuladas' : 'Facturación Total'}</span>
+              <div class="w-9 h-9 rounded-xl bg-tertiary-container/15 text-tertiary-container flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+              </div>
+            </div>
+            <div class="my-3">
+              <span class="text-3xl font-extrabold text-on-surface">$${totalFacturado.toLocaleString('es-AR')}</span>
+              <span class="text-xs text-outline font-semibold"> ARS</span>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-surface-container-high/60">
+              <span class="text-xs text-outline">Liquidaciones listas:</span>
+              <span class="text-xs font-bold text-tertiary">${completedTrips.length} mudanza(s)</span>
+            </div>
+          </div>
+
+          <!-- Objetivo Diario -->
+          <div class="bg-surface-container-low p-5 rounded-2xl border border-surface-container-high/60 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-outline uppercase tracking-wider">Objetivo Diario</span>
+              <div class="w-9 h-9 rounded-xl bg-primary-container/15 text-primary-container flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">flag</span>
+              </div>
+            </div>
+            <div class="my-3">
+              <div class="flex items-baseline justify-between mb-1">
+                <span class="text-sm font-bold text-on-surface">$${totalFacturado.toLocaleString('es-AR')} / $${objDiarioActual.toLocaleString('es-AR')}</span>
+                <span class="text-xs font-extrabold text-primary">${pctObjetivo}%</span>
+              </div>
+              <div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+                <div class="bg-primary-container h-full rounded-full transition-all duration-500" style="width: ${pctObjetivo}%"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-2 border-t border-surface-container-high/60">
+              <input type="number" id="input-daily-goal" placeholder="Nuevo objetivo" value="${objDiarioActual}" class="w-full px-2.5 py-1 text-xs rounded-lg bg-surface-container border border-surface-container-high text-on-surface focus:outline-none focus:border-primary">
+              <button id="btn-save-daily-goal" class="px-3 py-1 bg-surface-container-highest hover:bg-surface-container-high text-on-surface rounded-lg text-xs font-bold transition-all whitespace-nowrap">Guardar</button>
+            </div>
+          </div>
+
+          <!-- Billetera Mercado Pago CVU -->
+          <div class="bg-surface-container-low p-5 rounded-2xl border border-surface-container-high/60 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-outline uppercase tracking-wider">Billetera Mercado Pago</span>
+              <div class="w-9 h-9 rounded-xl bg-[#009ee3]/15 text-[#009ee3] flex items-center justify-center">
+                <span class="material-symbols-outlined text-[20px]">payments</span>
+              </div>
+            </div>
+            <div class="my-2">
+              <label class="text-[11px] text-outline font-semibold">CVU o Alias de Cobro</label>
+              <input type="text" id="input-mp-cvu" value="${cvuActual}" placeholder="Ingresa CVU / Alias MP" class="w-full px-3 py-2 text-xs rounded-xl bg-surface-container border border-surface-container-high text-on-surface font-mono font-bold mt-1 focus:outline-none focus:border-primary">
+            </div>
+            <div class="flex items-center gap-2 pt-2 border-t border-surface-container-high/60">
+              <button id="btn-save-mp-cvu" class="w-full py-1.5 px-3 rounded-lg bg-[#009ee3] text-white text-xs font-bold shadow-sm hover:opacity-90 transition-all flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-[15px]">link</span>
+                Vincular CVU Mercado Pago
+              </button>
+            </div>
+          </div>
         </div>
-        <h4 class="font-bold text-on-surface">${mode === 'conductor' ? 'Mis Ganancias Acumuladas' : 'Facturación Electrónica Flota'}</h4>
-        <p class="text-lg font-extrabold text-tertiary-container mt-1">$${kpis.monthlyBilling.toLocaleString('es-AR')} ARS</p>
-        <p class="text-xs text-outline mt-1">${mode === 'conductor' ? 'Total liquidado por tus mudanzas y fletes completados.' : 'Sincronización en vivo con viajes completados en Cloud Firestore.'}</p>
+
+        <!-- Solicitud de Retiro / Liquidación Rápida -->
+        <div class="p-4 rounded-2xl bg-surface-container-low border border-surface-container-high/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-tertiary-container/15 text-tertiary-container flex items-center justify-center">
+              <span class="material-symbols-outlined text-[22px]">send_money</span>
+            </div>
+            <div>
+              <h5 class="text-sm font-bold text-on-surface">Solicitar Retiro a tu Cuenta Bancaria / MP</h5>
+              <p class="text-xs text-outline">Las transferencias de liquidación se procesan automáticamente en el horario bancario.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <input type="number" id="input-withdraw-amount" placeholder="Monto ($)" class="px-3 py-2 rounded-xl bg-surface-container border border-surface-container-high text-xs text-on-surface font-mono font-bold w-32 focus:outline-none">
+            <button id="btn-request-withdrawal" class="px-4 py-2 rounded-xl bg-primary-container text-on-primary text-xs font-bold shadow-sm hover:opacity-95 whitespace-nowrap transition-all">
+              Solicitar Retiro
+            </button>
+          </div>
+        </div>
+
+        <!-- Historial de Liquidaciones y Viajes -->
+        <div class="bg-surface-container-low rounded-2xl border border-surface-container-high/60 overflow-hidden">
+          <div class="p-4 border-b border-surface-container-high/60 flex items-center justify-between">
+            <h5 class="text-sm font-bold text-on-surface">Detalle de Remitos & Liquidaciones Finalizadas</h5>
+            <span class="text-xs text-outline">${completedTrips.length} registros</span>
+          </div>
+
+          <div class="divide-y divide-surface-container-high/60">
+            ${completedTrips.length === 0 ? `
+              <div class="p-8 text-center text-on-surface-variant font-semibold text-xs">
+                Aún no tienes viajes finalizados en este período. Al completar mudanzas con el código OTP, se acreditarán automáticamente aquí.
+              </div>
+            ` : completedTrips.map(tr => {
+              const tripPrice = (tr.totalPrice || tr.precio || 0).toLocaleString('es-AR');
+              const tripDate = tr.date ? new Date(tr.date.toDate ? tr.date.toDate() : tr.date).toLocaleDateString('es-AR') : 'Reciente';
+              return `
+                <div class="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 hover:bg-surface-container/50 transition-colors">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-tertiary-container/15 text-tertiary-container flex items-center justify-center font-bold text-xs">
+                      <span class="material-symbols-outlined text-[18px]">verified</span>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-on-surface">Viaje #${(tr.id || '').substring(0, 8).toUpperCase()}</span>
+                        <span class="text-[11px] text-outline font-mono">${tripDate}</span>
+                      </div>
+                      <span class="text-xs text-outline">${tr.originAddress || tr.origen || 'Origen'} ➔ ${tr.destinationAddress || tr.destino || 'Destino'}</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-4">
+                    <span class="text-sm font-extrabold text-tertiary">+$${tripPrice} ARS</span>
+                    <span class="px-2.5 py-0.5 rounded-full bg-tertiary-container/10 text-tertiary text-[11px] font-bold">Liquidado</span>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
       </div>
     `;
+
+    // Eventos Billetera
+    const btnSaveCvu = document.getElementById('btn-save-mp-cvu');
+    if (btnSaveCvu) {
+      btnSaveCvu.addEventListener('click', async () => {
+        const inputCvu = document.getElementById('input-mp-cvu');
+        const cvu = inputCvu ? inputCvu.value.trim() : '';
+        if (!cvu) {
+          showToast('CVU Requerido', 'Por favor ingresa un CVU o Alias válido.', 'error');
+          return;
+        }
+        btnSaveCvu.disabled = true;
+        btnSaveCvu.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin">refresh</span> Guardando...';
+        try {
+          await service.linkMercadoPagoCVU(cvu);
+          showToast('Mercado Pago', 'CVU / Alias vinculado exitosamente a tu cuenta.', 'success');
+        } catch (err) {
+          showToast('Error', err.message || 'No se pudo guardar el CVU.', 'error');
+        } finally {
+          btnSaveCvu.disabled = false;
+          btnSaveCvu.innerHTML = '<span class="material-symbols-outlined text-[15px]">link</span> Vincular CVU Mercado Pago';
+        }
+      });
+    }
+
+    const btnSaveGoal = document.getElementById('btn-save-daily-goal');
+    if (btnSaveGoal) {
+      btnSaveGoal.addEventListener('click', async () => {
+        const inputGoal = document.getElementById('input-daily-goal');
+        const amount = parseFloat(inputGoal ? inputGoal.value : 0);
+        if (isNaN(amount) || amount <= 0) {
+          showToast('Monto Inválido', 'Ingresa un objetivo diario válido mayor a 0.', 'error');
+          return;
+        }
+        try {
+          await service.setDailyGoal(amount);
+          showToast('Objetivo Guardado', `Tu meta diaria es de $${amount.toLocaleString('es-AR')} ARS.`, 'success');
+          renderInvoicesModule();
+        } catch (err) {
+          showToast('Error', err.message, 'error');
+        }
+      });
+    }
+
+    const btnWithdraw = document.getElementById('btn-request-withdrawal');
+    if (btnWithdraw) {
+      btnWithdraw.addEventListener('click', async () => {
+        const inputAmount = document.getElementById('input-withdraw-amount');
+        const amount = parseFloat(inputAmount ? inputAmount.value : 0);
+        if (isNaN(amount) || amount <= 0) {
+          showToast('Monto Inválido', 'Ingresa un monto de retiro válido.', 'error');
+          return;
+        }
+        try {
+          const res = await service.requestWithdrawal(amount);
+          showToast('Retiro Solicitado', `Se ha generado la solicitud #${res.withdrawalId} por $${amount.toLocaleString('es-AR')}.`, 'success');
+          if (inputAmount) inputAmount.value = '';
+        } catch (err) {
+          showToast('Error de Retiro', err.message, 'error');
+        }
+      });
+    }
   };
 
   const renderReportsModule = async () => {
@@ -1293,10 +2028,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!container) return;
     const mode = service.getAccountMode();
     const profile = await service.getUserProfile();
+    const sub = service.getSubscription();
+    const maxVeh = service.getMaxVehiclesAllowed();
+    const rates = await service.getDriverRates();
+
+    const maxVehText = maxVeh === Infinity ? 'Ilimitados' : `${maxVeh} unidad(es)`;
 
     container.innerHTML = `
-      <div class="flex flex-col gap-4">
-        <div class="flex flex-col md:flex-row items-center justify-between p-4 rounded-xl bg-surface-container-low gap-4">
+      <div class="flex flex-col gap-6">
+        <!-- Switcher de Modo y Perfil -->
+        <div class="flex flex-col md:flex-row items-center justify-between p-5 rounded-2xl bg-surface-container-low border border-surface-container-high/60 gap-4">
           <div class="flex flex-col">
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full ${service.state.dbConnected ? 'bg-tertiary-container' : 'bg-primary-container'} animate-pulse"></span>
@@ -1306,24 +2047,227 @@ document.addEventListener('DOMContentLoaded', async () => {
             <span class="text-[11px] text-outline mt-0.5">Usuario: ${profile.name} (${profile.email})</span>
           </div>
           <div class="flex items-center gap-2">
-            <button class="px-4 py-2 rounded-xl text-xs font-bold transition-all ${mode === 'conductor' ? 'bg-primary-container text-on-primary' : 'bg-surface-container text-on-surface'}"
+            <button class="px-4 py-2 rounded-xl text-xs font-bold transition-all ${mode === 'conductor' ? 'bg-primary-container text-on-primary shadow-sm' : 'bg-surface-container text-on-surface hover:bg-surface-container-high'}"
                     onclick="window.MudifyUI.switchAccountMode('conductor')">
               Modo Conductor
             </button>
-            <button class="px-4 py-2 rounded-xl text-xs font-bold transition-all ${mode === 'empresa' ? 'bg-primary-container text-on-primary' : 'bg-surface-container text-on-surface'}"
+            <button class="px-4 py-2 rounded-xl text-xs font-bold transition-all ${mode === 'empresa' ? 'bg-primary-container text-on-primary shadow-sm' : 'bg-surface-container text-on-surface hover:bg-surface-container-high'}"
                     onclick="window.MudifyUI.switchAccountMode('empresa')">
               Modo Empresa
             </button>
           </div>
         </div>
 
-        <div class="p-4 rounded-xl bg-surface-container-low flex flex-col gap-1">
-          <span class="text-xs font-bold text-outline uppercase">Enlace a Base de Datos</span>
-          <span class="text-sm font-semibold text-on-surface">Cloud Firestore: mudapp-a9d40</span>
-          <span class="text-xs text-tertiary font-bold">Conexión Segura Activa</span>
+        <!-- Suscripción y Límite de Vehículos -->
+        <div class="p-5 rounded-2xl bg-surface-container-low border border-surface-container-high/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary-container/15 text-primary-container flex items-center justify-center">
+              <span class="material-symbols-outlined text-[22px]">workspace_premium</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h5 class="text-sm font-bold text-on-surface">${sub ? sub.planName : (mode === 'conductor' ? 'Plan Fletero Pro' : 'Plan Flota Enterprise')}</h5>
+                <span class="px-2 py-0.5 rounded-full bg-tertiary-container/15 text-tertiary font-bold text-[10px]">Activa</span>
+              </div>
+              <p class="text-xs text-outline mt-0.5">
+                Capacidad permitida en plataforma: <strong>${maxVehText}</strong>. 
+                ${mode === 'conductor' ? 'Los conductores independientes disponen de 1 solo vehículo autorizado.' : 'Gestión multi-unidad corporativa.'}
+              </p>
+            </div>
+          </div>
+          <a href="index.html#suscripciones" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface text-xs font-bold hover:bg-surface-container-high transition-all flex items-center gap-1.5 whitespace-nowrap">
+            <span class="material-symbols-outlined text-[16px] text-primary">arrow_upward</span>
+            Cambiar o Ampliar Plan
+          </a>
+        </div>
+
+        <!-- Formulario Completo de Tarifas y Servicios (Mapeado a Cloud Firestore mudancero) -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-surface-container-high/60 flex flex-col gap-5">
+          <div class="flex items-center justify-between pb-3 border-b border-surface-container-high/60">
+            <div>
+              <h4 class="font-bold text-on-surface text-base">Tarifario de Fletes & Mudanzas</h4>
+              <p class="text-xs text-outline">Estos valores se sincronizan directamente con el cálculo de cotizaciones en la app del cliente.</p>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-tertiary-container/10 text-tertiary font-bold text-xs">Cloud Firestore OK</span>
+          </div>
+
+          <form id="form-driver-rates" class="flex flex-col gap-6">
+            <!-- Bloque 1: Tarifas Base -->
+            <div>
+              <h5 class="text-xs font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">speed</span>
+                Tarifas Base de Desplazamiento & Tiempo
+              </h5>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="flex flex-col gap-1">
+                  <label class="text-xs font-semibold text-outline">Precio por Kilómetro ($)</label>
+                  <input type="number" step="any" id="rate-price-per-km" value="${rates.pricePerKm || 0}" class="px-3 py-2 rounded-xl bg-surface-container border border-surface-container-high text-on-surface font-mono font-bold text-sm focus:outline-none focus:border-primary">
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label class="text-xs font-semibold text-outline">Precio por Hora ($)</label>
+                  <input type="number" step="any" id="rate-price-per-hour" value="${rates.pricePerHour || 0}" class="px-3 py-2 rounded-xl bg-surface-container border border-surface-container-high text-on-surface font-mono font-bold text-sm focus:outline-none focus:border-primary">
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label class="text-xs font-semibold text-outline">Radio tarifa tiempo (km)</label>
+                  <input type="number" step="any" id="rate-radius-km" value="${rates.timeRateRadiusKm || 0}" class="px-3 py-2 rounded-xl bg-surface-container border border-surface-container-high text-on-surface font-mono font-bold text-sm focus:outline-none focus:border-primary">
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label class="text-xs font-semibold text-outline">Tarifa por demora/espera ($/h)</label>
+                  <input type="number" step="any" id="rate-delay" value="${rates.delayRate || 0}" class="px-3 py-2 rounded-xl bg-surface-container border border-surface-container-high text-on-surface font-mono font-bold text-sm focus:outline-none focus:border-primary">
+                </div>
+              </div>
+            </div>
+
+            <!-- Bloque 2: Servicios Adicionales -->
+            <div>
+              <h5 class="text-xs font-bold text-primary uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">handyman</span>
+                Servicios Adicionales & Cuadrilla
+              </h5>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Ayudantes / Estibadores -->
+                <div class="p-4 rounded-xl bg-surface-container border border-surface-container-high/60 flex flex-col gap-2">
+                  <label class="flex items-center justify-between cursor-pointer">
+                    <span class="text-xs font-bold text-on-surface">Ayudantes de Carga</span>
+                    <input type="checkbox" id="rate-offers-helpers" ${rates.offersHelpers ? 'checked' : ''} class="w-4 h-4 accent-primary">
+                  </label>
+                  <div class="grid grid-cols-2 gap-2 mt-1">
+                    <div>
+                      <span class="text-[10px] text-outline font-semibold">Tarifa/ayudante ($)</span>
+                      <input type="number" id="rate-helper-rate" value="${rates.helperRate || 0}" class="w-full px-2 py-1 text-xs rounded-lg bg-surface-container-low border border-surface-container-high text-on-surface font-mono font-bold">
+                    </div>
+                    <div>
+                      <span class="text-[10px] text-outline font-semibold">Máx ayudantes</span>
+                      <input type="number" id="rate-max-helpers" value="${rates.maxHelpers || 1}" class="w-full px-2 py-1 text-xs rounded-lg bg-surface-container-low border border-surface-container-high text-on-surface font-mono font-bold">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Canastos Plásticos -->
+                <div class="p-4 rounded-xl bg-surface-container border border-surface-container-high/60 flex flex-col gap-2">
+                  <label class="flex items-center justify-between cursor-pointer">
+                    <span class="text-xs font-bold text-on-surface">Canastos Plásticos</span>
+                    <input type="checkbox" id="rate-offers-baskets" ${rates.offersBaskets ? 'checked' : ''} class="w-4 h-4 accent-primary">
+                  </label>
+                  <div class="grid grid-cols-2 gap-2 mt-1">
+                    <div>
+                      <span class="text-[10px] text-outline font-semibold">Precio por canasto ($)</span>
+                      <input type="number" id="rate-basket-price" value="${rates.basketPrice || 0}" class="w-full px-2 py-1 text-xs rounded-lg bg-surface-container-low border border-surface-container-high text-on-surface font-mono font-bold">
+                    </div>
+                    <div>
+                      <span class="text-[10px] text-outline font-semibold">Disponibles</span>
+                      <input type="number" id="rate-avail-baskets" value="${rates.availableBaskets || 0}" class="w-full px-2 py-1 text-xs rounded-lg bg-surface-container-low border border-surface-container-high text-on-surface font-mono font-bold">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Cajas de Cartón -->
+                <div class="p-4 rounded-xl bg-surface-container border border-surface-container-high/60 flex flex-col gap-2">
+                  <label class="flex items-center justify-between cursor-pointer">
+                    <span class="text-xs font-bold text-on-surface">Cajas de Cartón</span>
+                    <input type="checkbox" id="rate-offers-boxes" ${rates.offersBoxes ? 'checked' : ''} class="w-4 h-4 accent-primary">
+                  </label>
+                  <div class="mt-1">
+                    <span class="text-[10px] text-outline font-semibold">Precio por caja ($)</span>
+                    <input type="number" id="rate-box-price" value="${rates.boxPrice || 0}" class="w-full px-2 py-1 text-xs rounded-lg bg-surface-container-low border border-surface-container-high text-on-surface font-mono font-bold">
+                  </div>
+                </div>
+
+                <!-- Embalaje y Protección -->
+                <div class="p-4 rounded-xl bg-surface-container border border-surface-container-high/60 flex flex-col gap-2">
+                  <label class="flex items-center justify-between cursor-pointer">
+                    <span class="text-xs font-bold text-on-surface">Servicio de Embalaje</span>
+                    <input type="checkbox" id="rate-offers-packing" ${rates.offersPacking ? 'checked' : ''} class="w-4 h-4 accent-primary">
+                  </label>
+                  <div class="mt-1">
+                    <span class="text-[10px] text-outline font-semibold">Tarifa embalaje ($)</span>
+                    <input type="number" id="rate-packing-rate" value="${rates.packingRate || 0}" class="w-full px-2 py-1 text-xs rounded-lg bg-surface-container-low border border-surface-container-high text-on-surface font-mono font-bold">
+                  </div>
+                </div>
+
+                <!-- Desarme y Armado de Muebles -->
+                <div class="p-4 rounded-xl bg-surface-container border border-surface-container-high/60 flex flex-col gap-2">
+                  <label class="flex items-center justify-between cursor-pointer">
+                    <span class="text-xs font-bold text-on-surface">Desarme & Armado</span>
+                    <input type="checkbox" id="rate-offers-assembly" ${rates.offersAssembly ? 'checked' : ''} class="w-4 h-4 accent-primary">
+                  </label>
+                  <div class="mt-1">
+                    <span class="text-[10px] text-outline font-semibold">Tarifa armado ($)</span>
+                    <input type="number" id="rate-assembly-rate" value="${rates.assemblyRate || 0}" class="w-full px-2 py-1 text-xs rounded-lg bg-surface-container-low border border-surface-container-high text-on-surface font-mono font-bold">
+                  </div>
+                </div>
+
+                <!-- Subida por Escalera -->
+                <div class="p-4 rounded-xl bg-surface-container border border-surface-container-high/60 flex flex-col gap-2">
+                  <label class="flex items-center justify-between cursor-pointer">
+                    <span class="text-xs font-bold text-on-surface">Subida por Escalera</span>
+                    <input type="checkbox" id="rate-offers-stairs" ${rates.offersStairs ? 'checked' : ''} class="w-4 h-4 accent-primary">
+                  </label>
+                  <div class="mt-1">
+                    <span class="text-[10px] text-outline font-semibold">Tarifa por piso ($)</span>
+                    <input type="number" id="rate-stair-rate" value="${rates.stairFloorRate || 0}" class="w-full px-2 py-1 text-xs rounded-lg bg-surface-container-low border border-surface-container-high text-on-surface font-mono font-bold">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-end pt-4 border-t border-surface-container-high/60">
+              <button type="submit" id="btn-submit-rates" class="px-6 py-2.5 rounded-xl bg-primary-container text-on-primary font-bold text-xs shadow-md hover:opacity-95 flex items-center gap-2 transition-all">
+                <span class="material-symbols-outlined text-[18px]">save</span>
+                Guardar Tarifario en Cloud Firestore
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     `;
+
+    // Evento Guardar Tarifas
+    const formRates = document.getElementById('form-driver-rates');
+    if (formRates) {
+      formRates.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btn-submit-rates');
+        if (btn) {
+          btn.disabled = true;
+          btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">refresh</span> Guardando tarifas...';
+        }
+
+        const newRates = {
+          pricePerKm: parseFloat(document.getElementById('rate-price-per-km')?.value || 0),
+          pricePerHour: parseFloat(document.getElementById('rate-price-per-hour')?.value || 0),
+          timeRateRadiusKm: parseFloat(document.getElementById('rate-radius-km')?.value || 0),
+          delayRate: parseFloat(document.getElementById('rate-delay')?.value || 0),
+          offersHelpers: document.getElementById('rate-offers-helpers')?.checked || false,
+          helperRate: parseFloat(document.getElementById('rate-helper-rate')?.value || 0),
+          maxHelpers: parseInt(document.getElementById('rate-max-helpers')?.value || 1, 10),
+          offersBaskets: document.getElementById('rate-offers-baskets')?.checked || false,
+          basketPrice: parseFloat(document.getElementById('rate-basket-price')?.value || 0),
+          availableBaskets: parseInt(document.getElementById('rate-avail-baskets')?.value || 0, 10),
+          offersBoxes: document.getElementById('rate-offers-boxes')?.checked || false,
+          boxPrice: parseFloat(document.getElementById('rate-box-price')?.value || 0),
+          offersPacking: document.getElementById('rate-offers-packing')?.checked || false,
+          packingRate: parseFloat(document.getElementById('rate-packing-rate')?.value || 0),
+          offersAssembly: document.getElementById('rate-offers-assembly')?.checked || false,
+          assemblyRate: parseFloat(document.getElementById('rate-assembly-rate')?.value || 0),
+          offersStairs: document.getElementById('rate-offers-stairs')?.checked || false,
+          stairFloorRate: parseFloat(document.getElementById('rate-stair-rate')?.value || 0)
+        };
+
+        try {
+          const user = service.getCurrentUser();
+          await service.saveDriverRates(user ? user.uid : null, newRates);
+          showToast('Tarifas Guardadas', 'Tu tarifario ha sido actualizado en Cloud Firestore y ya está activo.', 'success');
+        } catch (err) {
+          showToast('Error', err.message || 'No se pudieron guardar las tarifas.', 'error');
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">save</span> Guardar Tarifario en Cloud Firestore';
+          }
+        }
+      });
+    }
   };
 
   // =========================================================================
@@ -1396,14 +2340,29 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   if (window.firebase && window.firebase.auth) {
-    window.firebase.auth().onAuthStateChanged((fbUser) => {
+    window.firebase.auth().onAuthStateChanged(async (fbUser) => {
       if (fbUser) {
+        let isEmp = service.getAccountMode() === 'empresa';
+        if (window.firebase.firestore) {
+          try {
+            const db = window.firebase.firestore();
+            let snap = await db.collection('users').doc(fbUser.uid).get();
+            if (!snap.exists) snap = await db.collection('usuarios').doc(fbUser.uid).get();
+            if (snap.exists && snap.data().role === 'empresa') {
+              isEmp = true;
+              await service.setAccountMode('empresa');
+              updateModeSwitcherUI();
+            }
+          } catch(e) {
+            console.warn('Error sincronizando rol en panel.js:', e);
+          }
+        }
         const profile = {
           uid: fbUser.uid,
           name: fbUser.displayName || 'Usuario Google',
           email: fbUser.email,
           avatarUrl: fbUser.photoURL || '',
-          role: service.getAccountMode() === 'conductor' ? 'Conductor Independiente' : 'Empresa de Mudanzas'
+          role: isEmp ? 'Empresa de Mudanzas' : 'Conductor Independiente'
         };
         handleAuthState(profile);
       } else {
@@ -1477,7 +2436,106 @@ document.addEventListener('DOMContentLoaded', async () => {
     return 'torre-de-control';
   };
 
+  // =========================================================================
+  // GESTIÓN DE VEHÍCULOS Y LÍMITES POR SUSCRIPCIÓN
+  // =========================================================================
+  const initVehicleModals = () => {
+    const btnOpenAddVeh = document.getElementById('btn-open-add-vehicle');
+    const modalAddVeh = document.getElementById('modal-add-vehicle');
+    const modalUpgrade = document.getElementById('modal-upgrade-plan');
+    const btnCloseAddVeh = document.getElementById('btn-close-add-veh-modal');
+    const btnCancelAddVeh = document.getElementById('btn-cancel-add-veh');
+    const btnCloseUpgrade = document.getElementById('btn-close-upgrade-modal');
+    const formAddVeh = document.getElementById('form-add-vehicle');
+
+    if (btnOpenAddVeh && !btnOpenAddVeh.dataset.bound) {
+      btnOpenAddVeh.dataset.bound = 'true';
+      btnOpenAddVeh.addEventListener('click', async () => {
+        const vehicles = await service.getVehicles('todos');
+        const maxAllowed = service.getMaxVehiclesAllowed();
+        const sub = service.getSubscription();
+
+        if (vehicles.length >= maxAllowed) {
+          // Límite de suscripción alcanzado
+          const modalDesc = document.getElementById('upgrade-modal-desc');
+          if (modalDesc) {
+            modalDesc.innerHTML = `
+              Tu suscripción actual <strong>${sub.planName}</strong> autoriza un cupo máximo de <strong>${maxAllowed} vehículo(s)</strong> (actualmente tienes ${vehicles.length} registrados).<br><br>
+              Para incorporar más unidades, cuadrillas o choferes, actualiza tu suscripción al <strong>Plan Flota por Vehículos</strong> o <strong>Plan Flota Enterprise</strong>.
+            `;
+          }
+          if (modalUpgrade) modalUpgrade.classList.remove('hidden');
+        } else {
+          // Dentro del cupo permitido
+          const planHint = document.getElementById('modal-add-veh-plan-hint');
+          if (planHint) {
+            const limitText = maxAllowed === Infinity ? 'Ilimitados' : maxAllowed;
+            planHint.textContent = `${sub.planName} · Cupo: ${vehicles.length} de ${limitText} unidades`;
+          }
+          if (modalAddVeh) modalAddVeh.classList.remove('hidden');
+        }
+      });
+    }
+
+    if (btnCloseAddVeh) {
+      btnCloseAddVeh.addEventListener('click', () => {
+        if (modalAddVeh) modalAddVeh.classList.add('hidden');
+      });
+    }
+    if (btnCancelAddVeh) {
+      btnCancelAddVeh.addEventListener('click', () => {
+        if (modalAddVeh) modalAddVeh.classList.add('hidden');
+      });
+    }
+    if (btnCloseUpgrade) {
+      btnCloseUpgrade.addEventListener('click', () => {
+        if (modalUpgrade) modalUpgrade.classList.add('hidden');
+      });
+    }
+
+    if (formAddVeh && !formAddVeh.dataset.bound) {
+      formAddVeh.dataset.bound = 'true';
+      formAddVeh.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btnSubmit = document.getElementById('btn-submit-add-veh');
+        if (btnSubmit) {
+          btnSubmit.disabled = true;
+          btnSubmit.textContent = 'Registrando en Cloud Firestore...';
+        }
+
+        const vehData = {
+          plate: (document.getElementById('input-veh-plate')?.value || '').trim().toUpperCase(),
+          brand: (document.getElementById('input-veh-brand')?.value || '').trim(),
+          model: (document.getElementById('input-veh-model')?.value || '').trim(),
+          category: document.getElementById('select-veh-category')?.value || 'Flete Mediano',
+          capacity: (document.getElementById('input-veh-capacity')?.value || '').trim() || '10 m³',
+          driverName: (document.getElementById('input-veh-driver-name')?.value || '').trim()
+        };
+
+        try {
+          await service.addVehicle(vehData);
+          showToast('Vehículo Registrado', `La unidad ${vehData.plate} (${vehData.brand} ${vehData.model}) fue guardada exitosamente.`, 'success');
+          formAddVeh.reset();
+          if (modalAddVeh) modalAddVeh.classList.add('hidden');
+          await renderFlotaMantenimiento();
+          await initTopbar();
+        } catch (err) {
+          showToast('Límite de Suscripción', err.message || 'No se pudo registrar el vehículo.', 'error');
+          if (modalAddVeh) modalAddVeh.classList.add('hidden');
+          if (modalUpgrade) modalUpgrade.classList.remove('hidden');
+        } finally {
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = 'Guardar Vehículo';
+          }
+        }
+      });
+    }
+  };
+
   await initTopbar();
+  initVehicleModals();
+  startDeviceGeolocationTracking();
   switchView(resolveViewFromHashOrUser());
 
   window.addEventListener('hashchange', () => {

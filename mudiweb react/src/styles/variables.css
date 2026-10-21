@@ -1,0 +1,104 @@
+:root {
+  /* =========================================================================
+     MUDIFY DESIGN SYSTEM - TOKENS & VARIABLES OFICIALES (STITCH & VANILLA)
+     ========================================================================= */
+
+  /* Dimensiones del Layout del Panel */
+  --sidebar-width: 270px;
+  --header-height: 72px;
+
+  /* Colores Principales */
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-light: #60a5fa;
+  --color-primary-container: #2563eb;
+  --color-on-primary: #ffffff;
+
+  /* Paleta Vanilla Compat (Landing Original) */
+  --blue-50: #F0F4F8;
+  --blue-100: #D9E2EC;
+  --blue-500: #1864e3;
+  --blue-600: #0052cc;
+  --blue-700: #003a94;
+  --blue-900: #0A192F;
+  --white: #FFFFFF;
+  --black: #0F172A;
+  --gray-200: #E2E8F0;
+  --gray-500: #64748B;
+  --gray-800: #1E293B;
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Acentos y Secundarios */
+  --color-secondary: #fd651e;
+  --color-secondary-container: #fd651e;
+  --color-on-secondary: #ffffff;
+
+  /* Estados y Éxito */
+  --color-tertiary: #10b981;
+  --color-tertiary-container: #059669;
+  --color-on-tertiary: #ffffff;
+
+  /* Superficies y Fondos */
+  --color-surface: #f8fafc;
+  --color-surface-dim: #f1f5f9;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f5f9;
+  --color-surface-container: #e2e8f0;
+  --color-surface-container-high: #cbd5e1;
+  --color-surface-container-highest: #94a3b8;
+  --color-on-surface: #0f172a;
+  --color-on-surface-variant: #475569;
+  --color-outline: #64748b;
+  --color-border: #e2e8f0;
+
+  /* Textos */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #94a3b8;
+
+  /* Tema Oscuro Radar */
+  --color-radar-bg: #0b1c30;
+  --color-radar-grid: rgba(255, 255, 255, 0.08);
+
+  /* Tipografías */
+  --font-family-primary: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Tamaños de Fuente */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+
+  /* Espaciados */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Radios de Borde */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+
+  /* Transiciones */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+}

@@ -1,0 +1,22 @@
+.landing-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure mobile menu behaves smoothly */
+.nav-links--open {
+  display: flex !important;
+  position: absolute;
+  top: 72px;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  flex-direction: column;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  gap: 16px;
+  z-index: 100;
+}

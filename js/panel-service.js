@@ -42,6 +42,15 @@
       rates: null
     },
 
+    subscription: {
+      planId: 'fletero_pro',
+      planName: 'Plan Fletero Pro',
+      maxVehicles: 1,
+      status: 'trial_active',
+      trialDaysRemaining: 60,
+      description: 'Suscripción para 1 vehículo independiente'
+    },
+
     kpis: {
       activeFleetPct: 0,
       fleetRunning: 0,
@@ -77,7 +86,12 @@
       // Modo de cuenta (Conductor Independiente vs Empresa)
       let savedMode = 'conductor';
       try {
-        savedMode = localStorage.getItem(MODE_STORAGE_KEY) || 'conductor';
+        const storedUser = JSON.parse(localStorage.getItem('mudify_user_session') || '{}');
+        if (storedUser.role === 'empresa' || storedUser.isEmpresa) {
+          savedMode = 'empresa';
+        } else {
+          savedMode = localStorage.getItem(MODE_STORAGE_KEY) || 'conductor';
+        }
       } catch (e) {}
       this.accountMode = savedMode;
 
@@ -116,7 +130,23 @@
 
     _initAuthListener() {
       if (!this.firebaseAuth) return;
-      this.firebaseAuth.onAuthStateChanged((user) => {
+      this.firebaseAuth.onAuthStateChanged(async (user) => {
+        if (user && this.firestore) {
+          try {
+            let snap = await this.firestore.collection('users').doc(user.uid).get();
+            if (!snap.exists) snap = await this.firestore.collection('usuarios').doc(user.uid).get();
+            if (snap.exists && snap.data().role === 'empresa') {
+              this.accountMode = 'empresa';
+              this.state.accountMode = 'empresa';
+              const stored = JSON.parse(localStorage.getItem('mudify_user_session') || '{}');
+              stored.role = 'empresa';
+              stored.isEmpresa = true;
+              localStorage.setItem('mudify_user_session', JSON.stringify(stored));
+            }
+          } catch(e) {
+            console.warn('Aviso verificando rol empresa en panel-service:', e);
+          }
+        }
         if (user) {
           // Re-aplicar filtro con la cuenta que acaba de iniciar sesión
           this._applyScopedData();
@@ -878,14 +908,246 @@
       return null;
     }
 
+    // =========================================================================
+    // GESTIÓN DE SUSCRIPCIÓN Y LÍMITES DE FLOTA (REGLAS DEL SISTEMA)
+    // =========================================================================
+
+    getSubscription() {
+      let savedPlan = 'fletero_pro';
+      try {
+        savedPlan = localStorage.getItem('mudify_subscription_plan') || (this.accountMode === 'conductor' ? 'fletero_pro' : 'flota_vehiculos');
+      } catch (e) {}
+
+      if (this.accountMode === 'conductor') {
+        return {
+          planId: 'fletero_pro',
+          planName: 'Plan Fletero Pro',
+          maxVehicles: 1,
+          status: 'trial_active',
+          trialDaysRemaining: 60,
+          description: 'Suscripción para 1 solo vehículo independiente en plataforma'
+        };
+      } else {
+        const isEnterprise = savedPlan === 'dashboard_completo';
+        return {
+          planId: isEnterprise ? 'dashboard_completo' : 'flota_vehiculos',
+          planName: isEnterprise ? 'Plan Flota Enterprise' : 'Plan Flota por Vehículos',
+          maxVehicles: isEnterprise ? 999 : 10,
+          status: 'trial_active',
+          trialDaysRemaining: 60,
+          description: isEnterprise ? 'Dashboard centralizado y flota ilimitada' : 'Flota empresarial de 2 a 10 unidades'
+        };
+      }
+    }
+
+    getMaxVehiclesAllowed() {
+      return this.getSubscription().maxVehicles;
+    }
+
     async addVehicle(vehicleData) {
+      const sub = this.getSubscription();
+      const currentCount = this.state.vehicles.length;
+
+      // Validación estricta: Conductor independiente solo 1 vehículo
+      if (currentCount >= sub.maxVehicles) {
+        const msg = this.accountMode === 'conductor'
+          ? `Límite de suscripción alcanzado: Tu Plan Fletero Pro autoriza únicamente 1 vehículo en la plataforma. Para gestionar una flota con múltiples unidades y choferes, actualiza tu suscripción a Plan Flota.`
+          : `Límite de suscripción alcanzado: Tu plan actual autoriza hasta ${sub.maxVehicles} vehículos. Actualiza a Plan Flota Enterprise para operar con flota ilimitada.`;
+        throw new Error(msg);
+      }
+
       return await this.createDriver({
         name: vehicleData.driverName || 'Nuevo Chofer',
         phone: vehicleData.driverPhone || '',
-        plate: vehicleData.plate || '',
+        plate: (vehicleData.plate || '').toUpperCase().trim(),
         model: vehicleData.brandModel || '',
         category: vehicleData.category || 'Flete Mediano'
       });
+    }
+
+    // =========================================================================
+    // GESTIÓN DE TARIFAS Y SERVICIOS DEL MUDANCERO (CONECTADO A FIRESTORE)
+    // =========================================================================
+
+    async getDriverRates(driverUid) {
+      const uid = driverUid || (this.myDriverDoc ? this.myDriverDoc.id : (this.getCurrentUser()?.uid));
+      if (!uid || !this.firestore) return null;
+      try {
+        const doc = await this.firestore.collection('drivers').doc(uid).get();
+        if (doc.exists && doc.data()) {
+          const d = doc.data();
+          return {
+            pricePerKm: d.pricePerKm ?? 950.0,
+            pricePerHour: d.pricePerHour ?? 12000.0,
+            timeRateRadiusKm: d.timeRateRadiusKm ?? 15.0,
+            fuelPrice: d.fuelPrice ?? 1150.0,
+            delayRate: d.delayRate ?? 6000.0,
+            offersHelpers: d.offersHelpers ?? true,
+            helperRate: d.helperRate ?? 8000.0,
+            maxHelpers: d.maxHelpers ?? 2,
+            offersBaskets: d.offersBaskets ?? true,
+            basketPrice: d.basketPrice ?? 1500.0,
+            availableBaskets: d.availableBaskets ?? 10,
+            offersBoxes: d.offersBoxes ?? true,
+            boxPrice: d.boxPrice ?? 1800.0,
+            offersPacking: d.offersPacking ?? true,
+            packingRate: d.packingRate ?? 9500.0,
+            offersAssembly: d.offersAssembly ?? true,
+            assemblyRate: d.assemblyRate ?? 7000.0,
+            offersStairs: d.offersStairs ?? true,
+            stairFloorRate: d.stairFloorRate ?? 3000.0,
+            cvuMercadoPago: d.cvuMercadoPago || '',
+            objetivoDiario: d.objetivoDiario ?? 0.0
+          };
+        }
+      } catch (e) {
+        console.warn('Error getDriverRates:', e);
+      }
+      return null;
+    }
+
+    async saveDriverRates(driverUid, rates) {
+      const uid = driverUid || (this.myDriverDoc ? this.myDriverDoc.id : (this.getCurrentUser()?.uid));
+      if (!uid || !this.firestore) throw new Error('Usuario no autenticado o base de datos no disponible');
+      
+      const payload = {
+        pricePerKm: parseFloat(rates.pricePerKm) || 950.0,
+        pricePerHour: parseFloat(rates.pricePerHour) || 12000.0,
+        timeRateRadiusKm: parseFloat(rates.timeRateRadiusKm) || 15.0,
+        fuelPrice: parseFloat(rates.fuelPrice) || 1150.0,
+        delayRate: parseFloat(rates.delayRate) || 6000.0,
+        offersHelpers: Boolean(rates.offersHelpers),
+        helperRate: parseFloat(rates.helperRate) || 8000.0,
+        maxHelpers: parseInt(rates.maxHelpers, 10) || 2,
+        offersBaskets: Boolean(rates.offersBaskets),
+        basketPrice: parseFloat(rates.basketPrice) || 1500.0,
+        availableBaskets: parseInt(rates.availableBaskets, 10) || 10,
+        offersBoxes: Boolean(rates.offersBoxes),
+        boxPrice: parseFloat(rates.boxPrice) || 1800.0,
+        offersPacking: Boolean(rates.offersPacking),
+        packingRate: parseFloat(rates.packingRate) || 9500.0,
+        offersAssembly: Boolean(rates.offersAssembly),
+        assemblyRate: parseFloat(rates.assemblyRate) || 7000.0,
+        offersStairs: Boolean(rates.offersStairs),
+        stairFloorRate: parseFloat(rates.stairFloorRate) || 3000.0,
+        lastActive: window.firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      await this.firestore.collection('drivers').doc(uid).set(payload, { merge: true });
+      console.log('[Firestore] Tarifas actualizadas correctamente en drivers/' + uid);
+      return { success: true };
+    }
+
+    // =========================================================================
+    // CONTROL DE VIAJES ACTIVOS Y VALIDACIÓN OTP
+    // =========================================================================
+
+    async advanceTripStep(tripId, nextStatus) {
+      if (!this.firestore) throw new Error('Firestore no disponible');
+      const currentUser = this.getCurrentUser();
+      const driverUid = currentUser?.uid;
+
+      const batch = this.firestore.batch();
+      const tripRef = this.firestore.collection('trips').doc(tripId);
+      batch.update(tripRef, {
+        status: nextStatus,
+        updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      if (driverUid) {
+        const driverRef = this.firestore.collection('drivers').doc(driverUid);
+        batch.update(driverRef, {
+          tripStatus: nextStatus,
+          lastActive: window.firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+
+      await batch.commit();
+      console.log(`[Firestore] Viaje ${tripId} avanzado a estado: ${nextStatus}`);
+      return { success: true, nextStatus };
+    }
+
+    async completeTripWithOTP(tripId, enteredOtp) {
+      if (!this.firestore) throw new Error('Firestore no disponible');
+      const currentUser = this.getCurrentUser();
+      const driverUid = currentUser?.uid;
+
+      const tripDoc = await this.firestore.collection('trips').doc(tripId).get();
+      if (!tripDoc.exists) throw new Error('El viaje no existe');
+
+      const tripData = tripDoc.data();
+      const expectedOtp = (tripData.otpCode || '').trim();
+
+      if (expectedOtp && enteredOtp.trim() !== expectedOtp) {
+        throw new Error('Código de seguridad OTP incorrecto. Solicita el código correcto al cliente.');
+      }
+
+      const tripPrice = parseFloat(tripData.price || 0);
+
+      const batch = this.firestore.batch();
+      const tripRef = this.firestore.collection('trips').doc(tripId);
+      batch.update(tripRef, {
+        status: 'completed',
+        completedAt: window.firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      if (driverUid) {
+        const driverRef = this.firestore.collection('drivers').doc(driverUid);
+        batch.update(driverRef, {
+          tripStatus: 'searching',
+          earnings: window.firebase.firestore.FieldValue.increment(tripPrice),
+          lastActive: window.firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+
+      await batch.commit();
+      console.log(`[Firestore] Viaje ${tripId} COMPLETADO exitosamente con código OTP.`);
+      return { success: true, amountAdded: tripPrice };
+    }
+
+    // =========================================================================
+    // BILLETERA, MERCADO PAGO Y RETIROS
+    // =========================================================================
+
+    async linkMercadoPagoCVU(cvu) {
+      const currentUser = this.getCurrentUser();
+      const uid = currentUser?.uid;
+      if (!uid || !this.firestore) throw new Error('Usuario no autenticado');
+      await this.firestore.collection('drivers').doc(uid).set({
+        cvuMercadoPago: cvu.trim()
+      }, { merge: true });
+      return { success: true };
+    }
+
+    async requestWithdrawal(amount) {
+      const currentUser = this.getCurrentUser();
+      const uid = currentUser?.uid;
+      if (!uid || !this.firestore) throw new Error('Usuario no autenticado');
+
+      return await this.firestore.runTransaction(async (transaction) => {
+        const driverDoc = await transaction.get(this.firestore.collection('drivers').doc(uid));
+        if (!driverDoc.exists) throw new Error('Registro de conductor no encontrado');
+        const data = driverDoc.data();
+        const currentEarnings = parseFloat(data.earnings || 0);
+        if (currentEarnings < amount) {
+          throw new Error('Saldo insuficiente para retirar el monto solicitado');
+        }
+        transaction.update(this.firestore.collection('drivers').doc(uid), {
+          earnings: currentEarnings - amount,
+          lastActive: window.firebase.firestore.FieldValue.serverTimestamp()
+        });
+        return { success: true, remaining: currentEarnings - amount };
+      });
+    }
+
+    async setDailyGoal(goalAmount) {
+      const currentUser = this.getCurrentUser();
+      const uid = currentUser?.uid;
+      if (!uid || !this.firestore) throw new Error('Usuario no autenticado');
+      await this.firestore.collection('drivers').doc(uid).set({
+        objetivoDiario: parseFloat(goalAmount) || 0
+      }, { merge: true });
+      return { success: true };
     }
 
     async assignPendingService(serviceId, vehicleId) {
@@ -911,6 +1173,59 @@
         return alert;
       }
       return null;
+    }
+
+    async updateDriverLiveLocation(locationData) {
+      const currentUser = this.getCurrentUser();
+      const uid = currentUser?.uid;
+      const { lat, lng, heading, speed, accuracy } = locationData;
+
+      // Actualizar estado en memoria local
+      this.state.deviceLocation = {
+        lat,
+        lng,
+        heading: heading || 0,
+        speed: speed || 0,
+        accuracy: accuracy || 10,
+        timestamp: new Date().toISOString()
+      };
+
+      // Si estamos en modo conductor, actualizar la posición de su unidad en la lista de vehículos
+      if (this.state.accountMode === 'conductor' && this.state.vehicles.length > 0) {
+        this.state.vehicles[0].coords = { lat, lng };
+        this.state.vehicles[0].telemetry = {
+          ...this.state.vehicles[0].telemetry,
+          speedKmH: Math.round((speed || 0) * 3.6),
+          lastLocationUpdate: new Date().toLocaleTimeString('es-AR')
+        };
+      }
+
+      // Si hay Firestore activo y UID, sincronizar la última ubicación conocida en Cloud Firestore
+      if (uid && this.firestore) {
+        try {
+          await this.firestore.collection('drivers').doc(uid).set({
+            currentLocation: {
+              latitude: lat,
+              longitude: lng,
+              heading: heading || 0,
+              speed: speed || 0,
+              accuracy: accuracy || 10,
+              updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
+            },
+            isOnline: true,
+            lastActive: window.firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true });
+        } catch (e) {
+          console.warn('No se pudo guardar la ubicación en Firestore:', e);
+        }
+      }
+
+      this._notify();
+      return this.state.deviceLocation;
+    }
+
+    getDeviceLocation() {
+      return this.state.deviceLocation || null;
     }
 
     async resetToDefaultSeed() {

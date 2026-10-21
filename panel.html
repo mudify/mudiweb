@@ -125,6 +125,9 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <!-- Google Maps JavaScript API (Geolocalización y Radar en Vivo) -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFzahJi_GRSKlFcstLi85u3NXXzcyx7Mg&libraries=places,geometry"></script>
 </head>
 
 <body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
@@ -135,7 +138,7 @@
   <aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="flex flex-col flex-1 overflow-y-auto">
       <!-- Brand Header -->
-      <div class="h-16 px-space-lg flex items-center gap-space-sm">
+      <a href="index.html" class="h-16 px-space-lg flex items-center gap-space-sm hover:opacity-90 transition-opacity">
         <div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
           <span class="material-symbols-outlined text-[20px]">local_shipping</span>
         </div>
@@ -143,7 +146,7 @@
           <span class="font-headline-sm text-headline-sm text-on-surface font-extrabold tracking-tight">Mudify <span class="text-primary-container">PRO</span></span>
           <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider" id="sidebar-brand-subtitle">Conductor Independiente</span>
         </div>
-      </div>
+      </a>
 
       <!-- Live Network Badge -->
       <div class="px-space-md py-space-sm">
@@ -153,6 +156,20 @@
             <span class="font-label-sm text-label-sm text-on-surface font-semibold" id="sidebar-network-title">Estado Operativo</span>
           </div>
           <span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-surface-container-highest text-primary font-bold" id="sidebar-ontime-badge">100% En Línea</span>
+        </div>
+      </div>
+
+      <!-- Subscription Status Card in Sidebar -->
+      <div class="px-space-md pb-space-xs">
+        <div class="bg-gradient-to-r from-primary-container/10 to-surface-container-high/40 rounded-xl p-space-sm border border-primary-container/20 flex flex-col gap-1">
+          <div class="flex items-center justify-between">
+            <span class="font-label-sm text-[11px] text-primary font-bold uppercase tracking-wider" id="sidebar-sub-badge">Plan Fletero Pro</span>
+            <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-tertiary-container/20 text-tertiary-container font-extrabold" id="sidebar-sub-days">60d Bonificados</span>
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-on-surface">
+            <span class="font-semibold text-outline" id="sidebar-sub-veh-label">Cupo de Flota:</span>
+            <span class="font-extrabold text-primary font-mono" id="sidebar-sub-veh-limit">1 / 1 Vehículo</span>
+          </div>
         </div>
       </div>
 
@@ -303,6 +320,9 @@
               <!-- Inyectado 100% dinámicamente desde MudifyEnterpriseService.getKPIs() -->
             </div>
 
+            <!-- CONTENEDOR DE VIAJE ACTIVO Y VALIDACIÓN OTP (SINCRONIZADO CON APP MUDANCERO) -->
+            <div id="tc-active-trip-control"></div>
+
             <!-- 2 & 3. Main Operational Split (Telemetry Map + Live Priority Dispatches) -->
             <div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg">
               
@@ -344,10 +364,21 @@
                     </span>
                   </div>
 
-                  <!-- Canvas Interactivo del Mapa Satelital -->
+                  <!-- Canvas Interactivo del Mapa Satelital & Radar -->
                   <div class="relative h-[380px] bg-surface-container-highest overflow-hidden" id="tc-map-canvas-wrapper">
-                    <!-- Mapa Satelital / Vectorial de Fondo -->
-                    <div class="absolute inset-0 bg-[#0b1c30] flex items-center justify-center overflow-hidden">
+                    <!-- Mapa Real Google Maps con Dark Mode Stitch -->
+                    <div id="tc-google-map" class="absolute inset-0 z-10 w-full h-full"></div>
+
+                    <!-- Botón Flotante: Centrar en mi Teléfono (GPS) -->
+                    <div class="absolute top-3 right-3 z-20 flex items-center gap-2">
+                      <button id="btn-center-device-gps" class="px-3 py-1.5 rounded-xl bg-surface-container-lowest/90 backdrop-blur-md text-on-surface hover:bg-surface-container-lowest text-xs font-bold shadow-md border border-surface-container-high/60 flex items-center gap-1.5 transition-all">
+                        <span class="material-symbols-outlined text-[16px] text-primary">my_location</span>
+                        <span>Mi Teléfono</span>
+                      </button>
+                    </div>
+
+                    <!-- Radar Vectorial de Respaldo / Overlay Satelital -->
+                    <div id="tc-radar-fallback" class="absolute inset-0 bg-[#0b1c30] flex items-center justify-center overflow-hidden z-0">
                       <!-- Grid Satelital de Coordenadas -->
                       <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px); background-size: 32px 32px;"></div>
                       
@@ -357,13 +388,11 @@
                       </div>
 
                       <!-- Coordenadas AMBA de Referencia -->
-                      <span class="absolute bottom-3 left-3 text-[10px] text-white/40 font-mono">GPS: -34.6037° S, -58.3816° W (CABA / AMBA)</span>
+                      <span class="absolute bottom-3 left-3 text-[10px] text-white/40 font-mono" id="tc-fallback-gps-label">GPS: -34.6037° S, -58.3816° W (CABA / AMBA)</span>
                     </div>
 
-                    <!-- Contenedor Dinámico de Pines de Vehículos -->
-                    <div class="absolute inset-0 z-20 pointer-events-none" id="radar-dynamic-pins">
-                      <!-- Inyectado 100% dinámicamente desde MudifyEnterpriseService.getVehicles() -->
-                    </div>
+                    <!-- Contenedor Dinámico de Pines de Vehículos (Overlay) -->
+                    <div class="absolute inset-0 z-20 pointer-events-none" id="radar-dynamic-pins"></div>
                   </div>
                 </div>
               </div>
@@ -823,6 +852,99 @@
       <!-- Detalles dinámicos inyectados por JS (Cero hardcoded) -->
       <div class="grid grid-cols-2 gap-space-md mt-space-md" id="modal-ficha-details">
         <!-- Inyectado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: REGISTRO DE VEHÍCULO (CON VALIDACIÓN DE SUSCRIPCIÓN) -->
+  <!-- ======================================================== -->
+  <div class="fixed inset-0 bg-inverse-surface/50 backdrop-blur-sm z-50 flex items-center justify-center p-space-md hidden" id="modal-add-vehicle">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-lg w-full p-space-lg shadow-2xl border border-surface-container-high/60">
+      <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-high/60">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+            <span class="material-symbols-outlined text-[22px]">add_circle</span>
+          </div>
+          <div>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Registrar Vehículo</h3>
+            <span class="font-label-sm text-label-sm text-outline" id="modal-add-veh-plan-hint">Plan Fletero Pro · Máx 1 Vehículo</span>
+          </div>
+        </div>
+        <button class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors" id="btn-close-add-veh-modal">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <form id="form-add-vehicle" class="flex flex-col gap-space-sm mt-space-md">
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-outline uppercase font-semibold">Patente / Dominio *</label>
+          <input type="text" id="input-veh-plate" required placeholder="AE 123 CD" class="px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-on-surface uppercase font-mono font-bold focus:outline-none focus:border-primary">
+        </div>
+        <div class="grid grid-cols-2 gap-space-sm">
+          <div class="flex flex-col gap-1">
+            <label class="font-label-sm text-outline uppercase font-semibold">Marca *</label>
+            <input type="text" id="input-veh-brand" required placeholder="Renault" class="px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-on-surface focus:outline-none focus:border-primary">
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="font-label-sm text-outline uppercase font-semibold">Modelo *</label>
+            <input type="text" id="input-veh-model" required placeholder="Master" class="px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-on-surface focus:outline-none focus:border-primary">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-space-sm">
+          <div class="flex flex-col gap-1">
+            <label class="font-label-sm text-outline uppercase font-semibold">Categoría *</label>
+            <select id="select-veh-category" class="px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-on-surface font-semibold focus:outline-none focus:border-primary">
+              <option value="Flete Chico">Flete Chico (hasta 500 kg / 4 m³)</option>
+              <option value="Flete Mediano" selected>Flete Mediano (hasta 1.5 ton / 10 m³)</option>
+              <option value="Camión Mudancero">Camión Mudancero (hasta 3.5 ton / 22 m³)</option>
+              <option value="Pick-up con Caja">Pick-up con Caja (hasta 800 kg / 6 m³)</option>
+              <option value="Furgón Utilitario">Furgón Utilitario (hasta 1 ton / 7 m³)</option>
+            </select>
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="font-label-sm text-outline uppercase font-semibold">Capacidad m³ / Ton</label>
+            <input type="text" id="input-veh-capacity" placeholder="10 m³" class="px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-on-surface focus:outline-none focus:border-primary">
+          </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class="font-label-sm text-outline uppercase font-semibold">Nombre del Chofer Asignado</label>
+          <input type="text" id="input-veh-driver-name" placeholder="Juan Pérez" class="px-3 py-2 rounded-xl bg-surface-container-low border border-surface-container-high text-on-surface focus:outline-none focus:border-primary">
+        </div>
+
+        <div class="p-3 rounded-xl bg-surface-container-low text-xs text-outline flex items-center gap-2 mt-1">
+          <span class="material-symbols-outlined text-[18px] text-primary">verified_user</span>
+          <span>El vehículo se sincronizará automáticamente con tu cuenta en Cloud Firestore.</span>
+        </div>
+
+        <div class="flex items-center justify-end gap-space-sm pt-space-sm mt-space-xs border-t border-surface-container-high/60">
+          <button type="button" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface font-bold text-xs" id="btn-cancel-add-veh">Cancelar</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-primary-container text-on-primary font-bold text-xs shadow-md hover:opacity-95" id="btn-submit-add-veh">Guardar Vehículo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: LÍMITE DE SUSCRIPCIÓN ALCANZADO (UPGRADE PRO)     -->
+  <!-- ======================================================== -->
+  <div class="fixed inset-0 bg-inverse-surface/60 backdrop-blur-sm z-50 flex items-center justify-center p-space-md hidden" id="modal-upgrade-plan">
+    <div class="bg-surface-container-lowest rounded-2xl max-w-md w-full p-space-xl shadow-2xl border border-secondary-container/30 text-center flex flex-col items-center">
+      <div class="w-14 h-14 rounded-2xl bg-secondary-container/15 text-secondary-container flex items-center justify-center mb-space-sm">
+        <span class="material-symbols-outlined text-[32px]">warning</span>
+      </div>
+      <h3 class="font-headline-sm text-headline-sm text-on-surface font-extrabold" id="upgrade-modal-title">Límite de Vehículos Alcanzado</h3>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-2 mb-space-md" id="upgrade-modal-desc">
+        Tu <strong>Plan Fletero Pro</strong> autoriza únicamente <strong>1 vehículo</strong> en la plataforma. Para incorporar más unidades, cuadrillas o choferes, actualiza tu suscripción al <strong>Plan Flota por Vehículos</strong> o <strong>Plan Enterprise</strong>.
+      </p>
+
+      <div class="w-full flex flex-col gap-2">
+        <a href="index.html#suscripciones" class="w-full py-3 px-4 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg font-bold shadow-md text-center hover:opacity-95 transition-all">
+          Ver Planes y Ampliar Flota 🚀
+        </a>
+        <button type="button" class="w-full py-2.5 px-4 rounded-xl bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition-all" id="btn-close-upgrade-modal">
+          Entendido, continuar con 1 vehículo
+        </button>
       </div>
     </div>
   </div>

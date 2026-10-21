@@ -1,0 +1,1435 @@
+/* ==========================================================================
+   FACTURACIÓN & FINANZAS OPERATIVAS (MUDIFY PRO)
+   Estética Enterprise, Glassmorphism, Responsive y Plantilla Oficial Imprimible R
+   ========================================================================== */
+
+.facturacion-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeInPanel 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInPanel {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── HEADER PRINCIPAL ── */
+.facturacion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  padding: 24px 28px;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.facturacion-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-tertiary-container);
+  background: rgba(16, 185, 129, 0.1);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  margin-bottom: 8px;
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  background-color: var(--color-tertiary);
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.facturacion-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.facturacion-subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-top: 6px;
+  max-width: 650px;
+  line-height: 1.45;
+}
+
+.facturacion-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── BARRA DE PESTAÑAS INTERNAS ── */
+.fin-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  padding: 6px;
+  border-radius: var(--radius-xl);
+  overflow-x: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.fin-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.fin-tab-btn:hover {
+  color: var(--color-primary);
+  background: var(--color-surface);
+}
+
+.fin-tab-btn.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.fin-tab-btn .material-symbols-outlined {
+  font-size: 19px;
+}
+
+.tab-pill {
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.25);
+  padding: 2px 7px;
+  border-radius: 9999px;
+  color: inherit;
+}
+
+.fin-tab-btn:not(.active) .tab-pill {
+  background: var(--color-surface-dim);
+  color: var(--color-text-secondary);
+}
+
+.tab-pill--warn {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+}
+
+.tab-pane-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── PESTAÑA 1: KPIS FINANCIEROS ── */
+.fin-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.fin-kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fin-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.fin-kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.fin-kpi-card--income::before { background: #10b981; }
+.fin-kpi-card--expense::before { background: #ef4444; }
+.fin-kpi-card--profit::before { background: #2563eb; }
+.fin-kpi-card--comision::before { background: #059669; }
+
+.fin-kpi-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.fin-kpi-label {
+  font-size: var(--text-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+.kpi-icon {
+  font-size: 24px;
+}
+
+.fin-kpi-val {
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary);
+  margin-bottom: 10px;
+  line-height: 1.1;
+}
+
+.fin-kpi-val--zero {
+  color: #10b981;
+}
+
+.fin-kpi-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin-top: auto;
+}
+
+.badge-tag {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-tag--green { background: #d1fae5; color: #065f46; }
+.badge-tag--red { background: #fee2e2; color: #991b1b; }
+.badge-tag--blue { background: #dbeafe; color: #1e40af; }
+.badge-tag--amber { background: #fef3c7; color: #92400e; }
+
+/* ── SPLIT LAYOUT (ESTRUCTURA DE GASTOS & FLOTA) ── */
+.fin-split-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 980px) {
+  .fin-split-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fin-card-box {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 26px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 22px;
+  gap: 16px;
+}
+
+.box-header h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.box-header p {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+.empty-chart-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-text-tertiary);
+  gap: 12px;
+}
+
+.empty-chart-state .material-symbols-outlined {
+  font-size: 42px;
+  color: var(--color-outline);
+}
+
+.empty-chart-state p {
+  font-size: var(--text-sm);
+  max-width: 320px;
+}
+
+/* ── BARRAS DE PROGRESO DE COSTOS ── */
+.cost-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cost-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cost-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+.cost-cat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.cat-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.cat-dot--fuel { background-color: #f59e0b; }
+.cat-dot--crew { background-color: #3b82f6; }
+.cat-dot--toll { background-color: #8b5cf6; }
+.cat-dot--repair { background-color: #ef4444; }
+
+.cost-val {
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.progress-track {
+  height: 8px;
+  background: var(--color-surface-dim);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-fill--fuel { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.progress-fill--crew { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+.progress-fill--toll { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+.progress-fill--repair { background: linear-gradient(90deg, #dc2626, #f87171); }
+
+.cost-percent {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  align-self: flex-end;
+}
+
+/* ── RENDIMIENTO POR MÓVIL / CAMIÓN ── */
+.fleet-finance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.fleet-fin-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fleet-fin-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fleet-fin-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.patente-chip {
+  background: #0f172a;
+  color: #f8fafc;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.05em;
+}
+
+.cat-chip {
+  font-size: 11px;
+  background: var(--color-surface-dim);
+  color: var(--color-text-secondary);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+
+.trip-count-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.08);
+  padding: 3px 8px;
+  border-radius: 9999px;
+}
+
+.fleet-fin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
+}
+
+.f-stat {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.f-stat strong {
+  font-size: var(--text-sm);
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+/* ── PESTAÑA 2: REMITOS & FACTURAS ── */
+.invoices-filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  padding: 14px 20px;
+  border-radius: var(--radius-xl);
+}
+
+.search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  flex: 1;
+  max-width: 460px;
+}
+
+.search-input-wrap .material-symbols-outlined {
+  color: var(--color-outline);
+  font-size: 20px;
+}
+
+.search-input-wrap input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.filter-pill-group {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-pill {
+  padding: 6px 14px;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border);
+  background: #ffffff;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+
+.filter-pill.active {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+.invoices-table-card {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.empty-invoices-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+  gap: 12px;
+}
+
+.empty-invoices-box .material-symbols-outlined {
+  font-size: 48px;
+  color: var(--color-outline);
+}
+
+.empty-invoices-box h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.empty-invoices-box p {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  max-width: 440px;
+  margin-bottom: 8px;
+}
+
+.invoices-list-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.invoices-thead {
+  display: grid;
+  grid-template-columns: 180px 1.8fr 140px 130px 120px 160px;
+  gap: 16px;
+  padding: 14px 20px;
+  background: var(--color-surface-dim);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.invoice-row-item {
+  display: grid;
+  grid-template-columns: 180px 1.8fr 140px 130px 120px 160px;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  align-items: center;
+  transition: background 0.15s ease;
+}
+
+.invoice-row-item:last-child {
+  border-bottom: none;
+}
+
+.invoice-row-item:hover {
+  background: #fbfcfe;
+}
+
+.inv-code-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.remito-tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.08);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.inv-num {
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.inv-date {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+}
+
+.inv-client-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.client-title {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.route-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.3;
+}
+
+.cargo-hint {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+}
+
+.inv-veh-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.method-hint {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+}
+
+.inv-amount-col {
+  display: flex;
+  align-items: center;
+}
+
+.amount-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.status-btn-pill {
+  border: none;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.status-btn-pill--paid {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-btn-pill--pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-btn-pill:hover {
+  transform: scale(1.04);
+}
+
+.inv-actions-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-icon-share {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: #10b981;
+  padding: 6px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.btn-icon-share:hover {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: #10b981;
+}
+
+/* ── PESTAÑA 3: GASTOS & LIQUIDACIONES ── */
+.expenses-top-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  padding: 20px 24px;
+  border-radius: var(--radius-xl);
+}
+
+.expenses-meta-summary h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.expenses-meta-summary h3 strong {
+  color: #ef4444;
+}
+
+.expenses-meta-summary p {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+.actions-button-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.expenses-table-card {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.expenses-thead {
+  display: grid;
+  grid-template-columns: 110px 140px 1.8fr 160px 130px 80px;
+  gap: 16px;
+  padding: 14px 20px;
+  background: var(--color-surface-dim);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.expense-row-item {
+  display: grid;
+  grid-template-columns: 110px 140px 1.8fr 160px 130px 80px;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  align-items: center;
+}
+
+.expense-row-item:last-child {
+  border-bottom: none;
+}
+
+.expense-row-item:hover {
+  background: #fbfcfe;
+}
+
+.exp-date {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.exp-type-tag {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  display: inline-flex;
+}
+
+.exp-type-tag--combustible { background: #fef3c7; color: #92400e; }
+.exp-type-tag--peajes { background: #ede9fe; color: #6d28d9; }
+.exp-type-tag--liquidacion_personal { background: #dbeafe; color: #1e40af; }
+.exp-type-tag--mantenimiento { background: #fee2e2; color: #991b1b; }
+.exp-type-tag--otro { background: #f1f5f9; color: #475569; }
+
+.exp-concept-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.exp-concept-col strong {
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+}
+
+.ticket-num {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+}
+
+.exp-target-col {
+  display: flex;
+  align-items: center;
+}
+
+.staff-pill {
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.exp-amount-col strong {
+  font-size: var(--text-base);
+  font-weight: 800;
+}
+
+.exp-del-col {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-del-exp {
+  border: none;
+  background: transparent;
+  color: var(--color-outline);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.btn-del-exp:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+/* ── PESTAÑA 4: CUENTAS DE COBRO & GENERADOR QR ── */
+.cobros-grid-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 980px) {
+  .cobros-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cobros-card {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 26px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.payment-view-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pay-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 14px 18px;
+  border-radius: var(--radius-lg);
+  gap: 12px;
+}
+
+.pay-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  min-width: 90px;
+}
+
+.pay-val {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  word-break: break-all;
+  flex: 1;
+}
+
+.btn-copy {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  padding: 5px 12px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-copy:hover {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+.pay-grid-sub {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 16px;
+  background: var(--color-surface-dim);
+  border-radius: var(--radius-lg);
+}
+
+.pay-grid-sub div {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.pay-grid-sub div strong {
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  margin-top: 2px;
+}
+
+/* ── QR DINÁMICO ── */
+.qr-card-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1.5px solid rgba(37, 99, 235, 0.2);
+  background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
+}
+
+.qr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.1);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  margin-bottom: 12px;
+}
+
+.qr-card-center h3 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+.qr-card-center p {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  max-width: 320px;
+  line-height: 1.4;
+  margin-bottom: 18px;
+}
+
+.qr-canvas-box {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--color-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.qr-img {
+  width: 200px;
+  height: 200px;
+  display: block;
+  border-radius: var(--radius-md);
+}
+
+.qr-alias-tag {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-primary);
+  background: var(--color-surface);
+  padding: 3px 10px;
+  border-radius: 9999px;
+}
+
+.qr-features {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 18px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.feat-chip {
+  font-weight: 700;
+  color: #065f46;
+}
+
+/* ── FORMULARIOS Y MODALES DE FINANZAS ── */
+.modal-finance-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  background: #ffffff;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.currency-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  padding: 0 12px;
+}
+
+.curr-sym {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-text-tertiary);
+  margin-right: 6px;
+}
+
+.currency-input-wrap input {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 10px 0 !important;
+  width: 100%;
+}
+
+.modal-finance-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.form-submit-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   PLANTILLA OFICIAL IMPRIMIBLE: REMITO DIGITAL DE CARGA (FORMULARIO R)
+   ═════════════════════════════════════════════════════════════════════ */
+.printable-remito-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  color: #0f172a;
+}
+
+.remito-doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #0f172a;
+  gap: 20px;
+}
+
+.remito-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2563eb;
+}
+
+.remito-logo .material-symbols-outlined {
+  font-size: 32px;
+}
+
+.remito-logo h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #0f172a;
+}
+
+.remito-logo h2 span {
+  color: #2563eb;
+}
+
+.remito-company-name {
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.remito-tax-info {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.remito-doc-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #0f172a;
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  min-width: 170px;
+  text-align: center;
+}
+
+.doc-letter {
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  border-bottom: 2px solid #0f172a;
+  width: 100%;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+
+.doc-legal-type {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.doc-legal-num {
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 2px;
+}
+
+.doc-legal-date {
+  font-size: 11px;
+  color: #475569;
+}
+
+.remito-section-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+}
+
+.box-section-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.remito-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.remito-route-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.route-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.point-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.point-dot--origin { background-color: #2563eb; }
+.point-dot--dest { background-color: #10b981; }
+
+.route-sub-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #1e40af;
+}
+
+.cargo-text-declaration {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1e293b;
+}
+
+.remito-disclaimer {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 8px;
+  line-height: 1.4;
+  border-top: 1px dashed #cbd5e1;
+  padding-top: 6px;
+}
+
+.remito-footer-split {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  gap: 20px;
+}
+
+.remito-qr-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.remito-qr-img {
+  width: 72px;
+  height: 72px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+}
+
+.qr-meta-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.qr-meta-text small {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 400;
+}
+
+.remito-total-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.total-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #475569;
+}
+
+.total-val {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.paid-tag {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  margin-top: 4px;
+}
+
+.paid-tag--ok { background: #d1fae5; color: #065f46; }
+.paid-tag--pending { background: #fef3c7; color: #92400e; }
+
+.remito-signatures-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 14px;
+  padding: 24px 20px 8px;
+}
+
+.sig-line {
+  border-top: 1px solid #64748b;
+  text-align: center;
+  padding-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.remito-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* ── REGLAS DE IMPRESIÓN OFICIAL (@media print) ── */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-remito,
+  #printable-remito * {
+    visibility: visible;
+  }
+  #printable-remito {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    border: none;
+    box-shadow: none;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

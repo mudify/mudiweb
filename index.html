@@ -112,8 +112,8 @@
             <div class="header__right">
                 <!-- Estado Visitante (Sin sesión) -->
                 <div class="header__auth-guest" id="headerAuthGuest">
-                    <button type="button" class="btn btn--text" id="headerLoginBtn">Iniciar sesión</button>
-                    <button type="button" class="btn btn--primary" id="headerRegisterBtn">Registrarse</button>
+                    <button type="button" class="btn btn--text" id="headerLoginBtn" onclick="if(window.openAuthModal)window.openAuthModal('login')">Iniciar sesión</button>
+                    <button type="button" class="btn btn--primary" id="headerRegisterBtn" onclick="if(window.openAuthModal)window.openAuthModal('register')">Registrarse</button>
                 </div>
 
                 <!-- Estado Autenticado (Con sesión activa) -->
@@ -144,6 +144,13 @@
                         </div>
                         <div class="user-dropdown-divider"></div>
                         <div class="user-dropdown-links">
+                            <a href="panel.html" class="dropdown-link" style="background: #eef2ff;">
+                                <span class="dropdown-link-icon">🚚</span>
+                                <span class="dropdown-link-text">
+                                    <strong style="color: #0052cc;">Torre de Control PRO</strong>
+                                    <small>Panel de despacho y gestión web</small>
+                                </span>
+                            </a>
                             <a href="#descargar-app" class="dropdown-link" id="dropdownRoleLink">
                                 <span class="dropdown-link-icon" id="dropdownRoleIcon">📦</span>
                                 <span class="dropdown-link-text">
@@ -1609,8 +1616,11 @@
                 </div>
             </div>
 
-            <div class="auth-modal-footer">
-                <button type="button" class="btn btn--primary btn--full" id="btnCloseSubModal">Entendido / Continuar Operando 🚀</button>
+            <div class="auth-modal-footer" style="display: flex; flex-direction: column; gap: 8px;">
+                <a href="panel.html" class="btn btn--primary btn--full" style="text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <span>Ir a la Torre de Control / Panel Web ➔</span>
+                </a>
+                <button type="button" class="btn btn--secondary btn--full" id="btnCloseSubModal">Continuar en la Web</button>
             </div>
         </div>
     </div>
